@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { PlusIcon, type LucideIcon } from "lucide-react";
+import { TaskCard } from "../../Task-Card/TaskCard";
+import { useToggle } from "@/Context/AddBtnContext";
 
 type StatusTypeProps = {
   Icon: LucideIcon;
@@ -7,10 +9,16 @@ type StatusTypeProps = {
   outcome: number;
 };
 
-export const StatusTypes = ({ Icon, status, outcome }: StatusTypeProps) => {
+export const StatusTypesProps = ({
+  Icon,
+  status,
+  outcome,
+}: StatusTypeProps) => {
+  const { toggleOpen } = useToggle();
+
   return (
-    <>
-      <Card className="flex justify-between items-center w-1/5 flex-row px-3 py-3 mx-2">
+    <div className="w-full p-4 bg-gray-100 mx-2 rounded-sm">
+      <Card className="flex justify-between items-center flex-row px-3 py-3 mb-3">
         <div className="flex justify-evenly items-center space-x-2">
           <p className="rounded-full bg-red-200 p-1 w-fit">
             <Icon size={13} />
@@ -21,10 +29,12 @@ export const StatusTypes = ({ Icon, status, outcome }: StatusTypeProps) => {
           </span>
         </div>
         <PlusIcon
+          onClick={toggleOpen}
           size={15}
           className="cursor-pointer hover:bg-gray-200 rounded-full"
         />
       </Card>
-    </>
+      <TaskCard />
+    </div>
   );
 };

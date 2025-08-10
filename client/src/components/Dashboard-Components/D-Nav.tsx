@@ -1,7 +1,15 @@
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
-export const DashboardNav = () => {
+interface DashboardNavProps {
+  filter: (status: string) => void; // Oder: React.Dispatch<React.SetStateAction<string>>
+}
+
+export const DashboardNav = ({ filter }: DashboardNavProps) => {
+  const handleStatusFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    filter(e.currentTarget.value);
+  };
+
   return (
     <>
       <div className="flex justify-between p-2">
@@ -11,10 +19,18 @@ export const DashboardNav = () => {
             <span className="stripe"></span>
           </div>
           <div className="space-x-5">
-            <Button>All Tasks</Button>
-            <Button>To do</Button>
-            <Button>Doing</Button>
-            <Button>Done</Button>
+            <Button value="All Tasks" onClick={handleStatusFilter}>
+              All Tasks
+            </Button>
+            <Button value="To-Do" onClick={handleStatusFilter}>
+              To do
+            </Button>
+            <Button value="Doing" onClick={handleStatusFilter}>
+              Doing
+            </Button>
+            <Button value="Done" onClick={handleStatusFilter}>
+              Done
+            </Button>
           </div>
         </div>
         <div className="space-x-5">

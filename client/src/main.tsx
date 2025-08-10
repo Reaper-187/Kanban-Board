@@ -11,6 +11,7 @@ import { Dashboard } from "./Pages/Dashboard.tsx";
 import { Toaster } from "sonner";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Sidebar/app-sidebar.tsx";
+import { AddBtnProvider } from "./Context/AddBtnContext.tsx";
 
 const router = createBrowserRouter([
   // {
@@ -74,8 +75,10 @@ createRoot(document.getElementById("root")!).render(
     <SidebarProvider>
       <Toaster />
       <AppSidebar />
-      <SidebarTrigger />
-      <RouterProvider router={router} />
+      <AddBtnProvider>
+        <SidebarTrigger />
+        <RouterProvider router={router} />
+      </AddBtnProvider>
     </SidebarProvider>
   </StrictMode>
 );

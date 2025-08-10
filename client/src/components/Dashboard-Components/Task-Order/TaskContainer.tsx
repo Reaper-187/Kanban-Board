@@ -1,10 +1,10 @@
 import { Flag } from "lucide-react";
-import { StatusTypes } from "./StatusTypes";
+import { StatusTypesProps } from "./StatusTypes/StatusTypesProps";
 
 const statusData = [
   {
     Icon: Flag,
-    status: "To Do",
+    status: "To-Do",
     outcome: 0,
   },
   {
@@ -14,16 +14,26 @@ const statusData = [
   },
   {
     Icon: Flag,
-    status: "Doing",
+    status: "Done",
     outcome: 0,
   },
 ];
 
-export const TaskContainer = () => {
+interface TaskContainerProps {
+  filtertrigger: string;
+}
+
+export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
+  const filteredData =
+    filtertrigger === "All Tasks" || !filtertrigger
+      ? statusData
+      : statusData.filter((item) => item.status === filtertrigger);
+
   return (
-    <div className="flex justify-evenly">
-      {statusData.map((eachStatus) => (
-        <StatusTypes
+    <div className="flex">
+      {filteredData.map((eachStatus, index) => (
+        <StatusTypesProps
+          key={index}
           Icon={eachStatus.Icon}
           status={eachStatus.status}
           outcome={eachStatus.outcome}
