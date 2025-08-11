@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,15 +8,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowBigDown } from "lucide-react";
+import { useState } from "react";
 
 export function DropdownMenuImportance() {
-  const [position, setPosition] = React.useState("bottom");
+  const [position, setPosition] = useState("Importance");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          Importance <ArrowBigDown />
+          {position} <ArrowBigDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-50">

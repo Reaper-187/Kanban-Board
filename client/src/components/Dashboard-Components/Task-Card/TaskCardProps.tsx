@@ -6,6 +6,7 @@ type TaskProps = {
   topicDetail: string;
   importance: string;
   date: string;
+  initStatus: string;
 };
 
 export const TaskCardProps = ({
@@ -13,9 +14,10 @@ export const TaskCardProps = ({
   topicDetail,
   importance,
   date,
+  initStatus,
 }: TaskProps) => {
   return (
-    <Card className="p-3">
+    <Card className="p-3" key={initStatus}>
       <div className="flex justify-between">
         <h3>{topic}</h3>
         <span>. . .</span>
