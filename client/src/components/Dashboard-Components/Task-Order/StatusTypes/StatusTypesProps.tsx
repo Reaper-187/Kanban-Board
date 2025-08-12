@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { PlusIcon, type LucideIcon } from "lucide-react";
-// import { TaskCard } from "../../Task-Card/TaskCard";
 import { useToggle } from "@/Context/AddBtnContext";
 
 type StatusTypeProps = {
@@ -33,7 +32,6 @@ export const StatusTypesProps = ({
           className="cursor-pointer hover:bg-gray-200 rounded-full"
         />
       </Card>
-      {/* <TaskCard /> */}
     </div>
   );
 };
