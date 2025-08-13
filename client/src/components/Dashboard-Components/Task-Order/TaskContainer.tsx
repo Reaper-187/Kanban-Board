@@ -17,9 +17,7 @@ interface TaskContainerProps {
   filtertrigger: string;
 }
 
-type StatusCount = {
-  [key in "To-Do" | "Doing" | "Done"]: number;
-};
+// type StatusCount = Record<StatusType, number>;
 
 const initialTasks: Task[] = [
   {
@@ -52,30 +50,26 @@ type StatusDataEntry = {
   Icon: typeof Flag;
   status: StatusType;
   outcome: number;
+  tasks: Task[];
 };
 
 const statusData: StatusDataEntry[] = [
-  { Icon: Flag, status: "To-Do", outcome: 0 },
-  { Icon: Flag, status: "Doing", outcome: 0 },
-  { Icon: Flag, status: "Done", outcome: 0 },
+  { Icon: Flag, status: "To-Do", outcome: 0, tasks: [] },
+  { Icon: Flag, status: "Doing", outcome: 0, tasks: [] },
+  { Icon: Flag, status: "Done", outcome: 0, tasks: [] },
 ];
 
 export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
   const [allTasks, setAllTasks] = useState<Task[]>(initialTasks);
 
-  const result = initialTasks.reduce<StatusCount>(
-    (acc, task) => {
-      acc[task.status] = (acc[task.status] || 0) + 1;
-      return acc;
-    },
-    { "To-Do": 0, Doing: 0, Done: 0 }
-  );
-
   const updateOutcome = statusData.map((statusEntry) => {
-    const count = result[statusEntry.status] || 0;
+    const filterAllTasks = initialTasks.filter(
+      (status) => status.status === statusEntry.status
+    );
     return {
       ...statusEntry,
-      outcome: count,
+      outcome: filterAllTasks.length,
+      tasks: filterAllTasks,
     };
   });
 
@@ -92,6 +86,7 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
           Icon={eachStatus.Icon}
           status={eachStatus.status}
           outcome={eachStatus.outcome}
+          tasks={eachStatus.tasks}
         />
       ))}
     </div>
