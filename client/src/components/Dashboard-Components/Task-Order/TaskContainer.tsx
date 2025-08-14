@@ -33,7 +33,7 @@ const initialTasks: Task[] = [
     status: "Done",
     topic: "Monthly-Report",
     topicDetail: "Profit of the year Analytics",
-    importance: "Urgent",
+    importance: "High",
     date: "11.05.2025",
   },
   {
@@ -41,7 +41,7 @@ const initialTasks: Task[] = [
     status: "To-Do",
     topic: "Monthly-Report",
     topicDetail: "Profit of the year Analytics",
-    importance: "Urgent",
+    importance: "Lead",
     date: "11.05.2025",
   },
 ];

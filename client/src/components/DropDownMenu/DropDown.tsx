@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowBigDown } from "lucide-react";
+import { ArrowBigDown, DotIcon } from "lucide-react";
 import { useState } from "react";
 
 export function DropdownMenuImportance() {
@@ -31,6 +31,25 @@ export function DropdownMenuImportance() {
           <DropdownMenuRadioItem value="Internal">
             Internal
           </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+export function DropdownMenuCardOptions() {
+  const [position, setPosition] = useState("...");
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">{position}</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-fit">
+        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+          <DropdownMenuRadioItem value="Delete">Delete</DropdownMenuRadioItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioItem value="Edit">Edit</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
