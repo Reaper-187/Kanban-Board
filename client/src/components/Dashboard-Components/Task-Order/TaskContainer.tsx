@@ -17,8 +17,6 @@ interface TaskContainerProps {
   filtertrigger: string;
 }
 
-// type StatusCount = Record<StatusType, number>;
-
 const initialTasks: Task[] = [
   {
     id: "1",
@@ -79,7 +77,7 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
       : updateOutcome.filter((item) => item.status === filtertrigger);
 
   return (
-    <div className="flex">
+    <div className="flex flex-wrap gap-4">
       {filteredData.map((eachStatus, index) => (
         <StatusTypesProps
           key={index}

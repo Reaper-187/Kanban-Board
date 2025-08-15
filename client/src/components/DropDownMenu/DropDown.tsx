@@ -36,22 +36,3 @@ export function DropdownMenuImportance() {
     </DropdownMenu>
   );
 }
-
-export function DropdownMenuCardOptions() {
-  const [position, setPosition] = useState("...");
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline">{position}</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-fit">
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-          <DropdownMenuRadioItem value="Delete">Delete</DropdownMenuRadioItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioItem value="Edit">Edit</DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}

@@ -29,8 +29,11 @@ export const StatusTypesProps = ({
 }: StatusTypeProps) => {
   const { toggleOpen } = useToggle();
   return (
-    <div className="w-1/4 p-4 bg-gray-100 mx-2 rounded-sm">
-      <Card className="flex justify-between items-center flex-row px-3 py-3 mb-3">
+    <div
+      className="p-4 bg-gray-100 rounded-sm 
+                w-full sm:w-[48%] md:w-[31%] lg:w-1/4"
+    >
+      <Card className="flex justify-between items-center flex-row px-3 py-3 mb-3 transition-ease duration-300 hover:shadow-xl">
         <div className="flex justify-evenly items-center space-x-2">
           <p className="rounded-full bg-red-200 p-1 w-fit">
             <Icon size={13} />
