@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Flag } from "lucide-react";
 import { StatusTypesProps } from "./StatusTypes/StatusTypesProps";
-import { useState } from "react";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 
 type StatusType = "To-Do" | "Doing" | "Done";
 
@@ -61,7 +63,7 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
   const [allTasks, setAllTasks] = useState<Task[]>(initialTasks);
 
   const updateOutcome = statusData.map((statusEntry) => {
-    const filterAllTasks = initialTasks.filter(
+    const filterAllTasks = allTasks.filter(
       (status) => status.status === statusEntry.status
     );
     return {
@@ -76,17 +78,34 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
       ? updateOutcome
       : updateOutcome.filter((item) => item.status === filtertrigger);
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const taskId = active.id as string;
+    const newStatus = over.id as Task["status"];
+
+    setAllTasks(() =>
+      allTasks.map((task) =>
+        task.id === taskId ? { ...task, status: newStatus } : task
+      )
+    );
+  };
+
   return (
     <div className="flex flex-wrap gap-4">
-      {filteredData.map((eachStatus, index) => (
-        <StatusTypesProps
-          key={index}
-          Icon={eachStatus.Icon}
-          status={eachStatus.status}
-          outcome={eachStatus.outcome}
-          tasks={eachStatus.tasks}
-        />
-      ))}
+      <DndContext onDragEnd={handleDragEnd}>
+        {filteredData.map((eachStatus, index) => (
+          <StatusTypesProps
+            key={index}
+            Icon={eachStatus.Icon}
+            status={eachStatus.status}
+            outcome={eachStatus.outcome}
+            tasks={eachStatus.tasks}
+          />
+        ))}
+      </DndContext>
     </div>
   );
 };

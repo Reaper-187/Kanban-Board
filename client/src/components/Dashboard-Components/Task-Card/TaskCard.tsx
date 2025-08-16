@@ -1,7 +1,9 @@
 import { Card } from "@/components/ui/card";
+import { useSortable } from "@dnd-kit/sortable";
 import { Calendar } from "lucide-react";
 
 type TaskProps = {
+  id: string;
   topic: string;
   topicDetail: string;
   importance: string;
@@ -16,15 +18,6 @@ type Color = {
   Low: string;
 };
 
-// // Partian = jedes onj darf etwas davon sein und muss nicht mit allem gefüllt werden
-// const importanceColor: Partial<Color>[] = [
-//   { Urgent: "bg-red-600" },
-//   { Lead: "bg-orange-400" },
-//   { High: "bg-red-400" },
-//   { Medium: "bg-yellow-200" },
-//   { Low: "bg-gray-200" },
-// ];
-
 const importanceColor: Record<keyof Color, string> = {
   Urgent: "bg-red-600",
   Lead: "bg-orange-400",
@@ -34,26 +27,34 @@ const importanceColor: Record<keyof Color, string> = {
 };
 
 export const TaskCard = ({
+  id,
   topic,
   topicDetail,
   importance,
   date,
 }: TaskProps) => {
-  // const foundImportance = importanceColor.find((color) =>
-  //   Object.keys(color).includes(importance)
-  // ) as Partial<Color> | undefined;
-
-  // const colorPick = foundImportance?.[importance] ?? "";
-
   const colorPick = importanceColor[importance as keyof Color];
 
-  return (
-    // p-3 my-1 w-full
-    // max-w-sm sm:max-w-md lg:max-w-lg
-    // shadow-md hover:shadow-lg
-    // transition-shadow duration-200
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: id,
+    });
 
-    <Card className="p-3 my-1 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 transition-ease duration-300 hover:shadow-xl">
+  const style = {
+    transform: transform
+      ? `translate(${transform.x}px, ${transform.y}px)`
+      : undefined,
+    transition,
+  };
+  return (
+    <Card
+      id={id}
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      className="p-3 my-1 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 transition-ease duration-300 hover:shadow-xl"
+      style={style}
+    >
       <div className="flex justify-between items-start flex-wrap">
         <h3 className="text-base sm:text-lg md:text-xl font-semibold">
           {topic}

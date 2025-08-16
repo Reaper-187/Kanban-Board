@@ -2,6 +2,8 @@ import { Card } from "@/components/ui/card";
 import { PlusIcon, type LucideIcon } from "lucide-react";
 import { useToggle } from "@/Context/AddBtnContext";
 import { TaskCard } from "../../Task-Card/TaskCard";
+import { useDroppable } from "@dnd-kit/core";
+import { SortableContext } from "@dnd-kit/sortable";
 
 type StatusType = "To-Do" | "Doing" | "Done";
 
@@ -28,10 +30,17 @@ export const StatusTypesProps = ({
   tasks,
 }: StatusTypeProps) => {
   const { toggleOpen } = useToggle();
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: status,
+  });
+
   return (
     <div
-      className="p-4 bg-gray-100 rounded-sm 
-                w-full sm:w-[48%] md:w-[31%] lg:w-1/4"
+      ref={setNodeRef}
+      className={`p-4 bg-gray-100 rounded-sm 
+                w-full sm:w-[48%] md:w-[31%] lg:w-1/4
+                ${isOver ? "bg-blue-100" : "bg-gray-100"}`}
     >
       <Card className="flex justify-between items-center flex-row px-3 py-3 mb-3 transition-ease duration-300 hover:shadow-xl">
         <div className="flex justify-evenly items-center space-x-2">
@@ -49,9 +58,11 @@ export const StatusTypesProps = ({
           className="cursor-pointer hover:bg-gray-200 rounded-full"
         />
       </Card>
-      {tasks.map((task) => (
-        <TaskCard key={task.id} {...task} />
-      ))}
+      <SortableContext items={tasks.map((task) => task.id)}>
+        {tasks.map((task) => (
+          <TaskCard key={task.id} {...task} />
+        ))}
+      </SortableContext>
     </div>
   );
 };
