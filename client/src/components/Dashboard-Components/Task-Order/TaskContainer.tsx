@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Flag } from "lucide-react";
-import { StatusTypesProps } from "./StatusTypes/StatusTypesProps";
+import { StatusTypes } from "./StatusTypes/StatusTypes";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
 
 type StatusType = "To-Do" | "Doing" | "Done";
 
@@ -62,50 +61,58 @@ const statusData: StatusDataEntry[] = [
 export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
   const [allTasks, setAllTasks] = useState<Task[]>(initialTasks);
 
-  const updateOutcome = statusData.map((statusEntry) => {
-    const filterAllTasks = allTasks.filter(
-      (status) => status.status === statusEntry.status
-    );
-    return {
-      ...statusEntry,
-      outcome: filterAllTasks.length,
-      tasks: filterAllTasks,
-    };
-  });
-
   const filteredData =
     filtertrigger === "All Tasks" || !filtertrigger
-      ? updateOutcome
-      : updateOutcome.filter((item) => item.status === filtertrigger);
+      ? statusData
+      : statusData.filter((s) => s.status === filtertrigger);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    if (!over || active.id === over.id) return;
 
-    if (!over) return;
+    const activeTask = allTasks.find((t) => t.id === active.id);
+    const overTask = allTasks.find((t) => t.id === over.id);
 
-    const taskId = active.id as string;
-    const newStatus = over.id as Task["status"];
+    // Statuswechsel
+    if (!overTask && over?.data?.current?.type === "column") {
+      const newStatus = over.data.current.status as Task["status"];
+      setAllTasks((prev) =>
+        prev.map((task) =>
+          task.id === active.id ? { ...task, status: newStatus } : task
+        )
+      );
+      return;
+    }
 
-    setAllTasks(() =>
-      allTasks.map((task) =>
-        task.id === taskId ? { ...task, status: newStatus } : task
-      )
-    );
+    // Reihenfolge innerhalb einer Spalte
+    if (activeTask && overTask && activeTask.status === overTask.status) {
+      const oldIndex = allTasks.indexOf(activeTask);
+      const newIndex = allTasks.indexOf(overTask);
+      const updated = [...allTasks];
+      updated.splice(oldIndex, 1);
+      updated.splice(newIndex, 0, activeTask);
+      setAllTasks(updated);
+    }
   };
 
   return (
-    <div className="flex flex-wrap gap-4">
-      <DndContext onDragEnd={handleDragEnd}>
-        {filteredData.map((eachStatus, index) => (
-          <StatusTypesProps
-            key={index}
-            Icon={eachStatus.Icon}
-            status={eachStatus.status}
-            outcome={eachStatus.outcome}
-            tasks={eachStatus.tasks}
-          />
-        ))}
-      </DndContext>
-    </div>
+    <DndContext onDragEnd={handleDragEnd}>
+      <div className="flex gap-4 overflow-x-auto">
+        {filteredData.map((statusEntry) => {
+          const tasksForColumn = allTasks.filter(
+            (task) => task.status === statusEntry.status
+          );
+          return (
+            <StatusTypes
+              key={statusEntry.status}
+              Icon={statusEntry.Icon}
+              status={statusEntry.status}
+              outcome={tasksForColumn.length}
+              tasks={tasksForColumn}
+            />
+          );
+        })}
+      </div>
+    </DndContext>
   );
 };

@@ -18,12 +18,12 @@ type Task = {
 
 type StatusTypeProps = {
   Icon: LucideIcon;
-  status: string;
+  status: StatusType;
   outcome: number;
   tasks: Task[];
 };
 
-export const StatusTypesProps = ({
+export const StatusTypes = ({
   Icon,
   status,
   outcome,
@@ -33,14 +33,15 @@ export const StatusTypesProps = ({
 
   const { setNodeRef, isOver } = useDroppable({
     id: status,
+    data: { type: "column", status }, //debug
   });
+
+  console.log("Dropzone registered:", status);
 
   return (
     <div
-      ref={setNodeRef}
-      className={`p-4 bg-gray-100 rounded-sm 
-                w-full sm:w-[48%] md:w-[31%] lg:w-1/4
-                ${isOver ? "bg-blue-100" : "bg-gray-100"}`}
+      className="flex flex-col p-4 bg-gray-100 rounded-sm 
+                w-full sm:w-[48%] md:w-[31%] lg:w-1/4"
     >
       <Card className="flex justify-between items-center flex-row px-3 py-3 mb-3 transition-ease duration-300 hover:shadow-xl">
         <div className="flex justify-evenly items-center space-x-2">
@@ -58,11 +59,23 @@ export const StatusTypesProps = ({
           className="cursor-pointer hover:bg-gray-200 rounded-full"
         />
       </Card>
-      <SortableContext items={tasks.map((task) => task.id)}>
-        {tasks.map((task) => (
-          <TaskCard key={task.id} {...task} />
-        ))}
-      </SortableContext>
+      <div
+        ref={setNodeRef}
+        className={`flex flex-col gap-2 transition-colors duration-200 ${
+          isOver ? "bg-blue-100" : ""
+        }`}
+        style={{ willChange: "transform" }}
+      >
+        <SortableContext items={tasks.map((t) => t.id)}>
+          {tasks.length > 0 ? (
+            tasks.map((task) => (
+              <TaskCard key={task.id} {...task} status={status} />
+            ))
+          ) : (
+            <p>No tasks yet</p>
+          )}
+        </SortableContext>
+      </div>
     </div>
   );
 };
