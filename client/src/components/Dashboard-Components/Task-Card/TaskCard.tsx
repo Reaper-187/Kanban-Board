@@ -1,15 +1,11 @@
 import { Card } from "@/components/ui/card";
-import { useSortable } from "@dnd-kit/sortable";
 import { Calendar } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
+import type { Task } from "@/components/TEST/Types/types";
+import { useDraggable } from "@dnd-kit/core";
 
-type TaskProps = {
-  id: string;
-  topic: string;
-  topicDetail: string;
-  importance: string;
-  date: string;
-  status: string;
+type TaskCardProps = {
+  task: Task;
 };
 
 type Color = {
@@ -28,45 +24,36 @@ const importanceColor: Record<keyof Color, string> = {
   Low: "bg-gray-200",
 };
 
-export const TaskCard = ({
-  id,
-  topic,
-  topicDetail,
-  importance,
-  date,
-  status,
-}: TaskProps) => {
-  const colorPick = importanceColor[importance as keyof Color];
+export const TaskCard = ({ task }: TaskCardProps) => {
+  const colorPick = importanceColor[task.importance as keyof Color];
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: id,
-      data: { type: "task", status },
-    });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: task.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
   };
+
   return (
     <div
       ref={setNodeRef}
-      style={style}
       {...attributes}
       {...listeners}
       className="my-1 cursor-grab active:cursor-grabbing will-change-transform"
+      style={style}
     >
       <Card
-        id={id}
-        className="p-3 my-1 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 transition-transform duration-300 ease-in-out hover:shadow-xl"
+        id={task.id}
+        className="p-3 my-1 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
       >
         <div className="flex justify-between items-start flex-wrap">
           <h3 className="text-base sm:text-lg md:text-xl font-semibold">
-            {topic}
+            {task.topic}
           </h3>
           <span>alert-Btn</span>
         </div>
-        <p className="text-sm sm:text-base">{topicDetail}</p>
+        <p className="text-sm sm:text-base">{task.description}</p>
         <div className="flex flex-wrap gap-2">
           <span
             className={
@@ -75,12 +62,12 @@ export const TaskCard = ({
                 : ""
             }
           >
-            {importance}
+            {task.importance}
           </span>
         </div>
         <div className="flex items-center gap-1 text-xs sm:text-sm">
           <Calendar size={16} />
-          <span className="font-medium">Due Date: {date}</span>
+          <span className="font-medium">Due Date: {task.date}</span>
         </div>
       </Card>
     </div>
