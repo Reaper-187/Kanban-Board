@@ -2,14 +2,13 @@ import { useState } from "react";
 import { Flag } from "lucide-react";
 import { StatusTypes } from "./StatusTypes/StatusTypes";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import type { Column, Task } from "@/components/TEST/Types/types";
+import type { Column, Task } from "@/components/Types/types";
 
 const COLUMNS: Column[] = [
-  { id: "TODO", title: "To Do" },
-  { id: "IN_PROGRESS", title: "In Progress" },
-  { id: "DONE", title: "Done" },
+  { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
+  { id: "IN_PROGRESS", title: "In Progress", outcome: 0, Icon: Flag },
+  { id: "DONE", title: "Done", outcome: 0, Icon: Flag },
 ];
-
 interface TaskContainerProps {
   filtertrigger: string;
 }
@@ -39,28 +38,39 @@ const INITIAL_TASKS: Task[] = [
     importance: "Lead",
     date: "11.05.2025",
   },
-];
-
-type StatusDataEntry = {
-  Icon: typeof Flag;
-  status: Column;
-  outcome: number;
-  tasks: Task[];
-};
-
-const statusData: StatusDataEntry[] = [
-  { Icon: Flag, status: "TODO", outcome: 0, tasks: [] },
-  { Icon: Flag, status: "Doing", outcome: 0, tasks: [] },
-  { Icon: Flag, status: "Done", outcome: 0, tasks: [] },
+  {
+    id: "4",
+    topic: "Monthly-Report",
+    description: "Profit of the year Analytics",
+    importance: "Urgent",
+    status: "TODO",
+    date: "11.05.2025",
+  },
+  {
+    id: "5",
+    status: "DONE",
+    topic: "Monthly-Report",
+    description: "Profit of the year Analytics",
+    importance: "High",
+    date: "11.05.2025",
+  },
+  {
+    id: "6",
+    status: "IN_PROGRESS",
+    topic: "Monthly-Report",
+    description: "Profit of the year Analytics",
+    importance: "Lead",
+    date: "11.05.2025",
+  },
 ];
 
 export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
 
-  // const filteredData =
-  //   filtertrigger === "All Tasks" || !filtertrigger
-  //     ? statusData
-  //     : statusData.filter((s) => s.status === filtertrigger);
+  const filteredData =
+    filtertrigger === "All Tasks" || !filtertrigger
+      ? COLUMNS
+      : COLUMNS.filter((s) => s.id === filtertrigger);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -82,9 +92,9 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
   };
 
   return (
-    <div className="flex gap-4 overflow-x-auto">
+    <div className="flex gap-4 overflow-x-auto mx-auto">
       <DndContext onDragEnd={handleDragEnd}>
-        {COLUMNS.map((column) => {
+        {filteredData.map((column) => {
           return (
             <StatusTypes
               key={column.id}

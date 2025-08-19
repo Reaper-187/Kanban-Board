@@ -22,13 +22,13 @@ export const DashboardNav = ({ filter }: DashboardNavProps) => {
             <Button value="All Tasks" onClick={handleStatusFilter}>
               All Tasks
             </Button>
-            <Button value="To-Do" onClick={handleStatusFilter}>
+            <Button value="TODO" onClick={handleStatusFilter}>
               To do
             </Button>
-            <Button value="Doing" onClick={handleStatusFilter}>
+            <Button value="IN_PROGRESS" onClick={handleStatusFilter}>
               Doing
             </Button>
-            <Button value="Done" onClick={handleStatusFilter}>
+            <Button value="DONE" onClick={handleStatusFilter}>
               Done
             </Button>
           </div>

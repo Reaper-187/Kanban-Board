@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
-import type { Task } from "@/components/TEST/Types/types";
+import type { Task } from "@/components/Types/types";
 import { useDraggable } from "@dnd-kit/core";
 
 type TaskCardProps = {
@@ -40,12 +40,12 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className="my-1 cursor-grab active:cursor-grabbing will-change-transform"
+      className="my-1 cursor-grab active:cursor-grabbing"
       style={style}
     >
       <Card
         id={task.id}
-        className="p-3 my-1 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
+        className="p-3 my-1 transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
       >
         <div className="flex justify-between items-start flex-wrap">
           <h3 className="text-base sm:text-lg md:text-xl font-semibold">

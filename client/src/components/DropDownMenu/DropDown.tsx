@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowBigDown, DotIcon } from "lucide-react";
+import { ArrowBigDown } from "lucide-react";
 import { useState } from "react";
 
 export function DropdownMenuImportance() {

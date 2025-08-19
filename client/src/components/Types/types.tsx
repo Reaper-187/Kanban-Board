@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 export type Column = {
   id: string;
   title: string;
-  outcome: string;
+  outcome: number;
   Icon: LucideIcon;
 };
 
