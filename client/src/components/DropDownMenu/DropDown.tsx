@@ -2,12 +2,14 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowBigDown } from "lucide-react";
+import { ArrowBigDown, ArrowLeftRight } from "lucide-react";
 import { useState } from "react";
 
 export function DropdownMenuImportance() {
@@ -36,3 +38,36 @@ export function DropdownMenuImportance() {
     </DropdownMenu>
   );
 }
+
+type DropdownSwitchStatusProps = {
+  value: string;
+  onChange: (newStatus: string) => void;
+};
+
+export const DropdownSwitchStatus = ({
+  value,
+  onChange,
+}: DropdownSwitchStatusProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" className="text-xs">
+          <ArrowLeftRight />
+          Switch
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className="w-fit">
+        <DropdownMenuRadioGroup value={value} onValueChange={onChange}>
+          <DropdownMenuRadioItem value="TODO">To Do</DropdownMenuRadioItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioItem value="IN_PROGRESS">
+            In Progress
+          </DropdownMenuRadioItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioItem value="DONE">Done</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};

@@ -3,9 +3,11 @@ import { Calendar } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
 import type { Task } from "@/components/Types/types";
 import { useDraggable } from "@dnd-kit/core";
+import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
 
 type TaskCardProps = {
   task: Task;
+  onStatusChange: (id: string, newStatus: string) => void;
 };
 
 type Color = {
@@ -24,7 +26,7 @@ const importanceColor: Record<keyof Color, string> = {
   Low: "bg-gray-200",
 };
 
-export const TaskCard = ({ task }: TaskCardProps) => {
+export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
   const colorPick = importanceColor[task.importance as keyof Color];
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -51,7 +53,10 @@ export const TaskCard = ({ task }: TaskCardProps) => {
           <h3 className="text-base sm:text-lg md:text-xl font-semibold">
             {task.topic}
           </h3>
-          <span>alert-Btn</span>
+          <DropdownSwitchStatus
+            value={task.status}
+            onChange={(newStatus) => onStatusChange(task.id, newStatus)}
+          />
         </div>
         <p className="text-sm sm:text-base">{task.description}</p>
         <div className="flex flex-wrap gap-2">
