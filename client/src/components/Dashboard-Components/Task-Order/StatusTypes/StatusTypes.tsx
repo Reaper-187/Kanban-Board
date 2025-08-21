@@ -4,7 +4,6 @@ import { useToggle } from "@/Context/AddBtnContext";
 import { TaskCard } from "../../Task-Card/TaskCard";
 import { useDroppable } from "@dnd-kit/core";
 import type { Column as ColumnType, Task } from "@/components/Types/types";
-import { useState } from "react";
 
 type ColumnProps = {
   column: ColumnType;
@@ -17,8 +16,6 @@ export const StatusTypes = ({ column, tasks }: ColumnProps) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
   });
-
-  const [statusChange, setStatusChange] = useState<string>(column.id);
 
   return (
     <section className="min-w-80 w-80 shrink-0 flex flex-col">
@@ -43,12 +40,8 @@ export const StatusTypes = ({ column, tasks }: ColumnProps) => {
         <div ref={setNodeRef} className="min-h-32 min-w-full">
           <div className="flex flex-col gap-2">
             {tasks.map((task) => (
-              <div key={task.id} id={statusChange}>
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  statusChange={statusChange}
-                />
+              <div key={task.id}>
+                <TaskCard key={task.id} task={task} />
               </div>
             ))}
           </div>

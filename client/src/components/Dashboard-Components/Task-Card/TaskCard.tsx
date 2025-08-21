@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Calendar } from "lucide-react";
+import { Calendar, Grip } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
 import type { Task } from "@/components/Types/types";
 import { useDraggable } from "@dnd-kit/core";
@@ -7,7 +7,6 @@ import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
 
 type TaskCardProps = {
   task: Task;
-  onStatusChange: (id: string, newStatus: string) => void;
 };
 
 type Color = {
@@ -26,7 +25,7 @@ const importanceColor: Record<keyof Color, string> = {
   Low: "bg-gray-200",
 };
 
-export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
+export const TaskCard = ({ task }: TaskCardProps) => {
   const colorPick = importanceColor[task.importance as keyof Color];
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -38,27 +37,32 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      className="my-1 cursor-grab active:cursor-grabbing"
-      style={style}
-    >
+    <div ref={setNodeRef} style={style} className="my-1">
       <Card
         id={task.id}
+        key={task.status}
         className="p-3 my-1 transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
       >
-        <div className="flex justify-between items-start flex-wrap">
-          <h3 className="text-base sm:text-lg md:text-xl font-semibold">
-            {task.topic}
-          </h3>
-          <DropdownSwitchStatus
-            value={task.status}
-            onChange={(newStatus) => onStatusChange(task.id, newStatus)}
-          />
+        <div className="">
+          <div
+            {...listeners}
+            {...attributes}
+            className="flex justify-center cursor-grab active:cursor-grabbing"
+          >
+            <Grip />
+          </div>
+          <div className="flex justify-between items-start flex-wrap">
+            <h3 className="text-base sm:text-lg md:text-xl font-semibold">
+              {task.topic}
+            </h3>
+            <DropdownSwitchStatus
+              value={task.status}
+              onChange={(newStatus) => {
+                console.log("Neuer Status für Task:", task.id, "->", newStatus);
+              }}
+            />
+          </div>
         </div>
-        <p className="text-sm sm:text-base">{task.description}</p>
         <div className="flex flex-wrap gap-2">
           <span
             className={
