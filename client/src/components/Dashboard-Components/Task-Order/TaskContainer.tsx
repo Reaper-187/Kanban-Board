@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { Flag } from "lucide-react";
 import { StatusTypes } from "./StatusTypes/StatusTypes";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
 import type { Column, Task } from "@/components/Types/types";
+import { TaskCard } from "../Task-Card/TaskCard";
 
 const COLUMNS: Column[] = [
   { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
@@ -99,9 +105,17 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
     );
   };
 
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  function handleDragStart(event: DragStartEvent) {
+    const taskId = event.active.id;
+    const task = tasks.find((t) => t.id === taskId) || null;
+    setActiveTask(task);
+  }
+
   return (
-    <div className="flex gap-4 overflow-x-auto mx-auto">
-      <DndContext onDragEnd={handleDragEnd}>
+    <div className="flex gap-4 mx-auto">
+      <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         {filteredData.map((column) => {
           return (
             <StatusTypes
@@ -112,6 +126,12 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
             />
           );
         })}
+
+        <DragOverlay>
+          {activeTask ? (
+            <TaskCard task={activeTask} onStatusChange={handleStatusChange} />
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </div>
   );

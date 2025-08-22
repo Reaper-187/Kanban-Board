@@ -28,16 +28,21 @@ const importanceColor: Record<keyof Color, string> = {
 export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
   const colorPick = importanceColor[task.importance as keyof Color];
 
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: task.id,
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: task.id,
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="my-1">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`my-1 ${isDragging ? "opacity-0" : ""}`}
+    >
       <Card
         id={task.id}
         key={task.status}
