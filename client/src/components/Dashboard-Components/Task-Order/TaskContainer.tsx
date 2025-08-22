@@ -91,6 +91,14 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
     );
   };
 
+  const handleStatusChange = (id: string, newStatus: string) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, status: newStatus } : task
+      )
+    );
+  };
+
   return (
     <div className="flex gap-4 overflow-x-auto mx-auto">
       <DndContext onDragEnd={handleDragEnd}>
@@ -100,6 +108,7 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
               key={column.id}
               column={column}
               tasks={tasks.filter((task) => task.status === column.id)} // in Columns fetchen und filtern nicht hier wegen Performance (später)
+              onStatusChange={handleStatusChange}
             />
           );
         })}

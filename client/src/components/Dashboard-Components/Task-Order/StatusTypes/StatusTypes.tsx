@@ -8,9 +8,9 @@ import type { Column as ColumnType, Task } from "@/components/Types/types";
 type ColumnProps = {
   column: ColumnType;
   tasks: Task[];
+  onStatusChange: (id: string, newStatus: string) => void;
 };
-
-export const StatusTypes = ({ column, tasks }: ColumnProps) => {
+export const StatusTypes = ({ column, tasks, onStatusChange }: ColumnProps) => {
   const { toggleOpen } = useToggle();
 
   const { setNodeRef } = useDroppable({
@@ -37,11 +37,15 @@ export const StatusTypes = ({ column, tasks }: ColumnProps) => {
             <PlusIcon size={15} />
           </button>
         </div>
-        <div ref={setNodeRef} className="min-h-32 min-w-full">
-          <div className="flex flex-col gap-2">
+        <div ref={setNodeRef} className="min-h-30 min-w-full">
+          <div className="flex flex-col gap-2 ">
             {tasks.map((task) => (
-              <div key={task.id}>
-                <TaskCard key={task.id} task={task} />
+              <div key={task.id} className="">
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onStatusChange={onStatusChange}
+                />
               </div>
             ))}
           </div>

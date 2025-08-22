@@ -7,8 +7,8 @@ import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
 
 type TaskCardProps = {
   task: Task;
+  onStatusChange: (id: string, newStatus: string) => void;
 };
-
 type Color = {
   Urgent: string;
   Lead: string;
@@ -25,7 +25,7 @@ const importanceColor: Record<keyof Color, string> = {
   Low: "bg-gray-200",
 };
 
-export const TaskCard = ({ task }: TaskCardProps) => {
+export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
   const colorPick = importanceColor[task.importance as keyof Color];
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -41,13 +41,13 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       <Card
         id={task.id}
         key={task.status}
-        className="p-3 my-1 transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
+        className="p-3 my-1 space-y-3 transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
       >
         <div className="">
           <div
             {...listeners}
             {...attributes}
-            className="flex justify-center cursor-grab active:cursor-grabbing"
+            className="hidden justify-center cursor-grab active:cursor-grabbing md:flex"
           >
             <Grip />
           </div>
@@ -55,12 +55,12 @@ export const TaskCard = ({ task }: TaskCardProps) => {
             <h3 className="text-base sm:text-lg md:text-xl font-semibold">
               {task.topic}
             </h3>
-            <DropdownSwitchStatus
-              value={task.status}
-              onChange={(newStatus) => {
-                console.log("Neuer Status für Task:", task.id, "->", newStatus);
-              }}
-            />
+            <span className="md:hidden">
+              <DropdownSwitchStatus
+                value={task.status}
+                onChange={(newStatus) => onStatusChange(task.id, newStatus)}
+              />
+            </span>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
