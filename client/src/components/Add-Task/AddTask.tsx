@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useToggle } from "@/Context/AddBtnContext";
 import { motion } from "framer-motion";
 import { Card, CardHeader } from "../ui/card";
@@ -7,9 +8,24 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Calendar24 } from "../CalendarComp/DueDateCalendar";
 import { DropdownMenuImportance } from "../DropDownMenu/DropDown";
+import type { Task } from "../Types/types";
+import { INITIAL_TASKS } from "../Mock/mockTasks";
 
 export const AddTask = () => {
-  const { isOpen, toggleOpen } = useToggle();
+  const { isOpen, closeModal, currentTaskId } = useToggle();
+
+  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+
+  useEffect(() => {
+    if (currentTaskId) {
+      const found = tasks.find((task) => task.id === currentTaskId);
+      setTaskToEdit(found ?? null);
+    } else {
+      setTaskToEdit(null);
+    }
+  }, [currentTaskId, tasks]);
 
   return (
     <>
@@ -30,10 +46,10 @@ export const AddTask = () => {
               <CardHeader className="mb-5 p-0">
                 <div className="flex justify-between items-center">
                   <h1 className="text-xl font-semibold md:text-2xl lg:text-3xl">
-                    Create To-Do
+                    {currentTaskId ? "Edit" : "Create"} To-Do
                   </h1>
                   <span
-                    onClick={toggleOpen}
+                    onClick={closeModal}
                     className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors"
                   >
                     <X size={24} />
@@ -44,11 +60,17 @@ export const AddTask = () => {
               <div className="flex-1 space-y-4">
                 <div className="space-y-2">
                   <Label>Header:</Label>
-                  <Input placeholder="Topic" />
+                  <Input
+                    placeholder="Header"
+                    value={currentTaskId ? taskToEdit?.topic : ""}
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label>Topic:</Label>
-                  <Input placeholder="Nachname" />
+                  <Label>description</Label>
+                  <Input
+                    placeholder="description"
+                    value={currentTaskId ? taskToEdit?.description : ""}
+                  />
                 </div>
                 <div className="space-y-2">
                   <DropdownMenuImportance />

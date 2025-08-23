@@ -1,19 +1,32 @@
 import { useState, createContext, type ReactNode, useContext } from "react";
 
-type AddTaskModal = {
+export type AddTaskModal = {
   isOpen: boolean;
-  toggleOpen: () => void;
+  currentTaskId: string | null;
+  openModal: (id: string | null) => void;
+  closeModal: () => void;
 };
 
 export const AddBtnContext = createContext<AddTaskModal | undefined>(undefined);
 
 export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
 
-  const toggleOpen = () => setIsOpen((prev) => !prev);
+  const openModal = (id: string | null) => {
+    setCurrentTaskId(id);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setCurrentTaskId(null);
+    setIsOpen(false);
+  };
 
   return (
-    <AddBtnContext.Provider value={{ isOpen, toggleOpen }}>
+    <AddBtnContext.Provider
+      value={{ isOpen, currentTaskId, openModal, closeModal }}
+    >
       {children}
     </AddBtnContext.Provider>
   );

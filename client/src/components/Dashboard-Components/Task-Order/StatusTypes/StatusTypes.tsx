@@ -11,7 +11,7 @@ type ColumnProps = {
   onStatusChange: (id: string, newStatus: string) => void;
 };
 export const StatusTypes = ({ column, tasks, onStatusChange }: ColumnProps) => {
-  const { toggleOpen } = useToggle();
+  const { openModal } = useToggle();
 
   const { setNodeRef } = useDroppable({
     id: column.id,
@@ -30,7 +30,7 @@ export const StatusTypes = ({ column, tasks, onStatusChange }: ColumnProps) => {
           </span>
           <button
             type="button"
-            onClick={toggleOpen}
+            onClick={() => openModal(null)}
             className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
             aria-label="Add task"
           >

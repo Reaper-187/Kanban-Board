@@ -9,6 +9,7 @@ import {
 } from "@dnd-kit/core";
 import type { Column, Task } from "@/components/Types/types";
 import { TaskCard } from "../Task-Card/TaskCard";
+import { INITIAL_TASKS } from "@/components/Mock/mockTasks";
 
 const COLUMNS: Column[] = [
   { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
@@ -18,57 +19,6 @@ const COLUMNS: Column[] = [
 interface TaskContainerProps {
   filtertrigger: string;
 }
-
-const INITIAL_TASKS: Task[] = [
-  {
-    id: "1",
-    topic: "Monthly-Report",
-    description: "Profit of the year Analytics",
-    importance: "Urgent",
-    status: "TODO",
-    date: "11.05.2025",
-  },
-  {
-    id: "2",
-    status: "DONE",
-    topic: "Monthly-Report",
-    description: "Profit of the year Analytics",
-    importance: "High",
-    date: "11.05.2025",
-  },
-  {
-    id: "3",
-    status: "IN_PROGRESS",
-    topic: "Monthly-Report",
-    description: "Profit of the year Analytics",
-    importance: "Lead",
-    date: "11.05.2025",
-  },
-  {
-    id: "4",
-    topic: "Monthly-Report",
-    description: "Profit of the year Analytics",
-    importance: "Urgent",
-    status: "TODO",
-    date: "11.05.2025",
-  },
-  {
-    id: "5",
-    status: "DONE",
-    topic: "Monthly-Report",
-    description: "Profit of the year Analytics",
-    importance: "High",
-    date: "11.05.2025",
-  },
-  {
-    id: "6",
-    status: "IN_PROGRESS",
-    topic: "Monthly-Report",
-    description: "Profit of the year Analytics",
-    importance: "Lead",
-    date: "11.05.2025",
-  },
-];
 
 export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);

@@ -1,9 +1,10 @@
 import { Card } from "@/components/ui/card";
-import { Calendar, Grip } from "lucide-react";
+import { Calendar, Grip, Pen } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
 import type { Task } from "@/components/Types/types";
 import { useDraggable } from "@dnd-kit/core";
 import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
+import { useToggle } from "@/Context/AddBtnContext";
 
 type TaskCardProps = {
   task: Task;
@@ -26,6 +27,8 @@ const importanceColor: Record<keyof Color, string> = {
 };
 
 export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
+  const { openModal } = useToggle();
+
   const colorPick = importanceColor[task.importance as keyof Color];
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -46,9 +49,9 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
       <Card
         id={task.id}
         key={task.status}
-        className="p-3 my-1 space-y-3 transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
+        className="p-3  transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
       >
-        <div className="">
+        <div className="flex justify-between">
           <div
             {...listeners}
             {...attributes}
@@ -56,18 +59,27 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           >
             <Grip />
           </div>
-          <div className="flex justify-between items-start flex-wrap">
-            <h3 className="text-base sm:text-lg md:text-xl font-semibold">
-              {task.topic}
-            </h3>
-            <span className="md:hidden">
-              <DropdownSwitchStatus
-                value={task.status}
-                onChange={(newStatus) => onStatusChange(task.id, newStatus)}
-              />
-            </span>
-          </div>
+          <button
+            type="button"
+            onClick={() => openModal(task.id)}
+            className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
+          >
+            <Pen size={15} className="cursor-pointer" />
+          </button>
         </div>
+
+        <div className="flex justify-between items-start flex-wrap">
+          <h3 className="text-base sm:text-lg md:text-xl font-semibold">
+            {task.topic}
+          </h3>
+          <span className="md:hidden">
+            <DropdownSwitchStatus
+              value={task.status}
+              onChange={(newStatus) => onStatusChange(task.id, newStatus)}
+            />
+          </span>
+        </div>
+
         <div className="flex flex-wrap gap-2">
           <span
             className={
