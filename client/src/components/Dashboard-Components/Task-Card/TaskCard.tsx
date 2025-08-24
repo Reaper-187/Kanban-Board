@@ -93,7 +93,10 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
         </div>
         <div className="flex items-center gap-1 text-xs sm:text-sm">
           <Calendar size={16} />
-          <span className="font-medium">Due Date: {task.date}</span>
+          <span className="font-medium">
+            Due Date{" "}
+            {task.date ? new Date(task.date).toLocaleDateString("de-DE") : ""}
+          </span>
         </div>
       </Card>
     </div>

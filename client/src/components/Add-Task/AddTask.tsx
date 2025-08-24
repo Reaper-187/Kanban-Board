@@ -62,21 +62,23 @@ export const AddTask = () => {
                   <Label>Header:</Label>
                   <Input
                     placeholder="Header"
-                    value={currentTaskId ? taskToEdit?.topic : ""}
+                    defaultValue={taskToEdit?.topic ?? ""}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label>description</Label>
                   <Input
                     placeholder="description"
-                    value={currentTaskId ? taskToEdit?.description : ""}
+                    defaultValue={taskToEdit?.description ?? ""}
                   />
                 </div>
                 <div className="space-y-2">
-                  <DropdownMenuImportance />
+                  <DropdownMenuImportance
+                    value={taskToEdit?.importance ?? ""}
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Calendar24 />
+                  <Calendar24 dateString={taskToEdit?.date} />
                 </div>
               </div>
 

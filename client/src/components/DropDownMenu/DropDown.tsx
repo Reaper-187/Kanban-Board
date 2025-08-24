@@ -10,14 +10,18 @@ import {
 import { ArrowBigDown, ArrowLeftRight } from "lucide-react";
 import { useState } from "react";
 
-export function DropdownMenuImportance() {
+type DropdownImportanceProps = {
+  value: string;
+};
+
+export function DropdownMenuImportance({ value }: DropdownImportanceProps) {
   const [position, setPosition] = useState("Importance");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {position} <ArrowBigDown />
+          {value ? value : position} <ArrowBigDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-50">

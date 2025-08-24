@@ -13,5 +13,5 @@ export type Task = {
   description: string;
   status: string;
   importance: string;
-  date: string;
+  date: Date | undefined;
 };

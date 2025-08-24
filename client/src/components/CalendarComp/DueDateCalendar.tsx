@@ -11,9 +11,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function Calendar24() {
+type DateAndTimeProps = {
+  dateString: Date | undefined;
+};
+
+export function Calendar24({ dateString }: DateAndTimeProps) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(undefined);
+
+  React.useEffect(() => {
+    if (dateString) {
+      setDate(new Date(dateString));
+    }
+  }, [dateString]);
 
   return (
     <div className="flex gap-4">
