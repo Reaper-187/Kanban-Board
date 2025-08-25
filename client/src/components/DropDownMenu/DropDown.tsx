@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowBigDown, ArrowLeftRight } from "lucide-react";
+import { ArrowBigDown, ArrowBigUp, ArrowLeftRight } from "lucide-react";
 import { useState } from "react";
 
 type DropdownImportanceProps = {
@@ -68,6 +68,83 @@ export const DropdownSwitchStatus = ({
           </DropdownMenuRadioItem>
           <DropdownMenuSeparator />
           <DropdownMenuRadioItem value="DONE">Done</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+type DropdownSortProps = {
+  value: string;
+  onChangeSort: (sortStatusBy: string) => void;
+};
+
+export const DropdownSorting = ({ value, onChangeSort }: DropdownSortProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="text-xs">Sort by</Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className="w-fit">
+        <DropdownMenuRadioGroup value={value} onValueChange={onChangeSort}>
+          <DropdownMenuRadioItem value="none">
+            Default order
+          </DropdownMenuRadioItem>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuRadioItem value="importanceDown">
+            Importance <ArrowBigDown />
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="importanceUp">
+            Importance <ArrowBigUp />
+          </DropdownMenuRadioItem>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuRadioItem value="dateDown">
+            Due Date <ArrowBigDown />
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="dateUp">
+            Due Date <ArrowBigUp />
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+type DropdownFilterProps = {
+  value: string;
+  onChange: (newStatus: string) => void;
+};
+
+export const DropdownFilterStatus = ({
+  value,
+  onChange,
+}: DropdownFilterProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="text-xs">Filter</Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className="w-fit">
+        <DropdownMenuRadioGroup value={value} onValueChange={onChange}>
+          <DropdownMenuRadioItem value="defaulteVal">
+            Remove Filter
+          </DropdownMenuRadioItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioItem value="High">High</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="Medium">Medium</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="Low">Low</DropdownMenuRadioItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioItem value="Urgent">Urgent</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="Lead">Lead</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="Internal">
+            Internal
+          </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

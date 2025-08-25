@@ -12,6 +12,15 @@ export type Task = {
   topic: string;
   description: string;
   status: string;
-  importance: string;
+  importance: Importance;
   date: Date | undefined;
 };
+
+export type Importance = "Urgent" | "Lead" | "High" | "Normal" | "Low";
+
+export type SortOrder =
+  | "none"
+  | "importanceAsc"
+  | "importanceDesc"
+  | "dueDateAsc"
+  | "dueDateDesc";

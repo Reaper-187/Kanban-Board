@@ -7,7 +7,7 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
-import type { Column, Task } from "@/components/Types/types";
+import type { Column, SortOrder, Task } from "@/components/Types/types";
 import { TaskCard } from "../Task-Card/TaskCard";
 import { INITIAL_TASKS } from "@/components/Mock/mockTasks";
 
@@ -16,8 +16,10 @@ const COLUMNS: Column[] = [
   { id: "IN_PROGRESS", title: "In Progress", outcome: 0, Icon: Flag },
   { id: "DONE", title: "Done", outcome: 0, Icon: Flag },
 ];
+
 interface TaskContainerProps {
   filtertrigger: string;
+  sortOrder: SortOrder;
 }
 
 export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
