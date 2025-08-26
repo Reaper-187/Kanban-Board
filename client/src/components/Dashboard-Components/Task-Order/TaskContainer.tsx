@@ -59,11 +59,11 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
-  function handleDragStart(event: DragStartEvent) {
+  const handleDragStart = (event: DragStartEvent) => {
     const taskId = event.active.id;
     const task = tasks.find((t) => t.id === taskId) || null;
     setActiveTask(task);
-  }
+  };
 
   return (
     <div className="flex gap-4 mx-auto">
