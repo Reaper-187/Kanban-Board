@@ -1,7 +1,7 @@
 import type { Importance, Task } from "@/components/Types/types";
 
-type SortOptions = {
-  status?: string; // optionaler Status-Filter
+export type SortOptions = {
+  status?: string[]; // optionaler Status-Filter
   importance?: string[]; // ["Urgent", "High"]
   importanceOrder?: "asc" | "desc";
   dateOrder?: "asc" | "desc";
@@ -18,16 +18,12 @@ export const IMPORTANCE_ORDER: Importance[] = [
 
 // wenn ich utilitys schreibe kann alles ifs sein....
 
+// hier geht es nur um die tasks selbst nicht columns
 export const processTasks = (tasks: Task[], options: SortOptions): Task[] => {
-  //   Filtern nach Status (nur offene Tasks)
   let sortedTasks = [...tasks];
 
-  if (options.status && options.status !== "All Tasks") {
-    sortedTasks = sortedTasks.filter((task) => task.status === options.status);
-  }
-
-  // Filtern nach Importance (nur Urgent und High)
-  if (options.importance && !options.importance.includes("all")) {
+  // Filtern nach Importance
+  if (options.importance && !options.importance.includes("none")) {
     tasks = tasks.filter((task) =>
       options.importance?.includes(task.importance)
     );

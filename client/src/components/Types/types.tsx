@@ -20,7 +20,7 @@ export type Importance = "Urgent" | "Lead" | "High" | "Normal" | "Low";
 
 export type SortOrder =
   | "none"
-  | "importanceAsc"
-  | "importanceDesc"
+  | "importanceUp"
+  | "importanceDown"
   | "dueDateAsc"
   | "dueDateDesc";

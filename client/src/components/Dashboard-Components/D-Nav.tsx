@@ -1,7 +1,4 @@
-import {
-  DropdownFilterStatus,
-  DropdownSorting,
-} from "../DropDownMenu/DropDown";
+import { DropdownSorting } from "../DropDownMenu/DropDown";
 import type { SortOrder } from "../Types/types";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";

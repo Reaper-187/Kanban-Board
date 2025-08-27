@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Flag } from "lucide-react";
 import { StatusTypes } from "./StatusTypes/StatusTypes";
 import {
@@ -10,8 +10,9 @@ import {
 import type { Column, SortOrder, Task } from "@/components/Types/types";
 import { TaskCard } from "../Task-Card/TaskCard";
 import { INITIAL_TASKS } from "@/components/Mock/mockTasks";
+import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
 
-const COLUMNS: Column[] = [
+export const COLUMNS: Column[] = [
   { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
   { id: "IN_PROGRESS", title: "In Progress", outcome: 0, Icon: Flag },
   { id: "DONE", title: "Done", outcome: 0, Icon: Flag },
@@ -22,13 +23,37 @@ interface TaskContainerProps {
   sortOrder: SortOrder;
 }
 
-export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
+export const TaskContainer = ({
+  filtertrigger,
+  sortOrder,
+}: TaskContainerProps) => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [sortOptions, setSortOptions] = useState<SortOptions>({
+    status: [],
+    importanceOrder: undefined,
+    dateOrder: undefined,
+    importance: [],
+  });
 
-  const filteredData =
-    filtertrigger === "All Tasks" || !filtertrigger
-      ? COLUMNS
-      : COLUMNS.filter((s) => s.id === filtertrigger);
+  const filteredData = useMemo(() => {
+    let processed = processTasks(tasks, sortOptions);
+
+    return processed;
+  }, [tasks, sortOptions, filtertrigger]);
+
+  useEffect(() => {
+    if (sortOrder === "importanceDown")
+      setSortOptions((prev) => ({ ...prev, importanceOrder: "desc" }));
+    else if (sortOrder === "importanceUp")
+      setSortOptions((prev) => ({ ...prev, importanceOrder: "asc" }));
+  }, [sortOrder]);
+
+  const visibleColumns = useMemo(() => {
+    if (filtertrigger && filtertrigger !== "All Tasks") {
+      return COLUMNS.filter((col) => col.id === filtertrigger);
+    }
+    return COLUMNS;
+  }, [filtertrigger]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -68,16 +93,14 @@ export const TaskContainer = ({ filtertrigger }: TaskContainerProps) => {
   return (
     <div className="flex gap-4 mx-auto">
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-        {filteredData.map((column) => {
-          return (
-            <StatusTypes
-              key={column.id}
-              column={column}
-              tasks={tasks.filter((task) => task.status === column.id)} // in Columns fetchen und filtern nicht hier wegen Performance (später)
-              onStatusChange={handleStatusChange}
-            />
-          );
-        })}
+        {visibleColumns.map((column) => (
+          <StatusTypes
+            key={column.id}
+            column={column}
+            tasks={filteredData.filter((task) => task.status === column.id)}
+            onStatusChange={handleStatusChange}
+          />
+        ))}
 
         <DragOverlay>
           {activeTask ? (

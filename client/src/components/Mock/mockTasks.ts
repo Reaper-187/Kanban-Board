@@ -14,7 +14,7 @@ export const INITIAL_TASKS: Task[] = [
     status: "DONE",
     topic: "Monthly-Report",
     description: "Profit of the year Analytics",
-    importance: "High",
+    importance: "Low",
     date: new Date("2025-05-11"),
   },
   {
