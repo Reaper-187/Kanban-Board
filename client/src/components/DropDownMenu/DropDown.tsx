@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowBigDown, ArrowBigUp, ArrowLeftRight } from "lucide-react";
 import { useState } from "react";
+import type { ImportanceFilter } from "../Types/types";
 
 type DropdownImportanceProps = {
   value: string;
@@ -116,14 +118,22 @@ export const DropdownSorting = ({ value, onChangeSort }: DropdownSortProps) => {
 };
 
 type DropdownFilterProps = {
-  value: string;
-  onChange: (newStatus: string) => void;
+  value: ImportanceFilter[];
+  onChangeMultiFilter: (filter: ImportanceFilter[]) => void;
 };
 
 export const DropdownFilterStatus = ({
   value,
-  onChange,
+  onChangeMultiFilter,
 }: DropdownFilterProps) => {
+  const toggleValue = (filter: ImportanceFilter, checked: boolean) => {
+    if (checked) {
+      onChangeMultiFilter([...value, filter]);
+    } else {
+      onChangeMultiFilter(value.filter((v) => v !== filter));
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -131,21 +141,33 @@ export const DropdownFilterStatus = ({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-fit">
-        <DropdownMenuRadioGroup value={value} onValueChange={onChange}>
-          <DropdownMenuRadioItem value="defaulteVal">
-            Remove Filter
-          </DropdownMenuRadioItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioItem value="High">High</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Medium">Medium</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Low">Low</DropdownMenuRadioItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioItem value="Urgent">Urgent</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Lead">Lead</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Internal">
-            Internal
-          </DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
+        <DropdownMenuCheckboxItem
+          checked={value.length === 0}
+          onCheckedChange={() => onChangeMultiFilter([])}
+        >
+          Remove Filter
+        </DropdownMenuCheckboxItem>
+
+        <DropdownMenuCheckboxItem
+          checked={value.includes("High")}
+          onCheckedChange={(checked) => toggleValue("High", checked)}
+        >
+          High
+        </DropdownMenuCheckboxItem>
+
+        <DropdownMenuCheckboxItem
+          checked={value.includes("Medium")}
+          onCheckedChange={(checked) => toggleValue("Medium", checked)}
+        >
+          Medium
+        </DropdownMenuCheckboxItem>
+
+        <DropdownMenuCheckboxItem
+          checked={value.includes("Low")}
+          onCheckedChange={(checked) => toggleValue("Low", checked)}
+        >
+          Low
+        </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

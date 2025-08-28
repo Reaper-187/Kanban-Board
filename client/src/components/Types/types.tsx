@@ -24,3 +24,11 @@ export type SortOrder =
   | "importanceDown"
   | "dueDateAsc"
   | "dueDateDesc";
+
+export type ImportanceFilter =
+  | "Urgent"
+  | "Lead"
+  | "High"
+  | "Medium"
+  | "Low"
+  | "Internal";

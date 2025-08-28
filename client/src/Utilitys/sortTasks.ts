@@ -9,11 +9,11 @@ export type SortOptions = {
 
 // Reihenfolge für Importance festlegen
 export const IMPORTANCE_ORDER: Importance[] = [
+  "Low",
   "Urgent",
   "Lead",
   "High",
   "Normal",
-  "Low",
 ];
 
 // wenn ich utilitys schreibe kann alles ifs sein....
@@ -22,18 +22,21 @@ export const IMPORTANCE_ORDER: Importance[] = [
 export const processTasks = (tasks: Task[], options: SortOptions): Task[] => {
   let sortedTasks = [...tasks];
 
-  // Filtern nach Importance
-  if (options.importance && !options.importance.includes("none")) {
-    tasks = tasks.filter((task) =>
-      options.importance?.includes(task.importance)
+  console.log(
+    options.importance,
+    "SASDASDASDAD",
+    sortedTasks.map((t) => t.importance)
+  );
+
+  if (options.importance?.length) {
+    sortedTasks = sortedTasks.filter((task) =>
+      options.importance!.includes(task.importance)
     );
   }
 
-  // Sortieren nach Importance & Datum (asc/desc)
-
   if (options.importanceOrder) {
     const factor = options.importanceOrder === "asc" ? 1 : -1;
-    tasks.sort(
+    sortedTasks.sort(
       (a, b) =>
         (IMPORTANCE_ORDER.indexOf(a.importance) -
           IMPORTANCE_ORDER.indexOf(b.importance)) *
@@ -43,11 +46,9 @@ export const processTasks = (tasks: Task[], options: SortOptions): Task[] => {
 
   if (options.dateOrder) {
     const factor = options.dateOrder === "asc" ? 1 : -1;
-
-    tasks.sort((a, b) => {
+    sortedTasks.sort((a, b) => {
       const dateA = a.date ? new Date(a.date).getTime() : 0;
       const dateB = b.date ? new Date(b.date).getTime() : 0;
-
       return (dateA - dateB) * factor;
     });
   }

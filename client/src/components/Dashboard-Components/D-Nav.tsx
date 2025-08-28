@@ -1,5 +1,8 @@
-import { DropdownSorting } from "../DropDownMenu/DropDown";
-import type { SortOrder } from "../Types/types";
+import {
+  DropdownFilterStatus,
+  DropdownSorting,
+} from "../DropDownMenu/DropDown";
+import type { ImportanceFilter, SortOrder } from "../Types/types";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
@@ -7,12 +10,16 @@ interface DashboardNavProps {
   filter: (status: string) => void; // Oder: React.Dispatch<React.SetStateAction<string>>
   sortOrder: SortOrder;
   setSortOrder: (statusSorting: SortOrder) => void;
+  importanceFilter: ImportanceFilter[];
+  setImportanceFilter: (singleImportance: ImportanceFilter[]) => void;
 }
 
 export const DashboardNav = ({
   filter,
   sortOrder,
   setSortOrder,
+  importanceFilter,
+  setImportanceFilter,
 }: DashboardNavProps) => {
   const handleStatusFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
     filter(e.currentTarget.value);
@@ -46,7 +53,10 @@ export const DashboardNav = ({
             value={sortOrder}
             onChangeSort={(val) => setSortOrder(val as SortOrder)}
           />
-          {/* <DropdownFilterStatus value={undefined} onChange={undefined} /> */}
+          <DropdownFilterStatus
+            value={importanceFilter}
+            onChangeMultiFilter={(newValues) => setImportanceFilter(newValues)}
+          />
         </div>
       </div>
     </>

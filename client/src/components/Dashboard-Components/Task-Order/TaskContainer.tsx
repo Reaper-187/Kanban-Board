@@ -7,7 +7,12 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
-import type { Column, SortOrder, Task } from "@/components/Types/types";
+import type {
+  Column,
+  ImportanceFilter,
+  SortOrder,
+  Task,
+} from "@/components/Types/types";
 import { TaskCard } from "../Task-Card/TaskCard";
 import { INITIAL_TASKS } from "@/components/Mock/mockTasks";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
@@ -21,11 +26,13 @@ export const COLUMNS: Column[] = [
 interface TaskContainerProps {
   filtertrigger: string;
   sortOrder: SortOrder;
+  singleFilter: ImportanceFilter[];
 }
 
 export const TaskContainer = ({
   filtertrigger,
   sortOrder,
+  singleFilter,
 }: TaskContainerProps) => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
   const [sortOptions, setSortOptions] = useState<SortOptions>({
@@ -35,6 +42,13 @@ export const TaskContainer = ({
     importance: [],
   });
 
+  const visibleColumns = useMemo(() => {
+    if (filtertrigger && filtertrigger !== "All Tasks") {
+      return COLUMNS.filter((col) => col.id === filtertrigger);
+    }
+    return COLUMNS;
+  }, [filtertrigger]);
+
   const filteredData = useMemo(() => {
     let processed = processTasks(tasks, sortOptions);
 
@@ -42,18 +56,19 @@ export const TaskContainer = ({
   }, [tasks, sortOptions, filtertrigger]);
 
   useEffect(() => {
-    if (sortOrder === "importanceDown")
+    if (sortOrder === "importanceDown") {
       setSortOptions((prev) => ({ ...prev, importanceOrder: "desc" }));
-    else if (sortOrder === "importanceUp")
+    } else if (sortOrder === "importanceUp") {
       setSortOptions((prev) => ({ ...prev, importanceOrder: "asc" }));
+    }
   }, [sortOrder]);
 
-  const visibleColumns = useMemo(() => {
-    if (filtertrigger && filtertrigger !== "All Tasks") {
-      return COLUMNS.filter((col) => col.id === filtertrigger);
-    }
-    return COLUMNS;
-  }, [filtertrigger]);
+  useEffect(() => {
+    setSortOptions((prev) => ({
+      ...prev,
+      importance: singleFilter.length ? singleFilter : undefined,
+    }));
+  }, [singleFilter]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
