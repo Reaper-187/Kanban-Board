@@ -105,10 +105,10 @@ export const DropdownSorting = ({ value, onChangeSort }: DropdownSortProps) => {
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuRadioItem value="dateDown">
+          <DropdownMenuRadioItem value="dueDateDown">
             Due Date <ArrowBigDown />
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="dateUp">
+          <DropdownMenuRadioItem value="dueDateUp">
             Due Date <ArrowBigUp />
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
@@ -126,6 +126,15 @@ export const DropdownFilterStatus = ({
   value,
   onChangeMultiFilter,
 }: DropdownFilterProps) => {
+  const importanceArray: ImportanceFilter[] = [
+    "Urgent",
+    "High",
+    "Lead",
+    "Internal",
+    "Medium",
+    "Low",
+  ];
+
   const toggleValue = (filter: ImportanceFilter, checked: boolean) => {
     if (checked) {
       onChangeMultiFilter([...value, filter]);
@@ -148,26 +157,15 @@ export const DropdownFilterStatus = ({
           Remove Filter
         </DropdownMenuCheckboxItem>
 
-        <DropdownMenuCheckboxItem
-          checked={value.includes("High")}
-          onCheckedChange={(checked) => toggleValue("High", checked)}
-        >
-          High
-        </DropdownMenuCheckboxItem>
-
-        <DropdownMenuCheckboxItem
-          checked={value.includes("Medium")}
-          onCheckedChange={(checked) => toggleValue("Medium", checked)}
-        >
-          Medium
-        </DropdownMenuCheckboxItem>
-
-        <DropdownMenuCheckboxItem
-          checked={value.includes("Low")}
-          onCheckedChange={(checked) => toggleValue("Low", checked)}
-        >
-          Low
-        </DropdownMenuCheckboxItem>
+        {importanceArray.map((filter) => (
+          <DropdownMenuCheckboxItem
+            key={filter}
+            checked={value.includes(filter)}
+            onCheckedChange={(checked) => toggleValue(filter, checked)}
+          >
+            {filter}
+          </DropdownMenuCheckboxItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

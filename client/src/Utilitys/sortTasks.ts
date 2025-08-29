@@ -9,11 +9,12 @@ export type SortOptions = {
 
 // Reihenfolge für Importance festlegen
 export const IMPORTANCE_ORDER: Importance[] = [
-  "Low",
   "Urgent",
-  "Lead",
   "High",
-  "Normal",
+  "Lead",
+  "Internal",
+  "Medium",
+  "Low",
 ];
 
 // wenn ich utilitys schreibe kann alles ifs sein....
@@ -21,12 +22,6 @@ export const IMPORTANCE_ORDER: Importance[] = [
 // hier geht es nur um die tasks selbst nicht columns
 export const processTasks = (tasks: Task[], options: SortOptions): Task[] => {
   let sortedTasks = [...tasks];
-
-  console.log(
-    options.importance,
-    "SASDASDASDAD",
-    sortedTasks.map((t) => t.importance)
-  );
 
   if (options.importance?.length) {
     sortedTasks = sortedTasks.filter((task) =>

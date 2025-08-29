@@ -15,7 +15,7 @@ export const INITIAL_TASKS: Task[] = [
     topic: "Monthly-Report",
     description: "Profit of the year Analytics",
     importance: "Low",
-    date: new Date("2025-05-11"),
+    date: new Date("2025-03-12"),
   },
   {
     id: "3",
@@ -31,7 +31,7 @@ export const INITIAL_TASKS: Task[] = [
     description: "Profit of the year Analytics",
     importance: "Urgent",
     status: "TODO",
-    date: new Date("2025-05-11"),
+    date: new Date("2025-05-09"),
   },
   {
     id: "5",
@@ -39,7 +39,7 @@ export const INITIAL_TASKS: Task[] = [
     topic: "Monthly-Report",
     description: "Profit of the year Analytics",
     importance: "High",
-    date: new Date("2025-05-11"),
+    date: new Date("2025-05-2"),
   },
   {
     id: "6",
@@ -47,6 +47,6 @@ export const INITIAL_TASKS: Task[] = [
     topic: "Monthly-Report",
     description: "Profit of the year Analytics",
     importance: "Lead",
-    date: new Date("2025-05-11"),
+    date: new Date("2025-05-3"),
   },
 ];

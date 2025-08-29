@@ -16,14 +16,20 @@ export type Task = {
   date: Date | undefined;
 };
 
-export type Importance = "Urgent" | "Lead" | "High" | "Normal" | "Low";
+export type Importance =
+  | "Urgent"
+  | "High"
+  | "Lead"
+  | "Internal"
+  | "Medium"
+  | "Low";
 
 export type SortOrder =
   | "none"
   | "importanceUp"
   | "importanceDown"
-  | "dueDateAsc"
-  | "dueDateDesc";
+  | "dueDateUp"
+  | "dueDateDown";
 
 export type ImportanceFilter =
   | "Urgent"

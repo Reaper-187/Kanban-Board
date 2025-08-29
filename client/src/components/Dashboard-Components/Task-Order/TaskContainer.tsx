@@ -61,14 +61,18 @@ export const TaskContainer = ({
     } else if (sortOrder === "importanceUp") {
       setSortOptions((prev) => ({ ...prev, importanceOrder: "asc" }));
     }
-  }, [sortOrder]);
 
-  useEffect(() => {
+    if (sortOrder === "dueDateDown") {
+      setSortOptions((prev) => ({ ...prev, dateOrder: "desc" }));
+    } else if (sortOrder === "dueDateUp") {
+      setSortOptions((prev) => ({ ...prev, dateOrder: "asc" }));
+    }
+
     setSortOptions((prev) => ({
       ...prev,
       importance: singleFilter.length ? singleFilter : undefined,
     }));
-  }, [singleFilter]);
+  }, [singleFilter, sortOrder]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
