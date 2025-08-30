@@ -8,10 +8,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import { Dashboard } from "./Pages/Dashboard.tsx";
-import { Toaster } from "sonner";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/Sidebar/app-sidebar.tsx";
-import { AddBtnProvider } from "./Context/AddBtnContext.tsx";
+import { Settings } from "./Pages/Settings.tsx";
 
 const router = createBrowserRouter([
   // {
@@ -61,10 +58,14 @@ const router = createBrowserRouter([
   {
     element: <App />,
     children: [
-      { path: "/", element: <Navigate to="/dashboard" replace /> },
+      { path: "/", element: <Navigate to="/tasks" replace /> },
       {
-        path: "dashboard",
+        path: "tasks",
         element: <Dashboard />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
       },
     ],
   },
@@ -72,13 +73,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <SidebarProvider>
-      <Toaster />
-      <AppSidebar />
-      <AddBtnProvider>
-        <SidebarTrigger />
-        <RouterProvider router={router} />
-      </AddBtnProvider>
-    </SidebarProvider>
+    <RouterProvider router={router} />
   </StrictMode>
 );
