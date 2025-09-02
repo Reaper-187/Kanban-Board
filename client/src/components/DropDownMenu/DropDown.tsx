@@ -22,9 +22,7 @@ export function DropdownMenuImportance({ value }: DropdownImportanceProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
-          {value ? value : position} <ArrowBigDown />
-        </Button>
+        <Button variant="outline">{value ? value : position}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-50">
         <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>

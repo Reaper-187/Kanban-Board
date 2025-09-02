@@ -16,6 +16,14 @@ export type Task = {
   date: Date | undefined;
 };
 
+export type BackendData = {
+  topic: string;
+  description: string;
+  status: string;
+  importance: Importance;
+  date?: Date | undefined;
+};
+
 export type Importance =
   | "Urgent"
   | "High"

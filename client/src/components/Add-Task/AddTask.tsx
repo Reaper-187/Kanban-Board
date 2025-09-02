@@ -10,10 +10,15 @@ import { Calendar24 } from "../CalendarComp/DueDateCalendar";
 import { DropdownMenuImportance } from "../DropDownMenu/DropDown";
 import type { Task } from "../Types/types";
 import { INITIAL_TASKS } from "../Mock/mockTasks";
+import { createTask } from "@/services/taskServices";
 
 export const AddTask = () => {
-  const { isOpen, closeModal, currentTaskId } = useToggle();
+  const [topic, setTopic] = useState("");
+  const [description, setDescription] = useState("");
+  const [importance, setImportance] = useState("");
+  const [date, setDate] = useState("");
 
+  const { isOpen, closeModal, currentTaskId } = useToggle();
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
 
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
@@ -27,6 +32,23 @@ export const AddTask = () => {
     }
   }, [currentTaskId, tasks]);
 
+  async function handleAddTask() {
+    const newTask = {
+      taskToEdit,
+    };
+
+    try {
+      const res = await createTask(newTask);
+      console.log("Task created:", res.data);
+
+      setTopic("");
+      setDescription("");
+      setImportance("");
+      setDate("");
+    } catch (error) {
+      console.error("Error creating task:", error);
+    }
+  }
   return (
     <>
       {isOpen && (
@@ -59,9 +81,9 @@ export const AddTask = () => {
 
               <div className="flex-1 space-y-4">
                 <div className="space-y-2">
-                  <Label>Header:</Label>
+                  <Label>Topic:</Label>
                   <Input
-                    placeholder="Header"
+                    placeholder="Topic"
                     defaultValue={taskToEdit?.topic ?? ""}
                   />
                 </div>
@@ -86,6 +108,7 @@ export const AddTask = () => {
                 <Button
                   className="w-full cursor-pointer md:w-fit font-semibold mt-4"
                   type="submit"
+                  onClick={handleAddTask}
                 >
                   Add to Board
                 </Button>
