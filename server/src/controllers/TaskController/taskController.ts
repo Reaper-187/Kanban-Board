@@ -7,9 +7,6 @@ exports.addTask = async (req: Request, res: Response) => {
       ...req.body,
     });
 
-    console.log("req.body", req.body);
-    console.log("taskdata", taskData);
-
     const savedTask = await taskData.save();
 
     res.status(201).json(savedTask);
