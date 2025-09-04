@@ -11,44 +11,53 @@ import { DropdownMenuImportance } from "../DropDownMenu/DropDown";
 import type { Task } from "../Types/types";
 import { INITIAL_TASKS } from "../Mock/mockTasks";
 import { createTask } from "@/services/taskServices";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formTaskSchema = z.object({
+  topic: z.string(),
+  description: z.string(),
+  importance: z.string(),
+  date: z.date().optional(),
+});
+
+type FormTask = z.infer<typeof formTaskSchema>;
 
 export const AddTask = () => {
-  const [topic, setTopic] = useState("");
-  const [description, setDescription] = useState("");
-  const [importance, setImportance] = useState("");
-  const [date, setDate] = useState("");
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormTask>({
+    resolver: zodResolver(formTaskSchema),
+    defaultValues: {
+      topic: "",
+      description: "",
+      importance: "",
+      date: new Date(),
+    },
+  });
+  // console.log(errors);
 
   const { isOpen, closeModal, currentTaskId } = useToggle();
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
 
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
-  useEffect(() => {
-    if (currentTaskId) {
-      const found = tasks.find((task) => task.id === currentTaskId);
-      setTaskToEdit(found ?? null);
-    } else {
-      setTaskToEdit(null);
-    }
-  }, [currentTaskId, tasks]);
+  //   if (currentTaskId) {
+  //     const found = tasks.find((task) => task.id === currentTaskId);
+  //     setTaskToEdit(found ?? null);
+  //   } else {
+  //     setTaskToEdit(null);
+  //   }
+  // }, [currentTaskId, tasks]);
 
-  async function handleAddTask() {
-    const newTask = {
-      taskToEdit,
-    };
+  const handleAddTask = (data: FormTask) => {
+    console.log(data);
+  };
 
-    try {
-      const res = await createTask(newTask);
-      console.log("Task created:", res.data);
-
-      setTopic("");
-      setDescription("");
-      setImportance("");
-      setDate("");
-    } catch (error) {
-      console.error("Error creating task:", error);
-    }
-  }
   return (
     <>
       {isOpen && (
@@ -79,40 +88,62 @@ export const AddTask = () => {
                 </div>
               </CardHeader>
 
-              <div className="flex-1 space-y-4">
+              <form
+                className="flex-1 space-y-4"
+                onSubmit={handleSubmit(handleAddTask)}
+              >
                 <div className="space-y-2">
                   <Label>Topic:</Label>
                   <Input
+                    {...register("topic")}
                     placeholder="Topic"
                     defaultValue={taskToEdit?.topic ?? ""}
                   />
+                  {errors.topic && <p>{errors.topic.message}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>description</Label>
                   <Input
+                    {...register("description")}
                     placeholder="description"
                     defaultValue={taskToEdit?.description ?? ""}
                   />
+                  {errors.description && <p>{errors.description.message}</p>}
                 </div>
                 <div className="space-y-2">
-                  <DropdownMenuImportance
-                    value={taskToEdit?.importance ?? ""}
+                  <Controller
+                    control={control}
+                    name="importance"
+                    render={({ field }) => (
+                      <DropdownMenuImportance
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Calendar24 dateString={taskToEdit?.date} />
+                  <Controller
+                    control={control}
+                    name="date"
+                    render={({ field }) => (
+                      <Calendar24
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
                 </div>
-              </div>
 
-              <div className="flex-1 flex flex-col items-center justify-between">
-                <Button
-                  className="w-full cursor-pointer md:w-fit font-semibold mt-4"
-                  type="submit"
-                  onClick={handleAddTask}
-                >
-                  Add to Board
-                </Button>
-              </div>
+                <div className="flex-1 flex flex-col items-center justify-between">
+                  <Button
+                    className="w-full cursor-pointer md:w-fit font-semibold mt-4"
+                    type="submit"
+                  >
+                    Add to Board
+                  </Button>
+                </div>
+              </form>
             </Card>
           </motion.div>
         </motion.div>

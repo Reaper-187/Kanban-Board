@@ -13,16 +13,16 @@ export type Task = {
   description: string;
   status: string;
   importance: Importance;
-  date: Date | undefined;
+  date: Date;
 };
 
-export type BackendData = {
+export interface RequestData {
   topic: string;
   description: string;
   status: string;
-  importance: Importance;
-  date?: Date | undefined;
-};
+  importance?: Importance;
+  date?: Date;
+}
 
 export type Importance =
   | "Urgent"

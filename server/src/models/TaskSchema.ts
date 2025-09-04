@@ -12,13 +12,13 @@ interface TaskType extends Document {
 const taskSchema = new Schema<TaskType>({
   topic: {
     type: String,
-    required: true,
   },
   description: {
     type: String,
   },
   status: {
     type: String,
+    default: "TODO",
   },
   importance: {
     type: String,

@@ -14,9 +14,13 @@ import type { ImportanceFilter } from "../Types/types";
 
 type DropdownImportanceProps = {
   value: string;
+  onChange: (newImportance: string) => void;
 };
 
-export function DropdownMenuImportance({ value }: DropdownImportanceProps) {
+export function DropdownMenuImportance({
+  value,
+  onChange,
+}: DropdownImportanceProps) {
   const [position, setPosition] = useState("Importance");
 
   return (
@@ -25,7 +29,13 @@ export function DropdownMenuImportance({ value }: DropdownImportanceProps) {
         <Button variant="outline">{value ? value : position}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-50">
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+        <DropdownMenuRadioGroup
+          value={position}
+          onValueChange={(newValue) => {
+            setPosition(newValue);
+            onChange(newValue);
+          }}
+        >
           <DropdownMenuRadioItem value="High">High</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="Medium">Medium</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="Low">Low</DropdownMenuRadioItem>

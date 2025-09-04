@@ -12,18 +12,19 @@ import {
 } from "@/components/ui/popover";
 
 type DateAndTimeProps = {
-  dateString: Date | undefined;
+  value: Date | undefined;
+  onChange: (newDate: Date) => void;
 };
 
-export function Calendar24({ dateString }: DateAndTimeProps) {
+export function Calendar24({ value, onChange }: DateAndTimeProps) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(undefined);
 
   React.useEffect(() => {
-    if (dateString) {
-      setDate(new Date(dateString));
+    if (value) {
+      setDate(new Date(value));
     }
-  }, [dateString]);
+  }, [value]);
 
   return (
     <div className="flex gap-4">
@@ -47,8 +48,10 @@ export function Calendar24({ dateString }: DateAndTimeProps) {
               mode="single"
               selected={date}
               captionLayout="dropdown"
-              onSelect={(date) => {
-                setDate(date);
+              onSelect={(selectedDate) => {
+                if (!selectedDate) return;
+                setDate(selectedDate);
+                onChange(selectedDate);
                 setOpen(false);
               }}
             />

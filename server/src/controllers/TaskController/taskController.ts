@@ -7,10 +7,12 @@ exports.addTask = async (req: Request, res: Response) => {
       ...req.body,
     });
 
-    // const savedTask = await taskData.save();
-    console.log(taskData);
+    console.log("req.body", req.body);
+    console.log("taskdata", taskData);
 
-    res.status(201).json(taskData);
+    const savedTask = await taskData.save();
+
+    res.status(201).json(savedTask);
   } catch (error) {
     res.status(500).json({ message: "Error adding task", error });
   }

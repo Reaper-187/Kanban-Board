@@ -9,10 +9,18 @@ const taskRoute = require("./routes/Tasks/taskRoute");
 const { connectToDB } = require("./config/dbConnection");
 
 const app = express();
+
 const PORT = process.env.PORT || 5000;
+const FRONTEND_URL = process.env.FRONTEND_URL;
+
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+  })
+);
 
 app.use(express.json());
-app.use(cors());
 
 app.use("/api", taskRoute);
 
