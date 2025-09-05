@@ -14,6 +14,7 @@ import { createTask } from "@/services/taskServices";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const formTaskSchema = z.object({
   topic: z.string(),
@@ -39,7 +40,6 @@ export const AddTask = () => {
       date: new Date(),
     },
   });
-  // console.log(errors);
 
   const { isOpen, closeModal, currentTaskId } = useToggle();
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
@@ -54,8 +54,18 @@ export const AddTask = () => {
   //   }
   // }, [currentTaskId, tasks]);
 
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: createTask,
+    onSuccess: (data) => {
+      console.log("Task erfolgreich erstellt:", data);
+    },
+    onError: (err: Error) => {
+      console.error("Fehler beim Erstellen:", err);
+    },
+  });
+
   const handleAddTask = (data: FormTask) => {
-    console.log(data);
+    mutate(data);
   };
 
   return (
@@ -139,9 +149,11 @@ export const AddTask = () => {
                   <Button
                     className="w-full cursor-pointer md:w-fit font-semibold mt-4"
                     type="submit"
+                    disabled={isPending}
                   >
-                    Add to Board
+                    {isPending ? "Wird gespeichert..." : "Add to Board"}
                   </Button>
+                  {isError && <p>Fehler: {(error as Error).message}</p>}
                 </div>
               </form>
             </Card>

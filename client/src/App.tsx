@@ -4,10 +4,13 @@ import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import { Toaster } from "sonner";
 import { AppSidebar } from "./components/Sidebar/app-sidebar";
 import { AddBtnProvider } from "./Context/AddBtnContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <SidebarProvider>
         <Toaster />
         <AppSidebar />
@@ -18,7 +21,7 @@ function App() {
           </main>
         </AddBtnProvider>
       </SidebarProvider>
-    </>
+    </QueryClientProvider>
   );
 }
 
