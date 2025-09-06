@@ -17,3 +17,12 @@ exports.addTask = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error adding task", error });
   }
 };
+
+exports.getTask = async (req: Request, res: Response) => {
+  try {
+    const taskCards = await Task.find({});
+    res.status(201).json(taskCards);
+  } catch (error) {
+    res.status(500).json({ message: "Error adding task", error });
+  }
+};
