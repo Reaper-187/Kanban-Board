@@ -14,7 +14,7 @@ import { createTask } from "@/services/taskServices";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const formTaskSchema = z.object({
   topic: z.string(),
@@ -54,10 +54,13 @@ export const AddTask = () => {
   //   }
   // }, [currentTaskId, tasks]);
 
+  const queryClient = useQueryClient();
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: createTask,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Task erfolgreich erstellt:", data);
+      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (err: Error) => {
       console.error("Fehler beim Erstellen:", err);

@@ -40,13 +40,11 @@ export const StatusTypes = ({ column, tasks, onStatusChange }: ColumnProps) => {
         <div ref={setNodeRef} className="min-h-30 min-w-full">
           <div className="flex flex-col gap-2 ">
             {tasks.map((task) => (
-              <div key={task.id} className="">
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onStatusChange={onStatusChange}
-                />
-              </div>
+              <TaskCard
+                key={task._id}
+                task={task}
+                onStatusChange={onStatusChange}
+              />
             ))}
           </div>
         </div>

@@ -20,8 +20,11 @@ export const IMPORTANCE_ORDER: Importance[] = [
 // wenn ich utilitys schreibe kann alles ifs sein....
 
 // hier geht es nur um die tasks selbst nicht columns
-export const processTasks = (tasks: Task[], options: SortOptions): Task[] => {
-  let sortedTasks = [...tasks];
+export const processTasks = (
+  fetchTaskData: Task[],
+  options: SortOptions
+): Task[] => {
+  let sortedTasks = [...fetchTaskData];
 
   if (options.importance?.length) {
     sortedTasks = sortedTasks.filter((task) =>

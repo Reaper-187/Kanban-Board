@@ -33,7 +33,7 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
-      id: task.id,
+      id: task._id,
     });
 
   const style = {
@@ -47,7 +47,7 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
       className={`my-1 ${isDragging ? "opacity-0" : ""}`}
     >
       <Card
-        id={task.id}
+        id={task._id}
         key={task.status}
         className="p-3  transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
       >
@@ -61,7 +61,7 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           </div>
           <button
             type="button"
-            onClick={() => openModal(task.id)}
+            onClick={() => openModal(task._id)}
             className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
           >
             <Pen size={15} className="cursor-pointer" />
@@ -75,7 +75,7 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           <span className="md:hidden">
             <DropdownSwitchStatus
               value={task.status}
-              onChange={(newStatus) => onStatusChange(task.id, newStatus)}
+              onChange={(newStatus) => onStatusChange(task._id, newStatus)}
             />
           </span>
         </div>

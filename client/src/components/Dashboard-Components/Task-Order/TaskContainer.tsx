@@ -16,6 +16,8 @@ import type {
 import { TaskCard } from "../Task-Card/TaskCard";
 import { INITIAL_TASKS } from "@/components/Mock/mockTasks";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
+import { useQuery } from "@tanstack/react-query";
+import { fetchTask } from "@/services/taskServices";
 
 export const COLUMNS: Column[] = [
   { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
@@ -35,12 +37,20 @@ export const TaskContainer = ({
   singleFilter,
 }: TaskContainerProps) => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+
   const [sortOptions, setSortOptions] = useState<SortOptions>({
     status: [],
     importanceOrder: undefined,
     dateOrder: undefined,
     importance: [],
   });
+
+  const { data: fetchTaskData = [] } = useQuery({
+    queryFn: fetchTask,
+    queryKey: ["tasks"],
+  });
+
+  console.log("fetchTaskData", fetchTaskData);
 
   const visibleColumns = useMemo(() => {
     if (filtertrigger && filtertrigger !== "All Tasks") {
@@ -50,10 +60,10 @@ export const TaskContainer = ({
   }, [filtertrigger]);
 
   const filteredData = useMemo(() => {
-    let processed = processTasks(tasks, sortOptions);
+    let processed = processTasks(fetchTaskData, sortOptions);
 
     return processed;
-  }, [tasks, sortOptions, filtertrigger]);
+  }, [fetchTaskData, sortOptions, filtertrigger]);
 
   useEffect(() => {
     if (sortOrder === "importanceDown") {
@@ -75,37 +85,18 @@ export const TaskContainer = ({
   }, [singleFilter, sortOrder]);
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const taskId = active.id as string;
-    const newStatus = over.id as Task["status"];
-
-    setTasks(() =>
-      tasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              status: newStatus,
-            }
-          : task
-      )
-    );
+    console.log("drag end – später per Mutation");
   };
 
-  const handleStatusChange = (id: string, newStatus: string) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, status: newStatus } : task
-      )
-    );
+  const handleStatusChange = (_id: string, newStatus: string) => {
+    console.log("status change – später per Mutation");
   };
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const handleDragStart = (event: DragStartEvent) => {
     const taskId = event.active.id;
-    const task = tasks.find((t) => t.id === taskId) || null;
+    const task = fetchTaskData.find((t) => t._id === taskId) || null;
     setActiveTask(task);
   };
 
