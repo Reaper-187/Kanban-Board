@@ -10,3 +10,11 @@ export const fetchTask = async (): Promise<Task[]> => {
   const response = await axios.get<Task[]>(TASK_API);
   return response.data;
 };
+
+export const updateTask = async (
+  _id: string,
+  status: Task["status"]
+): Promise<Task> => {
+  const response = await axios.put<Task>(`${TASK_API}/${_id}`, { status });
+  return response.data;
+};
