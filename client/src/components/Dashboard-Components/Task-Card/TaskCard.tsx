@@ -8,7 +8,7 @@ import { useToggle } from "@/Context/AddBtnContext";
 
 type TaskCardProps = {
   task: Task;
-  onStatusChange: (id: string, newStatus: string) => void;
+  onStatusChange: (_id: string, updates: Partial<Task>) => void;
 };
 type Color = {
   Urgent: string;
@@ -75,7 +75,9 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           <span className="md:hidden">
             <DropdownSwitchStatus
               value={task.status}
-              onChange={(newStatus) => onStatusChange(task._id, newStatus)}
+              onChange={(newStatus) =>
+                onStatusChange(task._id, { status: newStatus })
+              }
             />
           </span>
         </div>

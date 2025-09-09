@@ -8,7 +8,7 @@ import type { Column as ColumnType, Task } from "@/components/Types/types";
 type ColumnProps = {
   column: ColumnType;
   tasks: Task[];
-  onStatusChange: (id: string, newStatus: string) => void;
+  onStatusChange: (_id: string, updates: Partial<Task>) => void;
 };
 export const StatusTypes = ({ column, tasks, onStatusChange }: ColumnProps) => {
   const { openModal } = useToggle();
@@ -43,7 +43,9 @@ export const StatusTypes = ({ column, tasks, onStatusChange }: ColumnProps) => {
               <TaskCard
                 key={task._id}
                 task={task}
-                onStatusChange={onStatusChange}
+                onStatusChange={(newStatus: string) =>
+                  onStatusChange(task._id, { status: newStatus })
+                }
               />
             ))}
           </div>

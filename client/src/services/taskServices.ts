@@ -13,8 +13,8 @@ export const fetchTask = async (): Promise<Task[]> => {
 
 export const updateTask = async (
   _id: string,
-  status: Task["status"]
+  updates: Partial<Task>
 ): Promise<Task> => {
-  const response = await axios.put<Task>(`${TASK_API}/${_id}`, { status });
+  const response = await axios.patch<Task>(`${TASK_API}/${_id}`, updates);
   return response.data;
 };

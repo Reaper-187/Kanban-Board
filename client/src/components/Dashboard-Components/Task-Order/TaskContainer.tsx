@@ -14,10 +14,9 @@ import type {
   Task,
 } from "@/components/Types/types";
 import { TaskCard } from "../Task-Card/TaskCard";
-import { INITIAL_TASKS } from "@/components/Mock/mockTasks";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createTask, fetchTask, updateTask } from "@/services/taskServices";
+import { fetchTask, updateTask } from "@/services/taskServices";
 
 export const COLUMNS: Column[] = [
   { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
@@ -36,7 +35,6 @@ export const TaskContainer = ({
   sortOrder,
   singleFilter,
 }: TaskContainerProps) => {
-  const [statusChange, setStatusChange] = useState("");
   const [sortOptions, setSortOptions] = useState<SortOptions>({
     status: [],
     importanceOrder: undefined,
@@ -50,6 +48,40 @@ export const TaskContainer = ({
   });
 
   console.log("fetchTaskData", fetchTaskData);
+
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const taskId = event.active.id;
+    const task = fetchTaskData.find((t) => t._id === taskId) || null;
+    setActiveTask(task);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+    const taskId = active.id as string;
+    const newStatus = over.id as Task["status"];
+
+    handleStatusChange(taskId, { status: newStatus });
+  };
+
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: ({ _id, updates }: { _id: string; updates: Partial<Task> }) =>
+      updateTask(_id, updates),
+    onSuccess: async (data) => {
+      console.log(`Task auf ${data} verschoben`);
+      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+    onError: (err: Error) => {
+      console.error("Fehler beim verschieben der Task", err);
+    },
+  });
+
+  const handleStatusChange = (_id: string, updates: Partial<Task>) => {
+    mutate({ _id, updates });
+  };
 
   const visibleColumns = useMemo(() => {
     if (filtertrigger && filtertrigger !== "All Tasks") {
@@ -82,50 +114,6 @@ export const TaskContainer = ({
       importance: singleFilter.length ? singleFilter : undefined,
     }));
   }, [singleFilter, sortOrder]);
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-    const taskId = active.id as string;
-    const newStatus = over.id as Task["status"];
-    fetchTaskData.map((task) =>
-      task._id === taskId
-        ? {
-            ...task,
-            status: newStatus,
-          }
-        : task
-    );
-  };
-
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: ({ _id, status }: { _id: string; status: Task["status"] }) =>
-      updateTask(_id, status),
-    onSuccess: async (data) => {
-      console.log(`Task auf ${data} verschoben`);
-      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
-    onError: (err: Error) => {
-      console.error("Fehler beim verschieben der Task", err);
-    },
-  });
-
-  const handleStatusChange = (_id: string, status: Task["status"]) => {
-    const data = {
-      _id,
-      status,
-    };
-    mutate(data);
-  };
-
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const taskId = event.active.id;
-    const task = fetchTaskData.find((t) => t._id === taskId) || null;
-    setActiveTask(task);
-  };
 
   return (
     <div className="flex gap-4 mx-auto">
