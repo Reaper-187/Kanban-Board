@@ -26,3 +26,24 @@ exports.getTask = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error adding task", error });
   }
 };
+
+exports.updateTask = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const updatedTask = await Task.findOneAndUpdate(
+      { _id: id },
+      { $set: updates },
+      { new: true }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json(updatedTask);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating task", error });
+  }
+};
