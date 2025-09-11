@@ -17,6 +17,8 @@ import { TaskCard } from "../Task-Card/TaskCard";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchTask, updateTask } from "@/services/taskServices";
+import { useUpdateTask } from "@/hooks/useUpdate";
+import { Button } from "@/components/ui/button";
 
 export const COLUMNS: Column[] = [
   { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
@@ -47,14 +49,18 @@ export const TaskContainer = ({
     queryKey: ["tasks"],
   });
 
-  console.log("fetchTaskData", fetchTaskData);
-
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const { mutate } = useUpdateTask();
 
   const handleDragStart = (event: DragStartEvent) => {
     const taskId = event.active.id;
     const task = fetchTaskData.find((t) => t._id === taskId) || null;
     setActiveTask(task);
+  };
+
+  const handleStatusChange = (_id: string, updates: Partial<Task>) => {
+    mutate({ _id, updates });
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -64,23 +70,6 @@ export const TaskContainer = ({
     const newStatus = over.id as Task["status"];
 
     handleStatusChange(taskId, { status: newStatus });
-  };
-
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: ({ _id, updates }: { _id: string; updates: Partial<Task> }) =>
-      updateTask(_id, updates),
-    onSuccess: async (data) => {
-      console.log(`Task auf ${data} verschoben`);
-      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
-    onError: (err: Error) => {
-      console.error("Fehler beim verschieben der Task", err);
-    },
-  });
-
-  const handleStatusChange = (_id: string, updates: Partial<Task>) => {
-    mutate({ _id, updates });
   };
 
   const visibleColumns = useMemo(() => {
