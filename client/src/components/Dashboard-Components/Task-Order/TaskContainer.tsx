@@ -55,7 +55,8 @@ export const TaskContainer = ({
 
   const handleDragStart = (event: DragStartEvent) => {
     const taskId = event.active.id;
-    const task = fetchTaskData.find((t) => t._id === taskId) || null;
+    const task =
+      fetchTaskData.find((taskCard) => taskCard._id === taskId) || null;
     setActiveTask(task);
   };
 
@@ -65,11 +66,16 @@ export const TaskContainer = ({
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+
     if (!over) return;
+
     const taskId = active.id as string;
     const newStatus = over.id as Task["status"];
 
-    handleStatusChange(taskId, { status: newStatus });
+    mutate({
+      _id: taskId,
+      updates: { status: newStatus },
+    });
   };
 
   const visibleColumns = useMemo(() => {
@@ -116,10 +122,10 @@ export const TaskContainer = ({
           />
         ))}
 
-        <DragOverlay>
-          {activeTask ? (
+        <DragOverlay dropAnimation={null}>
+          {activeTask && (
             <TaskCard task={activeTask} onStatusChange={handleStatusChange} />
-          ) : null}
+          )}
         </DragOverlay>
       </DndContext>
     </div>
