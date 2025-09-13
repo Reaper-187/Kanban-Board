@@ -15,10 +15,9 @@ import type {
 } from "@/components/Types/types";
 import { TaskCard } from "../Task-Card/TaskCard";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchTask, updateTask } from "@/services/taskServices";
-import { useUpdateTask } from "@/hooks/useUpdate";
-import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { fetchTask } from "@/services/taskServices";
+import { useUpdateTask } from "@/hooks/useUpdateTask";
 
 export const COLUMNS: Column[] = [
   { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },

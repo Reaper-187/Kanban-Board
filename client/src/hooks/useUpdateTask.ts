@@ -5,7 +5,7 @@ import type { Task } from "@/components/Types/types";
 export const useUpdateTask = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const mutate = useMutation({
     mutationFn: ({ _id, updates }: { _id: string; updates: Partial<Task> }) =>
       updateTask(_id, updates),
     onMutate: async ({ _id, updates }) => {
@@ -34,8 +34,5 @@ export const useUpdateTask = () => {
     },
   });
 
-  return mutation;
+  return mutate;
 };
-
-// Types fürs Backend erstellen und
-//  für Tanstack Optimistic Update im Frontend verwednen

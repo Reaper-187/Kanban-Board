@@ -15,6 +15,8 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useUpdateTask } from "@/hooks/useUpdateTask";
+import { useCreateTask } from "@/hooks/useCreateTask";
 
 const formTaskSchema = z.object({
   topic: z.string(),
@@ -46,26 +48,15 @@ export const AddTask = () => {
 
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
-  //   if (currentTaskId) {
-  //     const found = tasks.find((task) => task.id === currentTaskId);
-  //     setTaskToEdit(found ?? null);
-  //   } else {
-  //     setTaskToEdit(null);
-  //   }
-  // }, [currentTaskId, tasks]);
+  // const { mutate } = useUpdateTask()
+
+  // const handleStatusChange = (_id: string, updates: Partial<Task>) => {
+  //   mutate({ _id, updates });
+  // };
 
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, isError, error } = useMutation({
-    mutationFn: createTask,
-    onSuccess: async (data) => {
-      console.log("Task erfolgreich erstellt:", data);
-      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
-    onError: (err: Error) => {
-      console.error("Fehler beim Erstellen:", err);
-    },
-  });
+  const { mutate, isPending, isError, error } = useCreateTask();
 
   const handleAddTask = (data: FormTask) => {
     mutate(data);
