@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useToggle } from "@/Context/AddBtnContext";
 import { motion } from "framer-motion";
 import { Card, CardHeader } from "../ui/card";
@@ -9,19 +9,17 @@ import { Label } from "../ui/label";
 import { Calendar24 } from "../CalendarComp/DueDateCalendar";
 import { DropdownMenuImportance } from "../DropDownMenu/DropDown";
 import type { Task } from "../Types/types";
-import { INITIAL_TASKS } from "../Mock/mockTasks";
-import { createTask } from "@/services/taskServices";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUpdateTask } from "@/hooks/useUpdateTask";
 import { useCreateTask } from "@/hooks/useCreateTask";
 
 const formTaskSchema = z.object({
+  _id: z.string().optional(),
   topic: z.string(),
   description: z.string(),
-  importance: z.string(),
+  importance: z.enum(["Urgent", "High", "Lead", "Internal", "Medium", "Low"]),
   date: z.date().optional(),
 });
 
@@ -36,31 +34,43 @@ export const AddTask = () => {
   } = useForm<FormTask>({
     resolver: zodResolver(formTaskSchema),
     defaultValues: {
+      _id: "",
       topic: "",
       description: "",
-      importance: "",
+      importance: "Medium",
       date: new Date(),
     },
   });
 
   const { isOpen, closeModal, currentTaskId } = useToggle();
-  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
 
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
-  // const { mutate } = useUpdateTask()
+  const { mutate: patchMutate } = useUpdateTask();
 
-  // const handleStatusChange = (_id: string, updates: Partial<Task>) => {
-  //   mutate({ _id, updates });
-  // };
+  const handleStatusChange = (data: FormTask) => {
+    if (!taskToEdit) return;
 
-  const queryClient = useQueryClient();
+    const { _id } = taskToEdit;
+    const updates: Partial<FormTask> = Object.entries(data).reduce(
+      (acc, [key, value]) => {
+        if (value !== taskToEdit[key as keyof FormTask]) {
+          acc[key as keyof FormTask] = value as any;
+        }
+        return acc;
+      },
+      {} as Partial<FormTask>
+    );
 
-  const { mutate, isPending, isError, error } = useCreateTask();
+    patchMutate({ _id, updates });
+  };
+
+  const { mutate: postMutate, isPending, isError, error } = useCreateTask();
 
   const handleAddTask = (data: FormTask) => {
-    mutate(data);
+    postMutate(data);
   };
+  const onSubmitHandler = taskToEdit ? handleStatusChange : handleAddTask;
 
   return (
     <>
@@ -94,7 +104,7 @@ export const AddTask = () => {
 
               <form
                 className="flex-1 space-y-4"
-                onSubmit={handleSubmit(handleAddTask)}
+                onSubmit={handleSubmit(onSubmitHandler)}
               >
                 <div className="space-y-2">
                   <Label>Topic:</Label>

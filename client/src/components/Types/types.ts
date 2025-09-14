@@ -19,7 +19,6 @@ export type Task = {
 export interface RequestData {
   topic: string;
   description: string;
-  status: string;
   importance?: Importance;
   date?: Date;
 }

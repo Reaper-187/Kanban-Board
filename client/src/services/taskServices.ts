@@ -1,11 +1,11 @@
 // import type { BackendData } from "@/components/Types/types";
-import type { Task } from "@/components/Types/types";
+import type { Task, RequestData } from "@/components/Types/types";
 import axios from "axios";
 
 const TASK_API = import.meta.env.VITE_API_TASK;
 
-export const createTask = async (data: Task): Promise<Task> => {
-  const response = await axios.post<Task>(TASK_API, data);
+export const createTask = async (data: RequestData): Promise<RequestData> => {
+  const response = await axios.post<RequestData>(TASK_API, data);
   return response.data;
 };
 
