@@ -69,9 +69,12 @@ export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
         </div>
 
         <div className="flex justify-between items-start flex-wrap">
-          <h3 className="text-base sm:text-lg md:text-xl font-semibold">
-            {task.topic}
-          </h3>
+          <div>
+            <h3 className="text-base sm:text-lg md:text-xl font-semibold">
+              {task.topic}
+            </h3>
+            <p>{task.description}</p>
+          </div>
           <span className="md:hidden">
             <DropdownSwitchStatus
               value={task.status}

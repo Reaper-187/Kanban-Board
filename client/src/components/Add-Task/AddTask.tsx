@@ -14,6 +14,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUpdateTask } from "@/hooks/useUpdateTask";
 import { useCreateTask } from "@/hooks/useCreateTask";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const formTaskSchema = z.object({
   _id: z.string().optional(),
@@ -44,23 +46,41 @@ export const AddTask = () => {
 
   const { isOpen, closeModal, currentTaskId } = useToggle();
 
-  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
-
   const { mutate: patchMutate } = useUpdateTask();
+  const queryClient = useQueryClient();
 
   const handleStatusChange = (data: FormTask) => {
-    if (!taskToEdit) return;
+    const _id = currentTaskId;
+    if (!_id) return;
 
-    const { _id } = taskToEdit;
-    const updates: Partial<FormTask> = Object.entries(data).reduce(
-      (acc, [key, value]) => {
-        if (value !== taskToEdit[key as keyof FormTask]) {
-          acc[key as keyof FormTask] = value as any;
+    const tasks = queryClient.getQueryData<Task[]>(["tasks"]) ?? [];
+    const originalTask = tasks.find((t) => t._id === _id);
+    if (!originalTask) return;
+
+    const updates: Partial<FormTask> = {};
+
+    const keys = Object.keys(data) as (keyof FormTask)[];
+    for (const key of keys) {
+      const newValue = data[key];
+      const oldValue = originalTask[key as keyof Task] as unknown;
+
+      if (key === "date") {
+        const newTime = newValue ? new Date(newValue as Date).getTime() : null;
+        const oldTime = oldValue ? new Date(oldValue as Date).getTime() : null;
+        if (newTime !== oldTime) {
+          updates.date = newValue as Date | undefined;
         }
-        return acc;
-      },
-      {} as Partial<FormTask>
-    );
+        continue;
+      }
+
+      if (newValue !== (oldValue as any)) {
+        updates[key] = newValue as any;
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      toast("You did not Change or Add something");
+    }
 
     patchMutate({ _id, updates });
   };
@@ -70,7 +90,7 @@ export const AddTask = () => {
   const handleAddTask = (data: FormTask) => {
     postMutate(data);
   };
-  const onSubmitHandler = taskToEdit ? handleStatusChange : handleAddTask;
+  const onSubmitHandler = currentTaskId ? handleStatusChange : handleAddTask;
 
   return (
     <>
@@ -111,7 +131,7 @@ export const AddTask = () => {
                   <Input
                     {...register("topic")}
                     placeholder="Topic"
-                    defaultValue={taskToEdit?.topic ?? ""}
+                    defaultValue={""}
                   />
                   {errors.topic && <p>{errors.topic.message}</p>}
                 </div>
@@ -120,7 +140,7 @@ export const AddTask = () => {
                   <Input
                     {...register("description")}
                     placeholder="description"
-                    defaultValue={taskToEdit?.description ?? ""}
+                    defaultValue={""}
                   />
                   {errors.description && <p>{errors.description.message}</p>}
                 </div>
