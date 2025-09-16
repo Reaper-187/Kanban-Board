@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToggle } from "@/Context/AddBtnContext";
 import { motion } from "framer-motion";
 import { Card, CardHeader } from "../ui/card";
@@ -28,10 +28,16 @@ const formTaskSchema = z.object({
 type FormTask = z.infer<typeof formTaskSchema>;
 
 export const AddTask = () => {
+  const { isOpen, closeModal, currentTaskId } = useToggle();
+  const queryClient = useQueryClient();
+
+  const tasks = queryClient.getQueryData<Task[]>(["tasks"]) ?? [];
+  const originalTask = tasks.find((t) => t._id === currentTaskId);
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormTask>({
     resolver: zodResolver(formTaskSchema),
@@ -44,18 +50,16 @@ export const AddTask = () => {
     },
   });
 
-  const { isOpen, closeModal, currentTaskId } = useToggle();
+  useEffect(() => {
+    if (originalTask) {
+      reset(originalTask);
+    }
+  }, [originalTask, reset]);
 
   const { mutate: patchMutate } = useUpdateTask();
-  const queryClient = useQueryClient();
 
   const handleStatusChange = (data: FormTask) => {
-    const _id = currentTaskId;
-    if (!_id) return;
-
-    const tasks = queryClient.getQueryData<Task[]>(["tasks"]) ?? [];
-    const originalTask = tasks.find((t) => t._id === _id);
-    if (!originalTask) return;
+    if (!currentTaskId || !originalTask) return;
 
     const updates: Partial<FormTask> = {};
 
@@ -80,9 +84,12 @@ export const AddTask = () => {
 
     if (Object.keys(updates).length === 0) {
       toast("You did not Change or Add something");
+      console.log("You did not Change or Add something");
+      return;
     }
 
-    patchMutate({ _id, updates });
+    patchMutate({ _id: currentTaskId, updates });
+    closeModal();
   };
 
   const { mutate: postMutate, isPending, isError, error } = useCreateTask();
@@ -128,11 +135,7 @@ export const AddTask = () => {
               >
                 <div className="space-y-2">
                   <Label>Topic:</Label>
-                  <Input
-                    {...register("topic")}
-                    placeholder="Topic"
-                    defaultValue={""}
-                  />
+                  <Input {...register("topic")} placeholder="Topic" />
                   {errors.topic && <p>{errors.topic.message}</p>}
                 </div>
                 <div className="space-y-2">
@@ -140,7 +143,6 @@ export const AddTask = () => {
                   <Input
                     {...register("description")}
                     placeholder="description"
-                    defaultValue={""}
                   />
                   {errors.description && <p>{errors.description.message}</p>}
                 </div>
