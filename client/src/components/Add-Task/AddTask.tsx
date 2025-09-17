@@ -52,7 +52,10 @@ export const AddTask = () => {
 
   useEffect(() => {
     if (originalTask) {
-      reset(originalTask);
+      reset({
+        ...originalTask,
+        date: originalTask.date ? new Date(originalTask.date) : undefined,
+      });
     }
   }, [originalTask, reset]);
 
@@ -83,8 +86,7 @@ export const AddTask = () => {
     }
 
     if (Object.keys(updates).length === 0) {
-      toast("You did not Change or Add something");
-      console.log("You did not Change or Add something");
+      toast("You did no Changes");
       return;
     }
 
