@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useToggle } from "@/Context/AddBtnContext";
 import { motion } from "framer-motion";
 import { Card, CardHeader } from "../ui/card";
-import { X } from "lucide-react";
+import { Trash, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -173,14 +173,19 @@ export const AddTask = () => {
                   />
                 </div>
 
-                <div className="flex-1 flex flex-col items-center justify-between">
-                  <Button
-                    className="w-full cursor-pointer md:w-fit font-semibold mt-4"
-                    type="submit"
-                    disabled={isPending}
-                  >
-                    {isPending ? "Wird gespeichert..." : "Add to Board"}
-                  </Button>
+                <div>
+                  <div className="flex-1 flex items-center justify-between">
+                    <span className="bg-red-500 p-1 rounded-full cursor-pointer hover:bg-red-400 transition-all duration-300">
+                      <Trash size={20} />
+                    </span>
+                    <Button
+                      className="w-full cursor-pointer md:w-fit font-semibold"
+                      type="submit"
+                      disabled={isPending}
+                    >
+                      {isPending ? "Wird gespeichert..." : "Add to Board"}
+                    </Button>
+                  </div>
                   {isError && <p>Fehler: {(error as Error).message}</p>}
                 </div>
               </form>
