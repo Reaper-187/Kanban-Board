@@ -5,6 +5,9 @@ export type AddTaskModal = {
   currentTaskId: string | null;
   openModal: (id: string | null) => void;
   closeModal: () => void;
+  isAlertOpen: boolean;
+  openAlertModal: (id: string | null) => void;
+  closeAlertModal: () => void;
 };
 
 export const AddBtnContext = createContext<AddTaskModal | undefined>(undefined);
@@ -12,6 +15,7 @@ export const AddBtnContext = createContext<AddTaskModal | undefined>(undefined);
 export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const openModal = (id: string | null) => {
     setCurrentTaskId(id);
@@ -23,9 +27,29 @@ export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
     setIsOpen(false);
   };
 
+  const openAlertModal = (id: string | null) => {
+    setCurrentTaskId(id);
+    setIsAlertOpen(true);
+  };
+
+  const closeAlertModal = () => {
+    console.log("geht geht");
+
+    setCurrentTaskId(null);
+    setIsAlertOpen(false);
+  };
+
   return (
     <AddBtnContext.Provider
-      value={{ isOpen, currentTaskId, openModal, closeModal }}
+      value={{
+        isOpen,
+        currentTaskId,
+        openModal,
+        closeModal,
+        isAlertOpen,
+        openAlertModal,
+        closeAlertModal,
+      }}
     >
       {children}
     </AddBtnContext.Provider>

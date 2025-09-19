@@ -28,7 +28,7 @@ const formTaskSchema = z.object({
 type FormTask = z.infer<typeof formTaskSchema>;
 
 export const AddTask = () => {
-  const { isOpen, closeModal, currentTaskId } = useToggle();
+  const { isOpen, closeModal, currentTaskId, openAlertModal } = useToggle();
   const queryClient = useQueryClient();
 
   const tasks = queryClient.getQueryData<Task[]>(["tasks"]) ?? [];
@@ -175,8 +175,12 @@ export const AddTask = () => {
 
                 <div>
                   <div className="flex-1 flex items-center justify-between">
-                    <span className="bg-red-500 p-1 rounded-full cursor-pointer hover:bg-red-400 transition-all duration-300">
+                    <span
+                      className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
+                      onClick={() => openAlertModal(currentTaskId)}
+                    >
                       <Trash size={20} />
+                      delete
                     </span>
                     <Button
                       className="w-full cursor-pointer md:w-fit font-semibold"

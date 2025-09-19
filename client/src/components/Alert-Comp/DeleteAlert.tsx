@@ -1,18 +1,26 @@
 import { useState } from "react";
-import {
-  AlertCircleIcon,
-  CheckCircle2Icon,
-  PopcornIcon,
-  Trash,
-  Undo,
-} from "lucide-react";
+import { AlertCircleIcon, Trash, Undo } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { motion } from "framer-motion";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
+import { useToggle } from "@/Context/AddBtnContext";
+import { useDeleteTask } from "@/hooks/useDelete";
+
+interface DeleteReq {
+  _id: string;
+}
 
 export function DeleteAlert() {
-  const [isAlertOpen, setIsAlertOpen] = useState(true);
+  const { mutate } = useDeleteTask();
+  const { isAlertOpen, closeAlertModal, currentTaskId } = useToggle();
+
+  const deleteTask = (currentTaskId: DeleteReq) => {
+    console.log(currentTaskId);
+
+    mutate(currentTaskId);
+  };
+
   return (
     <>
       {isAlertOpen && (
@@ -42,11 +50,14 @@ export function DeleteAlert() {
                 </AlertDescription>
               </Alert>
               <div className="flex justify-between items-center">
-                <span className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300">
+                <span
+                  className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
+                  onClick={() => deleteTask}
+                >
                   <Trash size={20} />
                   delete
                 </span>
-                <Button>
+                <Button onClick={closeAlertModal}>
                   <Undo></Undo>
                   Cancle
                 </Button>
