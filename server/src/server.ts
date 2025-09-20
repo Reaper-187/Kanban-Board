@@ -25,7 +25,7 @@ app.use(express.json());
 app.use("/api", taskRoute);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello Kanban with Middleware!");
+  res.send("Backend running");
 });
 
 async function startServer() {
