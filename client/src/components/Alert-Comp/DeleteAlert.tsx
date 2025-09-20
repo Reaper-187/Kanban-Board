@@ -7,18 +7,17 @@ import { Button } from "../ui/button";
 import { useToggle } from "@/Context/AddBtnContext";
 import { useDeleteTask } from "@/hooks/useDelete";
 
-interface DeleteReq {
-  _id: string;
-}
-
 export function DeleteAlert() {
   const { mutate } = useDeleteTask();
-  const { isAlertOpen, closeAlertModal, currentTaskId } = useToggle();
+  const { isAlertOpen, closeAlertModal, currentTaskId, closeModal } =
+    useToggle();
 
-  const deleteTask = (currentTaskId: DeleteReq) => {
-    console.log(currentTaskId);
+  const deleteTask = (currentTaskId: string | null) => {
+    if (!currentTaskId) return;
 
-    mutate(currentTaskId);
+    mutate({ _id: currentTaskId });
+    closeAlertModal();
+    closeModal();
   };
 
   return (
@@ -52,7 +51,7 @@ export function DeleteAlert() {
               <div className="flex justify-between items-center">
                 <span
                   className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
-                  onClick={() => deleteTask}
+                  onClick={() => deleteTask(currentTaskId)}
                 >
                   <Trash size={20} />
                   delete
