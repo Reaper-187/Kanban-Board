@@ -59,7 +59,11 @@ export const AddTask = () => {
     }
   }, [originalTask, reset]);
 
-  const { mutate: patchMutate } = useUpdateTask();
+  const {
+    mutate: patchMutate,
+    isError: patchIsError,
+    error: patchError,
+  } = useUpdateTask();
 
   const handleStatusChange = (data: FormTask) => {
     if (!currentTaskId || !originalTask) return;
@@ -94,12 +98,20 @@ export const AddTask = () => {
     closeModal();
   };
 
-  const { mutate: postMutate, isPending, isError, error } = useCreateTask();
+  const {
+    mutate: postMutate,
+    isPending,
+    isError: postIsError,
+    error: postError,
+  } = useCreateTask();
 
   const handleAddTask = (data: FormTask) => {
     postMutate(data);
   };
   const onSubmitHandler = currentTaskId ? handleStatusChange : handleAddTask;
+
+  const activeError = currentTaskId ? patchError : postError;
+  const activeIsError = currentTaskId ? patchIsError : postIsError;
 
   return (
     <>
@@ -190,7 +202,9 @@ export const AddTask = () => {
                       {isPending ? "Wird gespeichert..." : "Add to Board"}
                     </Button>
                   </div>
-                  {isError && <p>Fehler: {(error as Error).message}</p>}
+                  {activeIsError && (
+                    <p>Fehler: {(activeError as Error).message}</p>
+                  )}
                 </div>
               </form>
             </Card>

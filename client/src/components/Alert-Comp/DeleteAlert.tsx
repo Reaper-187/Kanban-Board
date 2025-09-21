@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { AlertCircleIcon, Trash, Undo } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { motion } from "framer-motion";
@@ -33,7 +32,7 @@ export function DeleteAlert() {
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-full max-w-2xl mx-auto"
+            className="w-full max-w-xl mx-auto"
           >
             <Card className="grid w-full max-w-xl items-start p-2">
               <Alert variant="destructive">
