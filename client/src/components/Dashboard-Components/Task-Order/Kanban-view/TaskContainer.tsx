@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Flag } from "lucide-react";
-import { StatusTypes } from "./StatusTypes/StatusTypes";
+import { StatusTypes } from "../StatusTypes/StatusTypes";
 import {
   DndContext,
   DragOverlay,
@@ -13,7 +13,7 @@ import type {
   SortOrder,
   Task,
 } from "@/components/Types/types";
-import { TaskCard } from "../Task-Card/TaskCard";
+import { TaskCard } from "../../Task-Card/TaskCard";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTask } from "@/services/taskServices";

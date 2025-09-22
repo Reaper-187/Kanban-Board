@@ -1,7 +1,12 @@
 import { Button } from "../ui/button";
 import { CardHeader } from "../ui/card";
 
-export const DashboardHeader = () => {
+type ViewType = "Kanban" | "List";
+interface DashboardHeaderProps {
+  toggleView: (view: ViewType) => void;
+}
+
+export const DashboardHeader = ({ toggleView }: DashboardHeaderProps) => {
   return (
     <>
       <CardHeader>
@@ -9,8 +14,18 @@ export const DashboardHeader = () => {
           <div className="flex items-center gap-3">
             <h1 className="font-semibold md:text-lg lg:text-xl">Tasks</h1>
             <div className="flex gap-5">
-              <Button className="w-1/2 cursor-pointer">Kanban</Button>
-              <Button className="w-1/2 cursor-pointer">List</Button>
+              <Button
+                className="w-1/2 cursor-pointer"
+                onClick={() => toggleView("Kanban")}
+              >
+                Kanban
+              </Button>
+              <Button
+                className="w-1/2 cursor-pointer"
+                onClick={() => toggleView("List")}
+              >
+                List
+              </Button>
             </div>
           </div>
           <Button>+ Add Task</Button>
