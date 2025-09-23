@@ -1,37 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
-import { Flag } from "lucide-react";
-import { StatusTypes } from "../StatusTypes/StatusTypes";
 import {
-  DndContext,
-  DragOverlay,
-  type DragEndEvent,
-  type DragStartEvent,
-} from "@dnd-kit/core";
-import type {
-  Column,
-  ImportanceFilter,
-  SortOrder,
-  Task,
+  COLUMNS,
+  type Task,
+  type TaskContainerProps,
 } from "@/components/Types/types";
-import { TaskCard } from "../../Task-Card/TaskCard";
-import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
-import { useQuery } from "@tanstack/react-query";
-import { fetchTask } from "@/services/taskServices";
 import { useUpdateTask } from "@/hooks/useUpdateTask";
+import { fetchTask } from "@/services/taskServices";
+import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { StatusTypes } from "../StatusTypes/StatusTypes";
 
-export const COLUMNS: Column[] = [
-  { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
-  { id: "IN_PROGRESS", title: "In Progress", outcome: 0, Icon: Flag },
-  { id: "DONE", title: "Done", outcome: 0, Icon: Flag },
-];
-
-interface TaskContainerProps {
-  filtertrigger: string;
-  sortOrder: SortOrder;
-  singleFilter: ImportanceFilter[];
-}
-
-export const TaskContainer = ({
+export const TableContainer = ({
   filtertrigger,
   sortOrder,
   singleFilter,
@@ -108,25 +88,25 @@ export const TaskContainer = ({
       importance: singleFilter.length ? singleFilter : undefined,
     }));
   }, [singleFilter, sortOrder]);
-
   return (
     <div className="flex gap-4 mx-auto">
-      <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-        {visibleColumns.map((column) => (
-          <StatusTypes
-            key={column.id}
-            column={column}
-            tasks={filteredData.filter((task) => task.status === column.id)}
-            onStatusChange={handleStatusChange}
-          />
-        ))}
+      {/* <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}> */}
 
+      {visibleColumns.map((column) => (
+        <StatusTypes
+          key={column.id}
+          column={column}
+          tasks={filteredData.filter((task) => task.status === column.id)}
+          onStatusChange={handleStatusChange}
+        />
+      ))}
+      {/* 
         <DragOverlay dropAnimation={null}>
           {activeTask && (
             <TaskCard task={activeTask} onStatusChange={handleStatusChange} />
           )}
         </DragOverlay>
-      </DndContext>
+      </DndContext> */}
     </div>
   );
 };

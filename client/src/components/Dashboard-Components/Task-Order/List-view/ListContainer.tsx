@@ -1,3 +1,3 @@
 export const ListContainer = () => {
-  return <div>ListContainer</div>;
+  return <div className="flex gap-4 mx-auto">LISTCONTAINER</div>;
 };

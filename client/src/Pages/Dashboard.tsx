@@ -2,14 +2,13 @@ import { AddTask } from "@/components/Add-Task/AddTask";
 import { DeleteAlert } from "@/components/Alert-Comp/DeleteAlert";
 import { DashboardHeader } from "@/components/Dashboard-Components/D-Header";
 import { DashboardNav } from "@/components/Dashboard-Components/D-Nav";
-import { TaskContainer } from "@/components/Dashboard-Components/Task-Order/Kanban-view/TaskContainer";
-import { ListContainer } from "@/components/Dashboard-Components/Task-Order/List-view/ListContainer";
+import { TaskContainer } from "@/components/Dashboard-Components/Task-Order/TaskContainer";
 import type { ImportanceFilter, SortOrder } from "@/components/Types/types";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 
 export const Dashboard = () => {
-  const [viewType, setViewType] = useState<string>("Kanban");
+  const [viewType, setViewType] = useState<string>("kanban");
 
   const [filterStauts, setFilterStatus] = useState<string>("");
 
@@ -30,15 +29,14 @@ export const Dashboard = () => {
           importanceFilter={importanceFilter}
           setImportanceFilter={setImportanceFilter}
         />
-        {viewType === "Kanban" ? (
-          <TaskContainer
-            filtertrigger={filterStauts}
-            sortOrder={sortOrder}
-            singleFilter={importanceFilter}
-          />
-        ) : (
-          <ListContainer />
-        )}
+
+        <TaskContainer
+          viewType={viewType}
+          filtertrigger={filterStauts}
+          sortOrder={sortOrder}
+          singleFilter={importanceFilter}
+        />
+
         <AddTask />
         <DeleteAlert />
       </Card>
