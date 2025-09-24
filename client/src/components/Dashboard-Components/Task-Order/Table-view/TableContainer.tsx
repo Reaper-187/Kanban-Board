@@ -1,112 +1,28 @@
-import {
-  COLUMNS,
-  type Task,
-  type TaskContainerProps,
-} from "@/components/Types/types";
-import { useUpdateTask } from "@/hooks/useUpdateTask";
-import { fetchTask } from "@/services/taskServices";
-import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
-import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
-import { StatusTypes } from "../StatusTypes/StatusTypes";
+import type { Column as ColumnType, Task } from "@/components/Types/types";
+import type { KanbanHeaderProps } from "../Kanban-view/KanbanHeader";
+import { PlusIcon } from "lucide-react";
+import { useToggle } from "@/Context/AddBtnContext";
 
-export const TableContainer = ({
-  filtertrigger,
-  sortOrder,
-  singleFilter,
-}: TaskContainerProps) => {
-  const [sortOptions, setSortOptions] = useState<SortOptions>({
-    status: [],
-    importanceOrder: undefined,
-    dateOrder: undefined,
-    importance: [],
-  });
+export const TableContainer = ({ column, tasks }: KanbanHeaderProps) => {
+  const { openModal } = useToggle();
 
-  const { data: fetchTaskData = [] } = useQuery({
-    queryFn: fetchTask,
-    queryKey: ["tasks"],
-  });
-
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
-
-  const { mutate } = useUpdateTask();
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const taskId = event.active.id;
-    const task =
-      fetchTaskData.find((taskCard) => taskCard._id === taskId) || null;
-    setActiveTask(task);
-  };
-
-  const handleStatusChange = (_id: string, updates: Partial<Task>) => {
-    mutate({ _id, updates });
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over) return;
-
-    const taskId = active.id as string;
-    const newStatus = over.id as Task["status"];
-
-    mutate({
-      _id: taskId,
-      updates: { status: newStatus },
-    });
-  };
-
-  const visibleColumns = useMemo(() => {
-    if (filtertrigger && filtertrigger !== "All Tasks") {
-      return COLUMNS.filter((col) => col.id === filtertrigger);
-    }
-    return COLUMNS;
-  }, [filtertrigger]);
-
-  const filteredData = useMemo(() => {
-    let processed = processTasks(fetchTaskData, sortOptions);
-
-    return processed;
-  }, [fetchTaskData, sortOptions, filtertrigger]);
-
-  useEffect(() => {
-    if (sortOrder === "importanceDown") {
-      setSortOptions((prev) => ({ ...prev, importanceOrder: "desc" }));
-    } else if (sortOrder === "importanceUp") {
-      setSortOptions((prev) => ({ ...prev, importanceOrder: "asc" }));
-    }
-
-    if (sortOrder === "dueDateDown") {
-      setSortOptions((prev) => ({ ...prev, dateOrder: "desc" }));
-    } else if (sortOrder === "dueDateUp") {
-      setSortOptions((prev) => ({ ...prev, dateOrder: "asc" }));
-    }
-
-    setSortOptions((prev) => ({
-      ...prev,
-      importance: singleFilter.length ? singleFilter : undefined,
-    }));
-  }, [singleFilter, sortOrder]);
   return (
-    <div className="flex gap-4 mx-auto">
-      {/* <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}> */}
-
-      {visibleColumns.map((column) => (
-        <StatusTypes
-          key={column.id}
-          column={column}
-          tasks={filteredData.filter((task) => task.status === column.id)}
-          onStatusChange={handleStatusChange}
-        />
-      ))}
-      {/* 
-        <DragOverlay dropAnimation={null}>
-          {activeTask && (
-            <TaskCard task={activeTask} onStatusChange={handleStatusChange} />
-          )}
-        </DragOverlay>
-      </DndContext> */}
+    <div className="flex items-center gap-2">
+      <span className="rounded-full bg-red-200 p-1">
+        <column.Icon size={13} />
+      </span>
+      <h3 className="font-semibold">{column.title}</h3>
+      <span className="bg-gray-200 rounded-sm px-1 text-sm">
+        {tasks.length} Tasks
+      </span>
+      <button
+        type="button"
+        onClick={() => openModal(null)}
+        className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
+        aria-label="Add task"
+      >
+        <PlusIcon size={15} />
+      </button>
     </div>
   );
 };

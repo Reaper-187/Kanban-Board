@@ -1,8 +1,13 @@
 import { PlusIcon } from "lucide-react";
-import type { ColumnProps } from "../StatusTypes/StatusTypes";
 import { useToggle } from "@/Context/AddBtnContext";
+import type { Column as ColumnType, Task } from "@/components/Types/types";
 
-export const KanbanHeader = ({ column, tasks }: ColumnProps) => {
+export type KanbanHeaderProps = {
+  column: ColumnType;
+  tasks: Task[];
+};
+
+export const KanbanHeader = ({ column, tasks }: KanbanHeaderProps) => {
   const { openModal } = useToggle();
 
   return (

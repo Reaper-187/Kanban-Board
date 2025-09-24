@@ -1,9 +1,19 @@
 import { ListContainer } from "../List-view/ListContainer";
 import { TableContainer } from "../Table-view/TableContainer";
-import type { ColumnProps } from "./StatusTypes";
 import { KanbanHeader } from "../Kanban-view/KanbanHeader";
+import type { Column as ColumnType, Task } from "@/components/Types/types";
 
-export const StatusHeder = ({ column, tasks, viewType }: ColumnProps) => {
+export type ColumnsHeaderInfo = {
+  column: ColumnType;
+  tasks: Task[];
+  viewType: string;
+};
+
+export const StatusHeder = ({
+  column,
+  tasks,
+  viewType,
+}: Partial<ColumnsHeaderInfo>) => {
   switch (viewType) {
     case "kanban":
       return <KanbanHeader column={column} tasks={tasks} />;
