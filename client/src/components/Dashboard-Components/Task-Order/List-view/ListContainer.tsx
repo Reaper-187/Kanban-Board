@@ -4,20 +4,24 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import type { KanbanHeaderProps } from "../Kanban-view/KanbanHeader";
 import { PlusIcon } from "lucide-react";
-import { TaskCard } from "../../Task-Card/TaskCard";
 import { useToggle } from "@/Context/AddBtnContext";
+import { TaskCardList } from "../../Task-Card/ListCards/TaskCardList";
+import type { HeaderProps } from "../StatusTypes/StatusHeder";
 
-export const ListContainer = ({ column, tasks }: KanbanHeaderProps) => {
+export const ListContainer = ({
+  column,
+  tasks,
+  onStatusChange,
+}: HeaderProps) => {
   const { openModal } = useToggle();
 
   return (
-    <div className="flex gap-4 mx-auto">
+    <div className="flex gap-4">
       <Accordion
         type="single"
         collapsible
-        className="w-full"
+        className="w-full bg-red-200 m-3"
         defaultValue="item-1"
       >
         <AccordionItem value="item-1">
@@ -39,9 +43,9 @@ export const ListContainer = ({ column, tasks }: KanbanHeaderProps) => {
             </button>
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
-            {/* <div className="flex flex-col gap-2 ">
+            <div className="flex flex-col gap-2 ">
               {tasks.map((task) => (
-                <TaskCard
+                <TaskCardList
                   key={task._id}
                   task={task}
                   onStatusChange={(newStatus: string) =>
@@ -49,7 +53,7 @@ export const ListContainer = ({ column, tasks }: KanbanHeaderProps) => {
                   }
                 />
               ))}
-            </div> */}
+            </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

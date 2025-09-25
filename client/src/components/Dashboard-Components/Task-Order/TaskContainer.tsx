@@ -97,7 +97,11 @@ export const TaskContainer = ({
   }, [singleFilter, sortOrder]);
 
   return (
-    <div className="flex gap-4 mx-auto">
+    <div
+      className={`${
+        viewType != "kanban" ? "w-full p-1 gap-4" : "flex gap-4 mx-auto"
+      }`}
+    >
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         {visibleColumns.map((column) => (
           <StatusTypes
