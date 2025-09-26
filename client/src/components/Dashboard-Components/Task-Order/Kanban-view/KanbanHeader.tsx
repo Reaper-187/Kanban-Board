@@ -3,7 +3,7 @@ import { useToggle } from "@/Context/AddBtnContext";
 import { TaskCard } from "../../Task-Card/TaskCard";
 import { Card } from "@/components/ui/card";
 import { useDroppable } from "@dnd-kit/core";
-import type { HeaderProps } from "../StatusTypes/StatusHeder";
+import type { HeaderProps } from "../StatusTypes/StatusView";
 
 export const KanbanHeader = ({
   column,

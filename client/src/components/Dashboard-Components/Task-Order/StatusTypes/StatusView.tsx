@@ -10,7 +10,7 @@ export type HeaderProps = {
   onStatusChange: (_id: string, updates: Partial<Task>) => void;
 };
 
-export const StatusHeder = ({
+export const StatusView = ({
   column,
   tasks,
   onStatusChange,

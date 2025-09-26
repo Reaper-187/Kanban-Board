@@ -7,7 +7,7 @@ import {
 import { PlusIcon } from "lucide-react";
 import { useToggle } from "@/Context/AddBtnContext";
 import { TaskCardList } from "../../Task-Card/ListCards/TaskCardList";
-import type { HeaderProps } from "../StatusTypes/StatusHeder";
+import type { HeaderProps } from "../StatusTypes/StatusView";
 
 export const ListContainer = ({
   column,
@@ -21,27 +21,30 @@ export const ListContainer = ({
       <Accordion
         type="single"
         collapsible
-        className="w-full bg-red-200 m-3"
+        className="w-full m-3 border border-red-200 rounded-md"
         defaultValue="item-1"
       >
         <AccordionItem value="item-1">
           <AccordionTrigger>
-            <span className="rounded-full bg-red-200 p-1">
-              <column.Icon size={13} />
-            </span>
-            {column.title}
-            <span className="bg-gray-200 rounded-sm px-1 text-sm">
-              {tasks.length} Tasks
-            </span>
-            <button
-              type="button"
-              onClick={() => openModal(null)}
-              className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
-              aria-label="Add task"
-            >
-              <PlusIcon size={15} />
-            </button>
+            <div className="grid grid-cols-4 gap-5 w-full px-2">
+              <span className="rounded-full bg-green-400 p-1 flex w-fit justify-center">
+                <column.Icon size={13} />
+              </span>
+              <p>{column.title}</p>
+              <span className="bg-gray-200 rounded-sm px-1 text-sm  text-center w-fit">
+                {tasks.length} Tasks
+              </span>
+              <button
+                type="button"
+                onClick={() => openModal(null)}
+                className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200  flex justify-center"
+                aria-label="Add task"
+              >
+                <PlusIcon size={15} />
+              </button>
+            </div>
           </AccordionTrigger>
+
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <div className="flex flex-col gap-2 ">
               {tasks.map((task) => (

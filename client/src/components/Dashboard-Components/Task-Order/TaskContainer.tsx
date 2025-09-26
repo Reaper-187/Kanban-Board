@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { StatusTypes } from "../Task-Order/StatusTypes/StatusTypes";
+import { StatusTypes } from "./StatusTypes/StatusTypes";
 import {
   DndContext,
   DragOverlay,

@@ -1,5 +1,5 @@
 import type { Column as ColumnType, Task } from "@/components/Types/types";
-import { StatusHeder } from "./StatusHeder";
+import { StatusView } from "./StatusView";
 
 export type ColumnProps = {
   column: ColumnType;
@@ -15,7 +15,7 @@ export const StatusTypes = ({
 }: ColumnProps) => {
   return (
     <>
-      <StatusHeder
+      <StatusView
         viewType={viewType}
         column={column}
         tasks={tasks}
