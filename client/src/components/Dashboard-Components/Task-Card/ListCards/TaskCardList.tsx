@@ -1,8 +1,15 @@
+import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
 import type { Task } from "@/components/Types/types";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { useToggle } from "@/Context/AddBtnContext";
-import { Calendar } from "lucide-react";
-import React from "react";
-
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Calendar, Ellipsis, Pen, Trash } from "lucide-react";
 type TaskCardProps = {
   task: Task;
   onStatusChange: (_id: string, updates: Partial<Task>) => void;
@@ -24,19 +31,20 @@ const importanceColor: Record<keyof Color, string> = {
 };
 
 export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
-  const { openModal } = useToggle();
+  const { openModal, openAlertModal, currentTaskId } = useToggle();
 
   const colorPick = importanceColor[task.importance as keyof Color];
 
   return (
-    <div className="flex justify-between transition duration-300 hover:shadow-md p-2">
-      <div className="flex gap-5" id={task._id} key={task.status}>
-        <input type="checkbox" name="" id="" />
-        <h3 className="text-base sm:text-lg md:text-xl font-semibold">
+    <div className="flex justify-between items-center transition duration-300 border hover:shadow-md p-2">
+      <div className="flex items-center gap-3" id={task._id} key={task.status}>
+        <Checkbox />
+        <h3 className="text-base sm:text-md md:text-lg font-semibold">
           {task.topic}
         </h3>
       </div>
-      <div className="flex gap-5">
+
+      <div className="flex items-center gap-5">
         <div className="flex items-center gap-1 text-xs sm:text-sm">
           <Calendar size={16} />
           <span className="font-medium">
@@ -44,7 +52,8 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
             {task.date ? new Date(task.date).toLocaleDateString("de-DE") : ""}
           </span>
         </div>
-        <div className="flex flex-wrap gap-2">
+
+        <div className="flex gap-2">
           <span
             className={
               colorPick
@@ -55,9 +64,31 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
             {task.importance}
           </span>
         </div>
-      </div>
 
-      <p>....</p>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="p-1 h-auto w-auto">
+              <Ellipsis />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <Button
+              type="button"
+              onClick={() => openModal(task._id)}
+              className="w-full"
+            >
+              <Pen size={15} className="cursor-pointer" />
+            </Button>
+            <DropdownMenuSeparator />
+            <DropdownSwitchStatus
+              value={task.status}
+              onChange={(newStatus) =>
+                onStatusChange(task._id, { status: newStatus })
+              }
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { PlusIcon } from "lucide-react";
 import { useToggle } from "@/Context/AddBtnContext";
 import { TaskCardList } from "../../Task-Card/ListCards/TaskCardList";
 import type { HeaderProps } from "../StatusTypes/StatusView";
+import { Button } from "@/components/ui/button";
 
 export const ListContainer = ({
   column,
@@ -21,7 +22,7 @@ export const ListContainer = ({
       <Accordion
         type="single"
         collapsible
-        className="w-full m-3 border border-red-200 rounded-md"
+        className="w-full p-1 m-3 border border-red-200 rounded-md"
         defaultValue="item-1"
       >
         <AccordionItem value="item-1">
@@ -34,19 +35,18 @@ export const ListContainer = ({
               <span className="bg-gray-200 rounded-sm px-1 text-sm  text-center w-fit">
                 {tasks.length} Tasks
               </span>
-              <button
+              <PlusIcon
+                size={25}
                 type="button"
                 onClick={() => openModal(null)}
-                className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200  flex justify-center"
+                className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200  flex justify-center w-fit"
                 aria-label="Add task"
-              >
-                <PlusIcon size={15} />
-              </button>
+              />
             </div>
           </AccordionTrigger>
 
           <AccordionContent className="flex flex-col gap-4 text-balance">
-            <div className="flex flex-col gap-2 ">
+            <div className="flex flex-col gap-2">
               {tasks.map((task) => (
                 <TaskCardList
                   key={task._id}
