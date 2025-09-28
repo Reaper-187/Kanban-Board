@@ -31,7 +31,7 @@ const importanceColor: Record<keyof Color, string> = {
 };
 
 export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
-  const { openModal, openAlertModal, currentTaskId } = useToggle();
+  const { openModal } = useToggle();
 
   const colorPick = importanceColor[task.importance as keyof Color];
 
@@ -80,6 +80,7 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
               <Pen size={15} className="cursor-pointer" />
             </Button>
             <DropdownMenuSeparator />
+
             <DropdownSwitchStatus
               value={task.status}
               onChange={(newStatus) =>
