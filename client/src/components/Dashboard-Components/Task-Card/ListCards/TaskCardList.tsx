@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToggle } from "@/Context/AddBtnContext";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Calendar, Ellipsis, Pen, Trash } from "lucide-react";
+import { Calendar, Ellipsis, Pen } from "lucide-react";
 type TaskCardProps = {
   task: Task;
   onStatusChange: (_id: string, updates: Partial<Task>) => void;
@@ -81,12 +81,15 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
             </Button>
             <DropdownMenuSeparator />
 
-            <DropdownSwitchStatus
-              value={task.status}
-              onChange={(newStatus) =>
-                onStatusChange(task._id, { status: newStatus })
-              }
-            />
+            <span>
+              <DropdownSwitchStatus
+                value={task.status}
+                onChange={(newStatus) => {
+                  onStatusChange(task._id, { status: newStatus });
+                  document.body.style.pointerEvents = "auto";
+                }}
+              />
+            </span>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

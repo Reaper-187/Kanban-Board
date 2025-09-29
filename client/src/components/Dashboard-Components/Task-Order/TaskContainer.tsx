@@ -47,6 +47,8 @@ export const TaskContainer = ({
   };
 
   const handleStatusChange = (_id: string, updates: Partial<Task>) => {
+    console.log(_id, updates.status);
+
     mutate({ _id, updates });
   };
 

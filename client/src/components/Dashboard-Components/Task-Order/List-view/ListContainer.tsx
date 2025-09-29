@@ -50,9 +50,9 @@ export const ListContainer = ({
                 <TaskCardList
                   key={task._id}
                   task={task}
-                  onStatusChange={(newStatus: string) =>
-                    onStatusChange(task._id, { status: newStatus })
-                  }
+                  onStatusChange={(_id, updates) => {
+                    onStatusChange(_id, updates);
+                  }}
                 />
               ))}
             </div>

@@ -3,6 +3,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -63,7 +64,7 @@ export const DropdownSwitchStatus = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="text-xs">
+        <Button variant="outline" className="text-xs w-full">
           <ArrowLeftRight />
           Switch
         </Button>
