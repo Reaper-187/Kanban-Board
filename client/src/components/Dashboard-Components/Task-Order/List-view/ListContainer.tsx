@@ -21,26 +21,29 @@ export const ListContainer = ({
       <Accordion
         type="single"
         collapsible
-        className="w-full p-1 m-3 border border-red-200 rounded-md"
+        className="w-full p-1 m-3 rounded-md border rounded-md"
         defaultValue="item-1"
       >
-        <AccordionItem value="item-1">
+        <AccordionItem value="item-1" className="relative">
+          <PlusIcon
+            size={25}
+            type="button"
+            onClick={() => openModal(null)}
+            className="absolute left-1/2 top-3 p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
+            // className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200  flex justify-center w-fit"
+            aria-label="Add task"
+          />
           <AccordionTrigger>
-            <div className="grid grid-cols-4 gap-5 w-full px-2">
-              <span className="rounded-full bg-green-400 p-1 flex w-fit justify-center">
-                <column.Icon size={13} />
-              </span>
-              <p>{column.title}</p>
-              <span className="bg-gray-200 rounded-sm px-1 text-sm  text-center w-fit">
-                {tasks.length} Tasks
-              </span>
-              <PlusIcon
-                size={25}
-                type="button"
-                onClick={() => openModal(null)}
-                className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200  flex justify-center w-fit"
-                aria-label="Add task"
-              />
+            <div className="flex self-center px-2">
+              <div className="flex gap-4">
+                <span className="rounded-full bg-green-400 p-1 flex w-fit items-center justify-center">
+                  <column.Icon size={16} />
+                </span>
+                <p className="font-bold">{column.title}</p>
+                <span className="bg-gray-200 rounded-sm px-1 text-sm  text-center w-fit">
+                  {tasks.length} Tasks
+                </span>
+              </div>
             </div>
           </AccordionTrigger>
 

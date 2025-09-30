@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useToggle } from "@/Context/AddBtnContext";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Card, CardHeader } from "../ui/card";
 import { Trash, X } from "lucide-react";
 import { Button } from "../ui/button";
@@ -115,102 +115,104 @@ export const AddTask = () => {
 
   return (
     <>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-        >
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-full max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
           >
-            <Card className="relative p-5">
-              <CardHeader className="mb-5 p-0">
-                <div className="flex justify-between items-center">
-                  <h1 className="text-xl font-semibold md:text-2xl lg:text-3xl">
-                    {currentTaskId ? "Edit" : "Create"} To-Do
-                  </h1>
-                  <span
-                    onClick={closeModal}
-                    className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors"
-                  >
-                    <X size={24} />
-                  </span>
-                </div>
-              </CardHeader>
-
-              <form
-                className="flex-1 space-y-4"
-                onSubmit={handleSubmit(onSubmitHandler)}
-              >
-                <div className="space-y-2">
-                  <Label>Topic:</Label>
-                  <Input {...register("topic")} placeholder="Topic" />
-                  {errors.topic && <p>{errors.topic.message}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label>description</Label>
-                  <Input
-                    {...register("description")}
-                    placeholder="description"
-                  />
-                  {errors.description && <p>{errors.description.message}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Controller
-                    control={control}
-                    name="importance"
-                    render={({ field }) => (
-                      <DropdownMenuImportance
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Controller
-                    control={control}
-                    name="date"
-                    render={({ field }) => (
-                      <Calendar24
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                </div>
-
-                <div>
-                  <div className="flex-1 flex items-center justify-between">
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="w-full max-w-2xl mx-auto"
+            >
+              <Card className="relative p-5">
+                <CardHeader className="mb-5 p-0">
+                  <div className="flex justify-between items-center">
+                    <h1 className="text-xl font-semibold md:text-2xl lg:text-3xl">
+                      {currentTaskId ? "Edit" : "Create"} To-Do
+                    </h1>
                     <span
-                      className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
-                      onClick={() => openAlertModal(currentTaskId)}
+                      onClick={closeModal}
+                      className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors"
                     >
-                      <Trash size={20} />
-                      delete
+                      <X size={24} />
                     </span>
-                    <Button
-                      className="w-full cursor-pointer md:w-fit font-semibold"
-                      type="submit"
-                      disabled={isPending}
-                    >
-                      {isPending ? "Wird gespeichert..." : "Add to Board"}
-                    </Button>
                   </div>
-                  {activeIsError && (
-                    <p>Fehler: {(activeError as Error).message}</p>
-                  )}
-                </div>
-              </form>
-            </Card>
+                </CardHeader>
+
+                <form
+                  className="flex-1 space-y-4"
+                  onSubmit={handleSubmit(onSubmitHandler)}
+                >
+                  <div className="space-y-2">
+                    <Label>Topic:</Label>
+                    <Input {...register("topic")} placeholder="Topic" />
+                    {errors.topic && <p>{errors.topic.message}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>description</Label>
+                    <Input
+                      {...register("description")}
+                      placeholder="description"
+                    />
+                    {errors.description && <p>{errors.description.message}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Controller
+                      control={control}
+                      name="importance"
+                      render={({ field }) => (
+                        <DropdownMenuImportance
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Controller
+                      control={control}
+                      name="date"
+                      render={({ field }) => (
+                        <Calendar24
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex-1 flex items-center justify-between">
+                      <span
+                        className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
+                        onClick={() => openAlertModal(currentTaskId)}
+                      >
+                        <Trash size={20} />
+                        delete
+                      </span>
+                      <Button
+                        className="w-full cursor-pointer md:w-fit font-semibold"
+                        type="submit"
+                        disabled={isPending}
+                      >
+                        {isPending ? "Wird gespeichert..." : "Add to Board"}
+                      </Button>
+                    </div>
+                    {activeIsError && (
+                      <p>Fehler: {(activeError as Error).message}</p>
+                    )}
+                  </div>
+                </form>
+              </Card>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </>
   );
 };

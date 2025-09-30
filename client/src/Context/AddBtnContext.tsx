@@ -8,6 +8,9 @@ export type AddTaskModal = {
   isAlertOpen: boolean;
   openAlertModal: (id: string | null) => void;
   closeAlertModal: () => void;
+  isDescriptionOpen: boolean;
+  openDescription: (id: string | null) => void;
+  closeDescription: () => void;
 };
 
 export const AddBtnContext = createContext<AddTaskModal | undefined>(undefined);
@@ -16,6 +19,7 @@ export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
 
   const openModal = (id: string | null) => {
     setCurrentTaskId(id);
@@ -33,10 +37,18 @@ export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const closeAlertModal = () => {
-    console.log("geht geht");
-
     setCurrentTaskId(null);
     setIsAlertOpen(false);
+  };
+
+  const openDescription = (id: string | null) => {
+    setCurrentTaskId(id);
+    setIsDescriptionOpen(true);
+  };
+
+  const closeDescription = () => {
+    setCurrentTaskId(null);
+    setIsDescriptionOpen(false);
   };
 
   return (
@@ -49,6 +61,9 @@ export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
         isAlertOpen,
         openAlertModal,
         closeAlertModal,
+        isDescriptionOpen,
+        openDescription,
+        closeDescription,
       }}
     >
       {children}
