@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 
 export const Dashboard = () => {
-  const [viewType, setViewType] = useState<string>("kanban");
+  const [viewType, setViewType] = useState<string>("table");
 
   const [filterStauts, setFilterStatus] = useState<string>("");
 

@@ -33,8 +33,14 @@ export const StatusView = ({
           onStatusChange={onStatusChange}
         />
       );
-    case "table":
-      return <TableContainer column={column} tasks={tasks} />;
+    // case "table":
+    //   return (
+    //     <TableContainer
+    //       column={column}
+    //       tasks={tasks}
+    //       onStatusChange={onStatusChange}
+    //     />
+    //   );
     default:
       return null;
   }

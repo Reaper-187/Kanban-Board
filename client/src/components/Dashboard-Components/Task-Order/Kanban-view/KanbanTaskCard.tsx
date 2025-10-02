@@ -26,7 +26,7 @@ const importanceColor: Record<keyof Color, string> = {
   Low: "bg-gray-200",
 };
 
-export const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
+export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
   const { openModal } = useToggle();
 
   const colorPick = importanceColor[task.importance as keyof Color];

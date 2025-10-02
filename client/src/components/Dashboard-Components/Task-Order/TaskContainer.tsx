@@ -11,11 +11,12 @@ import {
   type Task,
   type TaskContainerProps,
 } from "@/components/Types/types";
-import { TaskCard } from "../Task-Card/TaskCard";
+import { KanbanTaskCard } from "./Kanban-view/KanbanTaskCard";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTask } from "@/services/taskServices";
 import { useUpdateTask } from "@/hooks/useUpdateTask";
+import { TableContainer } from "./Table-view/TableContainer";
 
 export const TaskContainer = ({
   viewType,
@@ -105,19 +106,29 @@ export const TaskContainer = ({
       }`}
     >
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-        {visibleColumns.map((column) => (
-          <StatusTypes
-            key={column.id}
-            column={column}
-            tasks={filteredData.filter((task) => task.status === column.id)}
+        {viewType === "table" ? (
+          <TableContainer
+            tasks={filteredData}
             onStatusChange={handleStatusChange}
-            viewType={viewType}
           />
-        ))}
+        ) : (
+          visibleColumns.map((column) => (
+            <StatusTypes
+              key={column.id}
+              column={column}
+              tasks={filteredData.filter((task) => task.status === column.id)}
+              onStatusChange={handleStatusChange}
+              viewType={viewType}
+            />
+          ))
+        )}
 
         <DragOverlay dropAnimation={null}>
           {activeTask && (
-            <TaskCard task={activeTask} onStatusChange={handleStatusChange} />
+            <KanbanTaskCard
+              task={activeTask}
+              onStatusChange={handleStatusChange}
+            />
           )}
         </DragOverlay>
       </DndContext>

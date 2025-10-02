@@ -1,6 +1,6 @@
 import { PlusIcon } from "lucide-react";
 import { useToggle } from "@/Context/AddBtnContext";
-import { TaskCard } from "../../Task-Card/TaskCard";
+import { KanbanTaskCard } from "./KanbanTaskCard";
 import { Card } from "@/components/ui/card";
 import { useDroppable } from "@dnd-kit/core";
 import type { HeaderProps } from "../StatusTypes/StatusView";
@@ -39,7 +39,7 @@ export const KanbanHeader = ({
           </div>
           <div className="flex flex-col gap-2 ">
             {tasks.map((task) => (
-              <TaskCard
+              <KanbanTaskCard
                 key={task._id}
                 task={task}
                 onStatusChange={(_id, updates) => onStatusChange(_id, updates)}
