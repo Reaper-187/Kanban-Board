@@ -138,10 +138,11 @@ export const AddTask = () => {
     isPending,
     isError: postIsError,
     error: postError,
-  } = useCreateTask();
+  } = useCreateTask(reset);
 
   const handleAddTask = (data: FormTask) => {
     postMutate(data);
+    closeModal();
   };
   const onSubmitHandler = currentTask?._id ? handleStatusChange : handleAddTask;
 

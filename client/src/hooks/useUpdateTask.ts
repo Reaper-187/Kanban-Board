@@ -4,13 +4,14 @@ import type { Task } from "@/components/Types/types";
 
 export const useUpdateTask = () => {
   const queryClient = useQueryClient();
+  const query = { queryKey: ["tasks"] };
 
   const mutate = useMutation({
     mutationFn: ({ _id, updates }: { _id: string; updates: Partial<Task> }) =>
       updateTask(_id, updates),
     onMutate: async ({ _id, updates }) => {
       // 1. Query-Cancelling
-      await queryClient.cancelQueries({ queryKey: ["tasks"] });
+      await queryClient.cancelQueries(query);
       // 2. Alte DAten Speichern für Fallback
       const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
       // 3. Opti-Updaten
@@ -30,7 +31,7 @@ export const useUpdateTask = () => {
       }
     },
     onSettled: async () => {
-      return queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      return queryClient.invalidateQueries(query);
     },
   });
 
