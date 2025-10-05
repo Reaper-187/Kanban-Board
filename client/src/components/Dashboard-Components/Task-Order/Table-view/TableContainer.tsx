@@ -119,6 +119,7 @@ export function TableContainer({ tasks }: TableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const table = useReactTable({
     data: tasks,
@@ -131,23 +132,25 @@ export function TableContainer({ tasks }: TableProps) {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      globalFilter,
     },
   });
 
   return (
     <div className="w-full">
-      {/* <div className="flex items-center py-4">
+      <div className="flex items-center py-4">
         <Input
-  placeholder="Search tasks..."
-  value={globalFilter ?? ""}
-  onChange={(event) => setGlobalFilter(event.target.value)}
-  className="max-w-sm"
-/>
+          placeholder="Search tasks..."
+          value={globalFilter ?? ""}
+          onChange={(event) => setGlobalFilter(event.target.value)}
+          className="max-w-sm"
+        />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -174,7 +177,7 @@ export function TableContainer({ tasks }: TableProps) {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div> */}
+      </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
