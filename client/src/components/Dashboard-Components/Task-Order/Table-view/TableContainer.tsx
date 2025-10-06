@@ -37,9 +37,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { HeaderProps } from "../StatusTypes/StatusView";
 import { useState } from "react";
-import { type Task, type TaskContainerProps } from "@/components/Types/types";
+import { type Task } from "@/components/Types/types";
+import type { Color } from "../../Task-Card/ListCards/TaskCardList";
 
 export type TableProps = {
   tasks: Task[];
@@ -79,25 +79,58 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "date",
     header: "Due Date",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("date")}</div>,
+    cell: ({ row }) => {
+      const rawDate: string | number = row.getValue("date");
+      const localFormatedDate = new Date(rawDate).toLocaleDateString("de-DE");
+      const formatedDate = localFormatedDate.split(".");
+      const day = formatedDate[0].padStart(2, "0");
+      const month = formatedDate[1].padStart(2, "0");
+      const year = formatedDate[2];
+      return <div>{`${day}.${month}.${year}`}</div>;
+    },
   },
   {
     accessorKey: "importance",
     header: "Importance",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("importance")}</div>
-    ),
+    cell: ({ row }) => {
+      const importanceColor: Record<keyof Color, string> = {
+        Urgent: "bg-red-600",
+        Lead: "bg-orange-400",
+        High: "bg-red-400",
+        Medium: "bg-yellow-200",
+        Low: "bg-gray-200",
+      };
+      const colorPick =
+        importanceColor[row.getValue("importance") as keyof Color];
+
+      return (
+        <div
+          className={
+            colorPick
+              ? `${colorPick} px-2 py-1 w-fit rounded-xl text-xs sm:text-sm`
+              : ""
+          }
+        >
+          {row.getValue("importance")}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
+    cell: ({ row }) => {
+      const STATUS_LABELS: Record<string, string> = {
+        TODO: "To Do",
+        IN_PROGRESS: "In Progress",
+        DONE: "Done",
+      };
+      const value = row.getValue("status") as string;
+      return <div className="capitalize">{STATUS_LABELS[value] || value}</div>;
+    },
   },
   {
-    id: "actions",
-    enableHiding: false,
+    accessorKey: "actions",
     cell: () => {
       return (
         <DropdownMenu>

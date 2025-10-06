@@ -16,7 +16,7 @@ type TaskCardProps = {
   task: Task;
   onStatusChange: (_id: string, updates: Partial<Task>) => void;
 };
-type Color = {
+export type Color = {
   Urgent: string;
   Lead: string;
   High: string;
