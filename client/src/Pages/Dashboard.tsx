@@ -1,5 +1,6 @@
 import { AddTask } from "@/components/Add-Task/AddTask";
 import { DeleteAlert } from "@/components/Alert-Comp/DeleteAlert";
+import { DescriptionAlert } from "@/components/Alert-Comp/DescriptionAlert";
 import { DashboardHeader } from "@/components/Dashboard-Components/D-Header";
 import { DashboardNav } from "@/components/Dashboard-Components/D-Nav";
 import { TaskContainer } from "@/components/Dashboard-Components/Task-Order/TaskContainer";
@@ -39,6 +40,7 @@ export const Dashboard = () => {
 
         <AddTask />
         <DeleteAlert />
+        <DescriptionAlert />
       </Card>
     </>
   );

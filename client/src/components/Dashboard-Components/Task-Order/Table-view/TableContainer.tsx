@@ -6,6 +6,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type RowData,
   type SortingState,
   useReactTable,
   type VisibilityState,
@@ -13,7 +14,10 @@ import {
 import {
   ArrowUpDown,
   ChevronDown,
+  Ellipsis,
   MoreHorizontal,
+  NotepadText,
+  Pen,
   type LucideIcon,
 } from "lucide-react";
 
@@ -40,11 +44,21 @@ import {
 import { useState } from "react";
 import { type Task } from "@/components/Types/types";
 import type { Color } from "../../Task-Card/ListCards/TaskCardList";
+import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
+import { useToggle } from "@/Context/AddBtnContext";
 
 export type TableProps = {
   tasks: Task[];
   onStatusChange: (_id: string, updates: Partial<Task>) => void;
 };
+
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends RowData> {
+    onStatusChange: (_id: string, updates: Partial<Task>) => void;
+    openModal: (id: string) => void;
+    openDescription: (id: string) => void;
+  }
+}
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -130,33 +144,69 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    accessorKey: "actions",
-    cell: () => {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row, table }) => {
+      const task = row.original;
+      const { onStatusChange, openModal, openDescription } =
+        table.options.meta!;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <DropdownMenuContent>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
-            </DropdownMenuContent>
+            <Button variant="ghost" className="p-1 h-auto w-auto">
+              <Ellipsis />
+            </Button>
           </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <Button
+              type="button"
+              onClick={() => {
+                openDescription(task._id);
+              }}
+              className="w-full"
+            >
+              <NotepadText size={15} className="cursor-pointer" />
+            </Button>
+            <DropdownMenuSeparator />
+            <DropdownSwitchStatus
+              value={task.status}
+              onChange={(newStatus) => {
+                onStatusChange(task._id, { status: newStatus });
+                document.body.style.pointerEvents = "auto";
+              }}
+            />
+            <DropdownMenuSeparator />
+            <Button
+              type="button"
+              onClick={() => openModal(task._id)}
+              className="w-full"
+            >
+              <Pen size={15} className="cursor-pointer" />
+            </Button>
+          </DropdownMenuContent>
         </DropdownMenu>
       );
     },
   },
 ];
 
-export function TableContainer({ tasks }: TableProps) {
+export function TableContainer({ tasks, onStatusChange }: TableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
 
+  const { openModal, openDescription } = useToggle();
+
   const table = useReactTable({
     data: tasks,
     columns,
+    meta: {
+      onStatusChange,
+      openModal,
+      openDescription,
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),

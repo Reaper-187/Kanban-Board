@@ -12,7 +12,7 @@ import { useToggle } from "@/Context/AddBtnContext";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Ellipsis, NotepadText, Pen, X } from "lucide-react";
-type TaskCardProps = {
+export type TaskCardProps = {
   task: Task;
   onStatusChange: (_id: string, updates: Partial<Task>) => void;
 };
