@@ -1,15 +1,16 @@
+import type { Task } from "@/components/Types/types";
 import { useState, createContext, type ReactNode, useContext } from "react";
 
 export type AddTaskModal = {
   isOpen: boolean;
-  currentTaskId: string | null;
-  openModal: (id: string | null) => void;
+  currentTask: Task | null;
+  openModal: (task: Task) => void;
   closeModal: () => void;
   isAlertOpen: boolean;
-  openAlertModal: (id: string | null) => void;
+  openAlertModal: (task: Task) => void;
   closeAlertModal: () => void;
   isDescriptionOpen: boolean;
-  openDescription: (id: string | null) => void;
+  openDescription: (task: Task) => void;
   closeDescription: () => void;
 };
 
@@ -17,37 +18,37 @@ export const AddBtnContext = createContext<AddTaskModal | undefined>(undefined);
 
 export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
+  const [currentTask, setcurrentTask] = useState<Task | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
 
-  const openModal = (id: string | null) => {
-    setCurrentTaskId(id);
+  const openModal = (task: Task) => {
+    setcurrentTask(task);
     setIsOpen(true);
   };
 
   const closeModal = () => {
-    setCurrentTaskId(null);
+    setcurrentTask(null);
     setIsOpen(false);
   };
 
-  const openAlertModal = (id: string | null) => {
-    setCurrentTaskId(id);
+  const openAlertModal = (task: Task) => {
+    setcurrentTask(task);
     setIsAlertOpen(true);
   };
 
   const closeAlertModal = () => {
-    setCurrentTaskId(null);
+    setcurrentTask(null);
     setIsAlertOpen(false);
   };
 
-  const openDescription = (id: string | null) => {
-    setCurrentTaskId(id);
+  const openDescription = (task: Task) => {
+    setcurrentTask(task);
     setIsDescriptionOpen(true);
   };
 
   const closeDescription = () => {
-    setCurrentTaskId(null);
+    setcurrentTask(null);
     setIsDescriptionOpen(false);
   };
 
@@ -55,7 +56,7 @@ export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
     <AddBtnContext.Provider
       value={{
         isOpen,
-        currentTaskId,
+        currentTask,
         openModal,
         closeModal,
         isAlertOpen,

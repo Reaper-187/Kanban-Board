@@ -28,11 +28,11 @@ const formTaskSchema = z.object({
 type FormTask = z.infer<typeof formTaskSchema>;
 
 export const AddTask = () => {
-  const { isOpen, closeModal, currentTaskId, openAlertModal } = useToggle();
+  const { isOpen, closeModal, currentTask, openAlertModal } = useToggle();
   const queryClient = useQueryClient();
 
   const tasks = queryClient.getQueryData<Task[]>(["tasks"]) ?? [];
-  const originalTask = tasks.find((t) => t._id === currentTaskId);
+  const originalTask = tasks.find((t) => t._id === currentTask?._id);
   const {
     register,
     control,
@@ -66,7 +66,7 @@ export const AddTask = () => {
   } = useUpdateTask();
 
   const handleStatusChange = (data: FormTask) => {
-    if (!currentTaskId || !originalTask) return;
+    if (!currentTask?._id || !originalTask) return;
 
     const updates: Partial<FormTask> = {};
 
@@ -94,7 +94,7 @@ export const AddTask = () => {
       return;
     }
 
-    patchMutate({ _id: currentTaskId, updates });
+    patchMutate({ _id: currentTask._id, updates });
     closeModal();
   };
 
@@ -108,10 +108,11 @@ export const AddTask = () => {
   const handleAddTask = (data: FormTask) => {
     postMutate(data);
   };
-  const onSubmitHandler = currentTaskId ? handleStatusChange : handleAddTask;
+  const onSubmitHandler = currentTask?._id ? handleStatusChange : handleAddTask;
 
-  const activeError = currentTaskId ? patchError : postError;
-  const activeIsError = currentTaskId ? patchIsError : postIsError;
+  const activeError = currentTask?._id ? patchError : postError;
+
+  const activeIsError = currentTask?._id ? patchIsError : postIsError;
 
   return (
     <>
@@ -133,7 +134,7 @@ export const AddTask = () => {
                 <CardHeader className="mb-5 p-0">
                   <div className="flex justify-between items-center">
                     <h1 className="text-xl font-semibold md:text-2xl lg:text-3xl">
-                      {currentTaskId ? "Edit" : "Create"} To-Do
+                      {currentTask?._id ? "Edit" : "Create"} To-Do
                     </h1>
                     <span
                       onClick={closeModal}
@@ -187,10 +188,24 @@ export const AddTask = () => {
                   </div>
 
                   <div>
-                    <div className="flex-1 flex items-center justify-between">
+                    <div
+                      className={
+                        currentTask?._id
+                          ? "flex-1 flex items-center justify-between"
+                          : "flex-1 flex items-center justify-end"
+                      }
+                    >
                       <span
-                        className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
-                        onClick={() => openAlertModal(currentTaskId)}
+                        className={
+                          currentTask?._id
+                            ? "text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
+                            : "hidden"
+                        }
+                        onClick={() => {
+                          if (currentTask) {
+                            openAlertModal(currentTask);
+                          }
+                        }}
                       >
                         <Trash size={20} />
                         delete

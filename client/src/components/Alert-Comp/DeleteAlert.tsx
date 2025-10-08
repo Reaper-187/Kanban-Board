@@ -8,13 +8,12 @@ import { useDeleteTask } from "@/hooks/useDelete";
 
 export function DeleteAlert() {
   const { mutate } = useDeleteTask();
-  const { isAlertOpen, closeAlertModal, currentTaskId, closeModal } =
-    useToggle();
+  const { isAlertOpen, closeAlertModal, currentTask, closeModal } = useToggle();
 
-  const deleteTask = (currentTaskId: string | null) => {
-    if (!currentTaskId) return;
+  const deleteTask = (currentTask: string | null) => {
+    if (!currentTask) return;
 
-    mutate({ _id: currentTaskId });
+    mutate({ _id: currentTask });
     closeAlertModal();
     closeModal();
   };
@@ -50,7 +49,7 @@ export function DeleteAlert() {
               <div className="flex justify-between items-center">
                 <span
                   className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
-                  onClick={() => deleteTask(currentTaskId)}
+                  onClick={() => deleteTask(currentTask)}
                 >
                   <Trash size={20} />
                   delete

@@ -61,7 +61,7 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           </div>
           <button
             type="button"
-            onClick={() => openModal(task._id)}
+            onClick={() => openModal(task)}
             className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
           >
             <Pen size={15} className="cursor-pointer" />

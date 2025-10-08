@@ -55,8 +55,8 @@ export type TableProps = {
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     onStatusChange: (_id: string, updates: Partial<Task>) => void;
-    openModal: (id: string) => void;
-    openDescription: (id: string) => void;
+    openModal: (task: Task) => void;
+    openDescription: (task: Task) => void;
   }
 }
 
@@ -161,7 +161,7 @@ export const columns: ColumnDef<Task>[] = [
             <Button
               type="button"
               onClick={() => {
-                openDescription(task._id);
+                openDescription(task);
               }}
               className="w-full"
             >
@@ -178,7 +178,7 @@ export const columns: ColumnDef<Task>[] = [
             <DropdownMenuSeparator />
             <Button
               type="button"
-              onClick={() => openModal(task._id)}
+              onClick={() => openModal(task)}
               className="w-full"
             >
               <Pen size={15} className="cursor-pointer" />
