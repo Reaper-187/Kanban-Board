@@ -18,6 +18,7 @@ const taskSchema = new Schema<TaskType>({
   },
   status: {
     type: String,
+    enum: ["TODO", "IN-PROGRESS", "DONE"],
     default: "TODO",
   },
   importance: {
