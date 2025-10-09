@@ -4,7 +4,7 @@ import { useState, createContext, type ReactNode, useContext } from "react";
 export type AddTaskModal = {
   isOpen: boolean;
   currentTask: Task | null;
-  openModal: (task: Task) => void;
+  openModal: (task?: Task) => void;
   closeModal: () => void;
   isAlertOpen: boolean;
   openAlertModal: (task: Task) => void;
@@ -22,8 +22,8 @@ export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
 
-  const openModal = (task: Task) => {
-    setcurrentTask(task);
+  const openModal = (task?: Task) => {
+    setcurrentTask(task ?? null);
     setIsOpen(true);
   };
 

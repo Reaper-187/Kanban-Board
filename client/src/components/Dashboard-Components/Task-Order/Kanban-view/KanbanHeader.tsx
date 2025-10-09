@@ -30,7 +30,7 @@ export const KanbanHeader = ({
             </span>
             <button
               type="button"
-              onClick={() => openModal(null)}
+              onClick={() => openModal()}
               className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
               aria-label="Add task"
             >

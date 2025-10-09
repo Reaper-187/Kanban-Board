@@ -12,6 +12,7 @@ interface DashboardNavProps {
   setSortOrder: (statusSorting: SortOrder) => void;
   importanceFilter: ImportanceFilter[];
   setImportanceFilter: (singleImportance: ImportanceFilter[]) => void;
+  viewType: string;
 }
 
 export const DashboardNav = ({
@@ -20,6 +21,7 @@ export const DashboardNav = ({
   setSortOrder,
   importanceFilter,
   setImportanceFilter,
+  viewType,
 }: DashboardNavProps) => {
   const handleStatusFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
     filter(e.currentTarget.value);
@@ -29,8 +31,8 @@ export const DashboardNav = ({
     <>
       <div className="flex justify-between p-2">
         <div className="flex space-x-5">
-          <div>
-            <Input />
+          <div className={viewType === "table" ? "hidden" : "block"}>
+            <Input placeholder="Search tasks...." />
             <span className="stripe"></span>
           </div>
           <div className="space-x-5">

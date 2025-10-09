@@ -29,6 +29,7 @@ export const Dashboard = () => {
           setSortOrder={setSortOrder}
           importanceFilter={importanceFilter}
           setImportanceFilter={setImportanceFilter}
+          viewType={viewType}
         />
 
         <TaskContainer

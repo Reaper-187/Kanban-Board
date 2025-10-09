@@ -28,7 +28,7 @@ export const ListContainer = ({
           <PlusIcon
             size={25}
             type="button"
-            onClick={() => openModal(null)}
+            onClick={() => openModal()}
             className="absolute left-1/2 top-3 p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
             // className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200  flex justify-center w-fit"
             aria-label="Add task"

@@ -1,3 +1,4 @@
+import { useToggle } from "@/Context/AddBtnContext";
 import { Button } from "../ui/button";
 import { CardHeader } from "../ui/card";
 
@@ -7,6 +8,8 @@ interface DashboardHeaderProps {
 }
 
 export const DashboardHeader = ({ toggleView }: DashboardHeaderProps) => {
+  const { openModal } = useToggle();
+
   return (
     <>
       <CardHeader>
@@ -34,7 +37,9 @@ export const DashboardHeader = ({ toggleView }: DashboardHeaderProps) => {
               </Button>
             </div>
           </div>
-          <Button>+ Add Task</Button>
+          <Button className="cursor-pointer" onClick={() => openModal()}>
+            + Add Task
+          </Button>
         </div>
       </CardHeader>
       <span className="stripe"></span>

@@ -150,6 +150,7 @@ export const columns: ColumnDef<Task>[] = [
       const task = row.original;
       const { onStatusChange, openModal, openDescription } =
         table.options.meta!;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
