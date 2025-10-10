@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Calendar, Grip, Pen } from "lucide-react";
+import { Calendar, File, Grip, MessageCircleMore, Pen } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
 import type { Task } from "@/components/Types/types";
 import { useDraggable } from "@dnd-kit/core";
@@ -27,7 +27,7 @@ const importanceColor: Record<keyof Color, string> = {
 };
 
 export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
-  const { openModal } = useToggle();
+  const { openModal, openDescription } = useToggle();
 
   const colorPick = importanceColor[task.importance as keyof Color];
 
@@ -98,10 +98,43 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
         </div>
         <div className="flex items-center gap-1 text-xs sm:text-sm">
           <Calendar size={16} />
-          <span className="font-medium">
+          <span className="font-medium text-gray-400">
             Due Date{" "}
             {task.date ? new Date(task.date).toLocaleDateString("de-DE") : ""}
           </span>
+        </div>
+        <span className="w-full bg-gray-400 h-[1px]"></span>
+        <div className="flex justify-between">
+          <div className="flex -space-x-3">
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 1"
+            />
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 2"
+            />
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 3"
+            />
+          </div>
+
+          <div
+            className="flex space-x-2 cursor-pointer"
+            onClick={() => openDescription(task)}
+          >
+            <span className="flex items-center">
+              <File size={15} /> <p>12</p>
+            </span>
+            <span className="flex items-center">
+              <MessageCircleMore size={15} />
+              <p>12</p>
+            </span>
+          </div>
         </div>
       </Card>
     </div>

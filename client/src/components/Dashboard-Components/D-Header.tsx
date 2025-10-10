@@ -1,6 +1,7 @@
 import { useToggle } from "@/Context/AddBtnContext";
 import { Button } from "../ui/button";
 import { CardHeader } from "../ui/card";
+import { Kanban, ListChevronsDownUp, Table } from "lucide-react";
 
 type ViewType = "kanban" | "list" | "table";
 interface DashboardHeaderProps {
@@ -18,21 +19,22 @@ export const DashboardHeader = ({ toggleView }: DashboardHeaderProps) => {
             <h1 className="font-semibold md:text-lg lg:text-xl">Tasks</h1>
             <div className="flex gap-5">
               <Button
-                className="w-1/2 cursor-pointer"
+                className="w-1/2 cursor-pointer focus:text-blue-400"
                 onClick={() => toggleView("kanban")}
               >
-                Kanban
+                <Kanban /> Kanban
               </Button>
               <Button
-                className="w-1/2 cursor-pointer"
+                className="w-1/2 cursor-pointer focus:text-blue-400"
                 onClick={() => toggleView("list")}
               >
-                List
+                <ListChevronsDownUp /> List
               </Button>
               <Button
-                className="w-1/2 cursor-pointer"
+                className="w-1/2 cursor-pointer focus:text-blue-400"
                 onClick={() => toggleView("table")}
               >
+                <Table />
                 Table
               </Button>
             </div>

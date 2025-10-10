@@ -1,7 +1,6 @@
 import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
 import type { Task } from "@/components/Types/types";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -10,8 +9,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToggle } from "@/Context/AddBtnContext";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Ellipsis, NotepadText, Pen, X } from "lucide-react";
+import {
+  Calendar,
+  Ellipsis,
+  File,
+  MessageCircleMore,
+  NotepadText,
+  Pen,
+  X,
+} from "lucide-react";
 export type TaskCardProps = {
   task: Task;
   onStatusChange: (_id: string, updates: Partial<Task>) => void;
@@ -53,6 +59,35 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
             Due Date{" "}
             {task.date ? new Date(task.date).toLocaleDateString("de-DE") : ""}
           </span>
+        </div>
+
+        <div className="flex justify-between gap-3">
+          <div className="flex space-x-2">
+            <span className="flex items-center">
+              <File size={15} /> <p>12</p>
+            </span>
+            <span className="flex items-center">
+              <MessageCircleMore size={15} />
+              <p>12</p>
+            </span>
+          </div>
+          <div className="flex -space-x-3">
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 1"
+            />
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 2"
+            />
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 3"
+            />
+          </div>
         </div>
 
         <div className="flex gap-2">

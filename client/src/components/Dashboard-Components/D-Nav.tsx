@@ -31,9 +31,11 @@ export const DashboardNav = ({
     <>
       <div className="flex justify-between p-2">
         <div className="flex space-x-5">
-          <div className={viewType === "table" ? "hidden" : "block"}>
+          <div
+            className={viewType === "table" ? "hidden" : "flex items-center"}
+          >
             <Input placeholder="Search tasks...." />
-            <span className="stripe"></span>
+            <span className="bg-gray-400 ml-5 w-[1px] h-[90%]"></span>
           </div>
           <div className="space-x-5">
             <Button value="All Tasks" onClick={handleStatusFilter}>

@@ -11,7 +11,7 @@ import {
   type Task,
   type TaskContainerProps,
 } from "@/components/Types/types";
-import { KanbanTaskCard } from "./Kanban-view/KanbanTaskCard";
+import { KanbanTaskCard } from "../Task-Card/Kanban-Card/KanbanTaskCard";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTask } from "@/services/taskServices";

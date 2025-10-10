@@ -11,15 +11,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  ChevronDown,
-  Ellipsis,
-  MoreHorizontal,
-  NotepadText,
-  Pen,
-  type LucideIcon,
-} from "lucide-react";
+import { ChevronDown, Ellipsis, NotepadText, Pen } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,8 +19,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -141,6 +131,34 @@ export const columns: ColumnDef<Task>[] = [
       };
       const value = row.getValue("status") as string;
       return <div className="capitalize">{STATUS_LABELS[value] || value}</div>;
+    },
+  },
+  {
+    // accessorKey: "member" später dann wenn fetch usw implentiert ist
+    enableHiding: false,
+    header: "Member",
+    cell: () => {
+      return (
+        <div className="flex">
+          <div className="flex -space-x-3 bg-red-200">
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 1"
+            />
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 2"
+            />
+            <img
+              className="w-6 h-6 rounded-full border-2 border-white"
+              src="https://via.placeholder.com/40"
+              alt="Avatar 3"
+            />
+          </div>
+        </div>
+      );
     },
   },
   {

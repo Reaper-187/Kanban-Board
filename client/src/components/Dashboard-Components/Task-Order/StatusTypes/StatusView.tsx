@@ -1,5 +1,4 @@
 import { ListContainer } from "../List-view/ListContainer";
-import { TableContainer } from "../Table-view/TableContainer";
 import { KanbanHeader } from "../Kanban-view/KanbanHeader";
 import type { Column as ColumnType, Task } from "@/components/Types/types";
 import type { ColumnProps } from "./StatusTypes";
@@ -33,14 +32,6 @@ export const StatusView = ({
           onStatusChange={onStatusChange}
         />
       );
-    // case "table":
-    //   return (
-    //     <TableContainer
-    //       column={column}
-    //       tasks={tasks}
-    //       onStatusChange={onStatusChange}
-    //     />
-    //   );
     default:
       return null;
   }

@@ -1,6 +1,6 @@
 import { PlusIcon } from "lucide-react";
 import { useToggle } from "@/Context/AddBtnContext";
-import { KanbanTaskCard } from "./KanbanTaskCard";
+import { KanbanTaskCard } from "../../Task-Card/Kanban-Card/KanbanTaskCard";
 import { Card } from "@/components/ui/card";
 import { useDroppable } from "@dnd-kit/core";
 import type { HeaderProps } from "../StatusTypes/StatusView";
