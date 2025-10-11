@@ -3,6 +3,7 @@ import { Card, CardHeader } from "../ui/card";
 import { useToggle } from "@/Context/AddBtnContext";
 import { DownloadIcon, X } from "lucide-react";
 import { Button } from "../ui/button";
+import { Dropzone } from "../Dropzone/Dropzone";
 
 export const DescriptionAlert = () => {
   const { isDescriptionOpen, closeDescription, currentTask } = useToggle();
@@ -45,9 +46,12 @@ export const DescriptionAlert = () => {
                 <p className="w-full bg-gray-300 h-[1px]"></p>
                 <div>
                   <div className="flex justify-between items-center mb-5">
-                    <div className="flex items-center">
-                      <p className="text-lg font-semibold">Attachment</p>
-                      <p className="p-2 rounded-m bg-grey-300">1: file</p>
+                    <div>
+                      <div className="flex items-center">
+                        <p className="text-lg font-semibold">Attachment</p>
+                        <p className="p-2 rounded-m bg-grey-300">1: file</p>
+                      </div>
+                      <Dropzone />
                     </div>
                     <Button className="p-1">+ Add new File</Button>
                   </div>
