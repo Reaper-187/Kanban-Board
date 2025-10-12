@@ -16,12 +16,28 @@ import { useUpdateTask } from "@/hooks/useUpdateTask";
 import { useCreateTask } from "@/hooks/useCreateTask";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Dropzone } from "../Dropzone/Dropzone";
+
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 const formTaskSchema = z.object({
   _id: z.string().optional(),
   topic: z.string(),
   description: z.string(),
   importance: z.enum(["Urgent", "High", "Lead", "Internal", "Medium", "Low"]),
+  file: z
+    .any()
+    .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported."
+    ),
   date: z.date().optional(),
 });
 
@@ -168,6 +184,19 @@ export const AddTask = () => {
                       name="importance"
                       render={({ field }) => (
                         <DropdownMenuImportance
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Add File:</Label>
+                    <Controller
+                      control={control}
+                      name="file"
+                      render={({ field }) => (
+                        <Dropzone
                           value={field.value}
                           onChange={field.onChange}
                         />

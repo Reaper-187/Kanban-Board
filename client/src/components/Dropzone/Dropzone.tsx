@@ -1,55 +1,72 @@
-import React, { useState, type ChangeEvent } from "react";
-import { Button } from "../ui/button";
-import axios from "axios";
+import { useEffect, useState, type ChangeEvent } from "react";
+import { Input } from "../ui/input";
+import { X } from "lucide-react";
 
-type UploadStatus = "idle" | "uploading" | "success" | "error";
+type FileDataProps = {
+  value: File[] | null;
+  onChange: (newFile: File[] | null) => void;
+};
 
-export const Dropzone = () => {
-  const [file, setFile] = useState<File | null>(null);
-
-  const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
+export const Dropzone = ({ value, onChange }: FileDataProps) => {
+  const [files, setFiles] = useState<File[]>([]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
+    if (!e.target.files) return;
+    const selectedFiles = Array.from(e.target.files); // e.target.files ist ein Obj daher dann Array.from()
+    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    onChange([...files, ...selectedFiles]);
   };
 
-  const handleFileUpload = async () => {
-    if (!file) return;
-    setUploadStatus("uploading");
-    const formData = new FormData();
-    formData.append("file", file);
-    try {
-      await axios.post("BACKEND_URL", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      setUploadStatus("success");
-    } catch (err) {
-      setUploadStatus("error");
-      console.log(err);
-    }
+  const handleRemoveFile = (name: string) => {
+    const updatedFiles = files?.filter((f) => f.name !== name) || null;
+    setFiles(updatedFiles);
+    onChange(updatedFiles);
   };
+
+  useEffect(() => {
+    if (value) setFiles(value);
+  }, [value]);
 
   return (
-    <div>
-      <input type="file" className="bg-red-200" onChange={handleFileChange} />
-      {file && (
-        <div className="mb-4 text-sm">
-          <p>File name: {file.name}</p>
-          <p>Size: {(file.size / 1024).toFixed(2)} KB</p>
-          <p>File name: {file.type}</p>
-        </div>
-      )}
-      {file && uploadStatus !== "uploading" && (
-        <Button onClick={handleFileUpload}>Upload</Button>
-      )}
-
-      {uploadStatus === "success" && <p>File uploaded successfully!</p>}
-
-      {uploadStatus === "error" && <p>upload fail. Please try again.</p>}
+    <div className="space-y-2">
+      <Input
+        type="file"
+        className="cursor-pointer hover:bg-gray-100 transition"
+        multiple
+        onChange={handleFileChange}
+      />
+      {files &&
+        files.map((file) => (
+          <li
+            key={file.name}
+            className="flex items-center justify-between text-sm bg-gray-100 p-2 rounded-md"
+          >
+            <p className="truncate">{file.name}</p>
+            <X
+              size={16}
+              className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+              onClick={() => handleRemoveFile(file.name)}
+            />
+          </li>
+        ))}
     </div>
   );
 };
+
+// const handleFileUpload = async () => {
+//   if (!file) return;
+//   setUploadStatus("uploading");
+//   const formData = new FormData();
+//   formData.append("file", file);
+//   try {
+//     await axios.post("BACKEND_URL", formData, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+//     setUploadStatus("success");
+//   } catch (err) {
+//     setUploadStatus("error");
+//     console.log(err);
+//   }
+// };
