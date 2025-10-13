@@ -1,6 +1,7 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import { Input } from "../ui/input";
 import { X } from "lucide-react";
+import { toast } from "sonner";
 
 type FileDataProps = {
   value: File[] | null;
@@ -8,12 +9,37 @@ type FileDataProps = {
 };
 
 export const Dropzone = ({ value, onChange }: FileDataProps) => {
+  const ACCEPTED_FILE_TYPES = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    //MIME-Typ (Multipurpose Internet Mail Extensions)
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "text/xml",
+  ];
+
   const [files, setFiles] = useState<File[]>([]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    const selectedFiles = Array.from(e.target.files); // e.target.files ist ein Obj daher dann Array.from()
-    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    const selectedFiles = Array.from(e.target.files);
+    const allAccepted = selectedFiles.every((file) =>
+      ACCEPTED_FILE_TYPES.includes(file.type)
+    );
+
+    if (!allAccepted) {
+      toast(
+        "Only .pdf, .xls, .doc, .xml, .jpg, .jpeg, .png and .webp formats are supported."
+      );
+      return;
+    }
+
+    setFiles((prev) => [...prev, ...selectedFiles]);
     onChange([...files, ...selectedFiles]);
   };
 
@@ -52,21 +78,3 @@ export const Dropzone = ({ value, onChange }: FileDataProps) => {
     </div>
   );
 };
-
-// const handleFileUpload = async () => {
-//   if (!file) return;
-//   setUploadStatus("uploading");
-//   const formData = new FormData();
-//   formData.append("file", file);
-//   try {
-//     await axios.post("BACKEND_URL", formData, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-//     setUploadStatus("success");
-//   } catch (err) {
-//     setUploadStatus("error");
-//     console.log(err);
-//   }
-// };

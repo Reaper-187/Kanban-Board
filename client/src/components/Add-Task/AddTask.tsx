@@ -19,11 +19,18 @@ import { toast } from "sonner";
 import { Dropzone } from "../Dropzone/Dropzone";
 
 const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = [
+const ACCEPTED_FILE_TYPES = [
   "image/jpeg",
   "image/jpg",
   "image/png",
   "image/webp",
+  //MIME-Typ (Multipurpose Internet Mail Extensions)
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/xml",
 ];
 
 const formTaskSchema = z.object({
@@ -33,10 +40,21 @@ const formTaskSchema = z.object({
   importance: z.enum(["Urgent", "High", "Lead", "Internal", "Medium", "Low"]),
   file: z
     .any()
-    .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+    .optional()
+    .or(z.null())
     .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
+      (files) =>
+        !files ||
+        (Array.isArray(files) &&
+          files.every((file) => file.size <= MAX_FILE_SIZE)),
+      "Max file size is 5MB per file."
+    )
+    .refine(
+      (files) =>
+        !files ||
+        (Array.isArray(files) &&
+          files.every((file) => ACCEPTED_FILE_TYPES.includes(file.type))),
+      "Only .pdf, .xls, .doc, .xml, .jpg, .jpeg, .png and .webp formats are supported."
     ),
   date: z.date().optional(),
 });
@@ -62,6 +80,7 @@ export const AddTask = () => {
       topic: "",
       description: "",
       importance: "Medium",
+      file: null,
       date: new Date(),
     },
   });
