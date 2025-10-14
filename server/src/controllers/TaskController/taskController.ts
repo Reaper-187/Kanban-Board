@@ -1,17 +1,30 @@
 import { Request, Response } from "express";
 const Task = require("../../models/TaskSchema");
 
-exports.addTask = async (req: Request, res: Response) => {
+interface MulterRequest extends Request {
+  files?: Express.Multer.File[];
+}
+
+exports.addTask = async (req: MulterRequest, res: Response) => {
   try {
     const { _id, ...taskData } = req.body;
-    const newTask = new Task(taskData);
+    const files = req.files;
+
+    // hier kommt der Pfad der gespeicherten Datei
+    const filePath = files
+      ? files.map((file) => file.path.split("\\").join("/"))
+      : null;
+
+    const newTask = new Task({
+      ...taskData,
+      file: filePath,
+    });
 
     const savedTask = await newTask.save();
-
     res.status(201).json(savedTask);
   } catch (error) {
     console.error("Error in addTask:", error);
-    res.status(500).json({ message: "Error adding task", error: { error } });
+    res.status(500).json({ message: "Error adding task", error });
   }
 };
 

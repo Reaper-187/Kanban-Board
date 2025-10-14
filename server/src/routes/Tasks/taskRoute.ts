@@ -5,10 +5,10 @@ const {
   updateTask,
   deleteTask,
 } = require("../../controllers/TaskController/taskController");
-
+const upload = require("../../middleware/multer/uploadMiddleware");
 const router = Router();
 
-router.post("/tasks", addTask);
+router.post("/tasks", upload.array("file", 10), addTask);
 
 router.get("/tasks", getTask);
 
