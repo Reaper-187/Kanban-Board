@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req: Request, file: any, cb: any) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9); // später noch die userID mit anhängen damit wir wissen wer was hochgeladen hat.
-    cb(null, file.filename + "-" + uniqueSuffix);
+    cb(null, uniqueSuffix + "-" + file.originalname);
   },
 });
 
