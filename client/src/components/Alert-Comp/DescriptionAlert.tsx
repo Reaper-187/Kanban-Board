@@ -2,7 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardHeader } from "../ui/card";
 import { useToggle } from "@/Context/AddBtnContext";
 import { DownloadIcon, X } from "lucide-react";
-import { Dropzone } from "../Dropzone/Dropzone";
 
 export const DescriptionAlert = () => {
   const { isDescriptionOpen, closeDescription, currentTask } = useToggle();
@@ -44,18 +43,39 @@ export const DescriptionAlert = () => {
                 </div>
                 <p className="w-full bg-gray-300 h-[1px]"></p>
                 <div>
-                  <div className="flex justify-between items-center mb-5">
+                  <div className="grid grid-col-2 mb-5">
                     <div>
                       <div className="flex items-center">
                         <p className="text-lg font-semibold">Attachment</p>
-                        <p className="p-2 rounded-m bg-grey-300">1: file</p>
+                        <p className="p-2 rounded-m bg-grey-300">
+                          {currentTask.file?.length
+                            ? currentTask.file?.length + " "
+                            : 0}
+                          file
+                        </p>
                       </div>
-                      {/* <Dropzone /> */}
+                      <div>
+                        {currentTask?.file &&
+                          currentTask?.file.map((f) => (
+                            <li
+                              key={f.name}
+                              className="flex items-center justify-between text-sm bg-gray-100 p-2 my-1 rounded-md space-x-2"
+                            >
+                              <p className="truncate">{f.name}</p>
+                              <p className="truncate">
+                                {(f.size / 1200).toFixed(2)}/Kb
+                              </p>
+                              <a
+                                key={f.path}
+                                target="_blank"
+                                href={import.meta.env.VITE_API_STATIC + f.path}
+                              >
+                                <DownloadIcon />
+                              </a>
+                            </li>
+                          ))}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p>DOC</p>
-                    <DownloadIcon />
                   </div>
                   <div className="mt-5">
                     <p className="text-lg font-semibold">Activity</p>

@@ -19,6 +19,7 @@ export type Task = {
   description: string;
   status: string;
   importance: Importance;
+  file: UploadedFile[] | null;
   date: Date;
 };
 
@@ -26,7 +27,15 @@ export interface RequestData {
   topic: string;
   description: string;
   importance?: Importance;
+  file?: File[] | null;
   date?: Date;
+}
+
+export interface UploadedFile {
+  name: string;
+  path: string;
+  type: string;
+  size: number;
 }
 
 export interface TaskContainerProps {

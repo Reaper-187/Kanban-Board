@@ -3,7 +3,7 @@ export type Task = {
   description: string;
   status: string;
   importance: Importance;
-  file: string;
+  file: File[];
   date: Date | undefined;
 };
 

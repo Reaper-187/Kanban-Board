@@ -23,6 +23,7 @@ app.use(
 app.use(express.json());
 
 app.use("/api", taskRoute);
+app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running");

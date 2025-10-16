@@ -2,13 +2,15 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import { Input } from "../ui/input";
 import { X } from "lucide-react";
 import { toast } from "sonner";
+import type { Task } from "../Types/types";
 
 type FileDataProps = {
   value: File[] | null;
   onChange: (newFile: File[] | null) => void;
+  currentTask: Task | null;
 };
 
-export const Dropzone = ({ value, onChange }: FileDataProps) => {
+export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
   const ACCEPTED_FILE_TYPES = [
     "image/jpeg",
     "image/jpg",
@@ -61,17 +63,22 @@ export const Dropzone = ({ value, onChange }: FileDataProps) => {
         multiple
         onChange={handleFileChange}
       />
-      {files &&
-        files.map((file) => (
+      {currentTask?.file &&
+        currentTask?.file.map((f) => (
           <li
-            key={file.name}
+            key={f.name}
             className="flex items-center justify-between text-sm bg-gray-100 p-2 rounded-md"
           >
-            <p className="truncate">{file.name}</p>
+            <p className="truncate">{f.name}</p>
+            <p className="truncate">{f.size} Kb</p>
             <X
               size={16}
-              className="cursor-pointer text-gray-500 hover:text-red-500 transition"
-              onClick={() => handleRemoveFile(file.name)}
+              className={
+                currentTask?._id
+                  ? "hidden"
+                  : "cursor-pointer text-gray-500 hover:text-red-500 transition"
+              }
+              onClick={() => handleRemoveFile(f.name)}
             />
           </li>
         ))}

@@ -10,14 +10,18 @@ exports.addTask = async (req: MulterRequest, res: Response) => {
     const { _id, ...taskData } = req.body;
     const files = req.files;
 
-    // hier kommt der Pfad der gespeicherten Datei
-    const filePath = files
-      ? files.map((file) => file.path.split("\\").join("/"))
-      : null;
+    const fileInfos = files
+      ? files.map((file) => ({
+          name: file.originalname,
+          path: file.path.split("\\").join("/"),
+          type: file.mimetype,
+          size: file.size,
+        }))
+      : [];
 
     const newTask = new Task({
       ...taskData,
-      file: filePath,
+      file: fileInfos,
     });
 
     const savedTask = await newTask.save();
@@ -37,10 +41,21 @@ exports.getTask = async (req: Request, res: Response) => {
   }
 };
 
-exports.updateTask = async (req: Request, res: Response) => {
+exports.updateTask = async (req: MulterRequest, res: Response) => {
   try {
+    const files = req.files;
     const { id } = req.params;
     const updates = req.body;
+
+    if (files && files.length > 0) {
+      const fileData = files.map((f) => ({
+        name: f.originalname,
+        path: f.path.split("\\").join("/"),
+        size: f.size,
+      }));
+
+      updates.file = fileData;
+    }
 
     const updatedTask = await Task.findOneAndUpdate(
       { _id: id },

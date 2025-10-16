@@ -218,6 +218,7 @@ export const AddTask = () => {
                         <Dropzone
                           value={field.value}
                           onChange={field.onChange}
+                          currentTask={currentTask}
                         />
                       )}
                     />
