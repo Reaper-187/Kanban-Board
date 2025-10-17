@@ -2,11 +2,13 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import { Input } from "../ui/input";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import type { Task } from "../Types/types";
+import type { Task, UploadedFile } from "../Types/types";
+
+type FileItem = File | UploadedFile;
 
 type FileDataProps = {
   value: File[] | null;
-  onChange: (newFile: File[] | null) => void;
+  onChange: (newFile: FileItem[] | null) => void;
   currentTask: Task | null;
 };
 
@@ -25,7 +27,7 @@ export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
     "text/xml",
   ];
 
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<FileItem[]>([]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -34,6 +36,16 @@ export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
       ACCEPTED_FILE_TYPES.includes(file.type)
     );
 
+    const newFiles: UploadedFile[] = selectedFiles.map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      path: "",
+      isNew: true,
+    }));
+
+    console.log("newFiles", newFiles);
+
     if (!allAccepted) {
       toast(
         "Only .pdf, .xls, .doc, .xml, .jpg, .jpeg, .png and .webp formats are supported."
@@ -41,8 +53,8 @@ export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
       return;
     }
 
-    setFiles((prev) => [...prev, ...selectedFiles]);
-    onChange([...files, ...selectedFiles]);
+    setFiles((prev) => [...prev, ...newFiles]);
+    onChange([...files, ...newFiles]);
   };
 
   const handleRemoveFile = (name: string) => {

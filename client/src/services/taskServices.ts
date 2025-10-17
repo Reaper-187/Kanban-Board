@@ -14,7 +14,9 @@ export const createTask = async (data: RequestData): Promise<RequestData> => {
 
   if (data.file && data.file.length > 0) {
     data.file.forEach((file) => {
-      formData.append("file", file);
+      if (file instanceof File) {
+        formData.append("file", file);
+      }
     });
   }
 

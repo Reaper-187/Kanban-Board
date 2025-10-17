@@ -27,7 +27,7 @@ export interface RequestData {
   topic: string;
   description: string;
   importance?: Importance;
-  file?: File[] | null;
+  file?: (File | UploadedFile)[] | null;
   date?: Date;
 }
 
@@ -36,6 +36,7 @@ export interface UploadedFile {
   path: string;
   type: string;
   size: number;
+  isNew: boolean;
 }
 
 export interface TaskContainerProps {
