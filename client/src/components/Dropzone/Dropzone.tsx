@@ -7,7 +7,7 @@ import type { Task, UploadedFile } from "../Types/types";
 type FileItem = File | UploadedFile;
 
 type FileDataProps = {
-  value: File[] | null;
+  value: FileItem[] | null;
   onChange: (newFile: FileItem[] | null) => void;
   currentTask: Task | null;
 };
@@ -29,22 +29,38 @@ export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
 
   const [files, setFiles] = useState<FileItem[]>([]);
 
+  // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (!e.target.files) return;
+  //   const selectedFiles = Array.from(e.target.files);
+  //   const allAccepted = selectedFiles.every((file) =>
+  //     ACCEPTED_FILE_TYPES.includes(file.type)
+  //   );
+
+  //   const newFiles: UploadedFile[] = selectedFiles.map((file) => ({
+  //     name: file.name,
+  //     size: file.size,
+  //     type: file.type,
+  //     path: "",
+  //     isNew: true,
+  //   }));
+
+  //   if (!allAccepted) {
+  //     toast(
+  //       "Only .pdf, .xls, .doc, .xml, .jpg, .jpeg, .png and .webp formats are supported."
+  //     );
+  //     return;
+  //   }
+
+  //   setFiles((prev) => [...prev, ...newFiles]);
+  //   onChange([...files, ...newFiles]);
+  // };
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const selectedFiles = Array.from(e.target.files);
     const allAccepted = selectedFiles.every((file) =>
       ACCEPTED_FILE_TYPES.includes(file.type)
     );
-
-    const newFiles: UploadedFile[] = selectedFiles.map((file) => ({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      path: "",
-      isNew: true,
-    }));
-
-    console.log("newFiles", newFiles);
 
     if (!allAccepted) {
       toast(
@@ -53,8 +69,8 @@ export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
       return;
     }
 
-    setFiles((prev) => [...prev, ...newFiles]);
-    onChange([...files, ...newFiles]);
+    setFiles((prev) => [...prev, ...selectedFiles]);
+    onChange([...files, ...selectedFiles]);
   };
 
   const handleRemoveFile = (name: string) => {
