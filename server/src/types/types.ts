@@ -7,6 +7,13 @@ export type Task = {
   date: Date | undefined;
 };
 
+export interface UploadedFile {
+  name: string;
+  path: string;
+  type: string;
+  size: number;
+}
+
 export type Importance =
   | "Urgent"
   | "High"

@@ -12,7 +12,7 @@ router.post("/tasks", upload.array("file", 10), addTask);
 
 router.get("/tasks", getTask);
 
-router.patch("/tasks/:id", upload.array("file", 10), updateTask);
+router.patch("/tasks/:id", upload.array("newFiles", 10), updateTask);
 
 router.delete("/tasks/:id", deleteTask);
 

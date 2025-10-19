@@ -12,17 +12,6 @@ export const createTask = async (data: RequestData): Promise<RequestData> => {
   formData.append("importance", data.importance || "Medium");
   formData.append("date", data.date ? data.date.toString() : "");
 
-  // // Neue Dateien (echte File-Objekte → Multer)
-  // data.file?.forEach((file) => {
-  //   if (file instanceof File) {
-  //     formData.append("newFiles", file);
-  //   }
-  // });
-
-  // // Alte Dateien (bereits gespeicherte Files → JSON)
-  // const existingFiles = data.file?.filter((f) => !(f instanceof File));
-  // formData.append("existingFiles", JSON.stringify(existingFiles || []));
-
   if (data.file && data.file.length > 0) {
     data.file.forEach((file) => {
       formData.append("file", file);
@@ -45,11 +34,26 @@ export const fetchTask = async (): Promise<Task[]> => {
 
 export const updateTask = async (
   _id: string,
-  updates: Partial<Task>
-): Promise<Task> => {
-  const response = await axios.patch<Task>(`${TASK_API}/${_id}`, updates, {
-    headers: { "Content-Type": "multipart/form-data" },
+  updates: Partial<RequestData>
+): Promise<RequestData> => {
+  const formData = new FormData();
+
+  if (updates.topic) formData.append("topic", updates.topic);
+  if (updates.description) formData.append("description", updates.description);
+  if (updates.importance) formData.append("importance", updates.importance);
+  if (updates.date) formData.append("date", updates.date.toString());
+
+  updates.file?.forEach((file) => {
+    formData.append("newFiles", file);
   });
+
+  const response = await axios.patch<RequestData>(
+    `${TASK_API}/${_id}`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
 
   return response.data;
 };
@@ -58,5 +62,3 @@ export const deleteTask = async (_id: string): Promise<Task> => {
   const response = await axios.delete<Task>(`${TASK_API}/${_id}`);
   return response.data;
 };
-
-// Delete Fetches prüfen weil Type Taks auf File[] erweitert wurde.

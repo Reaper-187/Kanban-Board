@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { UploadedFile } from "../../types/types";
 const Task = require("../../models/TaskSchema");
 
 interface MulterRequest extends Request {
@@ -8,22 +9,20 @@ interface MulterRequest extends Request {
 exports.addTask = async (req: MulterRequest, res: Response) => {
   try {
     const { _id, ...taskData } = req.body;
-    const files = req.files;
+    const newFiles = req.files;
 
-    const fileInfos = files
-      ? files.map((file) => ({
+    const fileInfos = newFiles
+      ? newFiles.map((file) => ({
           name: file.originalname,
           path: file.path.split("\\").join("/"),
           type: file.mimetype,
           size: file.size,
         }))
       : [];
-
     const newTask = new Task({
       ...taskData,
       file: fileInfos,
     });
-
     const savedTask = await newTask.save();
     res.status(201).json(savedTask);
   } catch (error) {
@@ -47,19 +46,30 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
     const { id } = req.params;
     const updates = req.body;
 
-    if (files && files.length > 0) {
-      const fileData = files.map((f) => ({
-        name: f.originalname,
-        path: f.path.split("\\").join("/"),
-        size: f.size,
-      }));
-
-      updates.file = fileData;
+    // Aktuellen task nochmal holen für die files
+    const task = await Task.findById(id);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
     }
+
+    // Alte files speichern wegen der zsm führung
+    const existingFiles = task.file || [];
+
+    const newFiles = files
+      ? files?.map((f) => ({
+          name: f.originalname,
+          path: f.path.split("\\").join("/"),
+          size: f.size,
+          type: f.mimetype,
+        }))
+      : [];
+
+    // zsmführung sonst verlierst du beim speichern neuer Files die Alten
+    const allFiles = [...existingFiles, ...newFiles];
 
     const updatedTask = await Task.findOneAndUpdate(
       { _id: id },
-      { $set: updates },
+      { ...updates, file: allFiles },
       { new: true }
     );
 
