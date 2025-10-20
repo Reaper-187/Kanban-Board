@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "../../types/types";
 const Task = require("../../models/TaskSchema");
-
+import fs from "fs/promises";
 interface MulterRequest extends Request {
   files?: Express.Multer.File[];
 }
@@ -86,6 +86,24 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
 exports.deleteTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const uploadDir = "uploads/docs";
+    const filesInFolder = await fs.readdir(uploadDir);
+
+    const task = await Task.findById({ _id: id });
+    const filesToDeleteFromUploads = task.file.map(
+      (f: Partial<UploadedFile>) => {
+        return f.path;
+      }
+    );
+
+    for (const filePath of filesToDeleteFromUploads) {
+      const fileName = filePath.split("/").pop(); // Nur den Dateinamen extrahieren
+      if (filesInFolder.includes(fileName)) {
+        await fs.unlink(`${uploadDir}/${fileName}`);
+        console.log("Gelöscht:", fileName);
+      }
+    }
+
     const deleteTask = await Task.deleteOne({ _id: id });
 
     if (!deleteTask) {
@@ -94,6 +112,6 @@ exports.deleteTask = async (req: Request, res: Response) => {
 
     res.json(deleteTask);
   } catch (error) {
-    res.status(500).json({ message: "Error updating task", error });
+    res.status(500).json({ message: "Error deleting task", error });
   }
 };
