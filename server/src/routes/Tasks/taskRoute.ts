@@ -14,6 +14,6 @@ router.get("/tasks", getTask);
 
 router.patch("/tasks/:id", upload.array("newFiles", 10), updateTask);
 
-router.delete("/tasks/:id", deleteTask);
+router.delete("/tasks", deleteTask);
 
 module.exports = router;

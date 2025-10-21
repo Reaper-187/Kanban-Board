@@ -85,16 +85,23 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
 
 exports.deleteTask = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    // const { id } = req.params;
+    const { _id } = req.body;
     const uploadDir = "uploads/docs";
     const filesInFolder = await fs.readdir(uploadDir);
 
-    const task = await Task.findById({ _id: id });
-    const filesToDeleteFromUploads = task.file.map(
+    // const task = await Task.findById({ _id: id });
+    const tasksToDelete = await Task.find({ _id: { $in: _id } });
+    const extractingFiles = tasksToDelete
+      .map((eachPath: any) => eachPath.file)
+      .flat(1);
+    const filesToDeleteFromUploads = extractingFiles.map(
       (f: Partial<UploadedFile>) => {
         return f.path;
       }
     );
+
+    console.log(filesToDeleteFromUploads);
 
     for (const filePath of filesToDeleteFromUploads) {
       const fileName = filePath.split("/").pop(); // Nur den Dateinamen extrahieren
@@ -104,7 +111,7 @@ exports.deleteTask = async (req: Request, res: Response) => {
       }
     }
 
-    const deleteTask = await Task.deleteOne({ _id: id });
+    const deleteTask = await Task.deleteMany({ _id: { $in: _id } });
 
     if (!deleteTask) {
       return res.status(404).json({ message: "Task not found" });
