@@ -3,23 +3,26 @@ import { deleteTask } from "@/services/taskServices";
 import type { Task } from "@/components/Types/types";
 import { toast } from "sonner";
 
+type DeletePayload = { _id: string[] };
+
 export const useDeleteTask = () => {
   const queryClient = useQueryClient();
   const query = { queryKey: ["tasks"] };
   const mutate = useMutation({
-    mutationFn: ({ _id }: { _id: string }) => deleteTask(_id),
-    onMutate: async ({ _id }) => {
+    mutationFn: (payload: DeletePayload) => deleteTask(payload),
+    onMutate: async (payload) => {
       await queryClient.cancelQueries(query);
 
       const previousTasks = queryClient.getQueriesData<Task[]>(query);
 
       queryClient.setQueriesData<Task[]>(query, (old = []) =>
-        old.filter((task) => task._id !== _id)
+        old.filter((task) => !payload._id.includes(task._id))
       );
       return { previousTasks };
     },
     onError: (err, variables, context) => {
-      toast(err.message);
+      toast("Task/s cannot delete");
+      console.error(err.message);
       queryClient.setQueryData(["tasks"], context?.previousTasks);
     },
     onSettled: async () => {

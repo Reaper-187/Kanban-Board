@@ -58,7 +58,9 @@ export const updateTask = async (
   return response.data;
 };
 
-export const deleteTask = async (_id: string): Promise<Task> => {
-  const response = await axios.delete<Task>(`${TASK_API}/${_id}`);
+type DeletePayload = { _id: string[] };
+
+export const deleteTask = async (_id: DeletePayload): Promise<Task> => {
+  const response = await axios.delete<Task>(TASK_API, { data: _id });
   return response.data;
 };

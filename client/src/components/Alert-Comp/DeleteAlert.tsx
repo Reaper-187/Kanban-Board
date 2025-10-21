@@ -8,15 +8,24 @@ import { useDeleteTask } from "@/hooks/useDelete";
 
 export function DeleteAlert() {
   const { mutate } = useDeleteTask();
-  const { isAlertOpen, closeAlertModal, currentTask, closeModal } = useToggle();
+  const {
+    isAlertOpen,
+    closeAlertModal,
+    currentTask,
+    multipleTasks,
+    closeModal,
+  } = useToggle();
 
-  const deleteTask = (currentTask: string | null) => {
-    if (!currentTask) return;
-
-    mutate({ _id: currentTask });
+  const deleteTask = (ids: string[]) => {
+    if (ids.length === 0) return;
+    mutate({ _id: ids });
     closeAlertModal();
     closeModal();
   };
+
+  const singleIdToDelete = currentTask?._id ? [currentTask._id] : [];
+  const multipleIdsToDelete = multipleTasks?.map((task) => task._id) || [];
+  const arrayOfIdsToDelete = [...singleIdToDelete, ...multipleIdsToDelete];
 
   return (
     <>
@@ -49,7 +58,7 @@ export function DeleteAlert() {
               <div className="flex justify-between items-center">
                 <span
                   className="text-white flex items-center bg-red-500 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
-                  onClick={() => deleteTask(currentTask)}
+                  onClick={() => deleteTask(arrayOfIdsToDelete)}
                 >
                   <Trash size={20} />
                   delete

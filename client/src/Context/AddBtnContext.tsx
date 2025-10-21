@@ -4,10 +4,12 @@ import { useState, createContext, type ReactNode, useContext } from "react";
 export type AddTaskModal = {
   isOpen: boolean;
   currentTask: Task | null;
+  multipleTasks: Task[] | null;
   openModal: (task?: Task) => void;
   closeModal: () => void;
   isAlertOpen: boolean;
   openAlertModal: (task: Task) => void;
+  multipleDeleteAlert: (tasks: Task[]) => void;
   closeAlertModal: () => void;
   isDescriptionOpen: boolean;
   openDescription: (task: Task) => void;
@@ -18,37 +20,44 @@ export const AddBtnContext = createContext<AddTaskModal | undefined>(undefined);
 
 export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentTask, setcurrentTask] = useState<Task | null>(null);
+  const [currentTask, setCurrentTask] = useState<Task | null>(null);
+  const [multipleTasks, setMultipleTasks] = useState<Task[] | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
 
   const openModal = (task?: Task) => {
-    setcurrentTask(task ?? null);
+    setCurrentTask(task ?? null);
     setIsOpen(true);
   };
 
   const closeModal = () => {
-    setcurrentTask(null);
+    setCurrentTask(null);
     setIsOpen(false);
   };
 
-  const openAlertModal = (task: Task) => {
-    setcurrentTask(task);
+  const openAlertModal = (task?: Task) => {
+    setCurrentTask(task ?? null);
+    setIsAlertOpen(true);
+  };
+
+  const multipleDeleteAlert = (tasks?: Task[]) => {
+    setMultipleTasks(tasks ?? null);
     setIsAlertOpen(true);
   };
 
   const closeAlertModal = () => {
-    setcurrentTask(null);
+    setCurrentTask(null);
+    setMultipleTasks(null);
     setIsAlertOpen(false);
   };
 
   const openDescription = (task: Task) => {
-    setcurrentTask(task);
+    setCurrentTask(task);
     setIsDescriptionOpen(true);
   };
 
   const closeDescription = () => {
-    setcurrentTask(null);
+    setCurrentTask(null);
     setIsDescriptionOpen(false);
   };
 
@@ -57,6 +66,8 @@ export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
       value={{
         isOpen,
         currentTask,
+        multipleDeleteAlert,
+        multipleTasks,
         openModal,
         closeModal,
         isAlertOpen,

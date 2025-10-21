@@ -19,7 +19,7 @@ export type Task = {
   description: string;
   status: string;
   importance: Importance;
-  file: UploadedFile[] | null;
+  file: File[] | null;
   date: Date;
 };
 

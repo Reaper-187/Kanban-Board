@@ -11,7 +11,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown, Ellipsis, NotepadText, Pen } from "lucide-react";
+import { ChevronDown, Ellipsis, NotepadText, Pen, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -216,7 +216,7 @@ export function TableContainer({ tasks, onStatusChange }: TableProps) {
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const { openModal, openDescription } = useToggle();
+  const { openModal, openDescription, multipleDeleteAlert } = useToggle();
 
   const table = useReactTable({
     data: tasks,
@@ -253,6 +253,27 @@ export function TableContainer({ tasks, onStatusChange }: TableProps) {
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
+
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <span
+            className={
+              table.getSelectedRowModel().rows.map((row) => row.original)
+                ? "text-white flex items-center bg-red-500 ml-1 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
+                : "hidden"
+            }
+            onClick={() => {
+              const selectedTasks = table
+                .getSelectedRowModel()
+                .rows.map((row) => row.original as Task);
+              console.log(selectedTasks);
+
+              multipleDeleteAlert(selectedTasks);
+            }}
+          >
+            <Trash size={20} />
+            delete
+          </span>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
