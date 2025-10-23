@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardHeader } from "../ui/card";
 import { useToggle } from "@/Context/AddBtnContext";
 import { DownloadIcon, X } from "lucide-react";
+import { CommentSection } from "../Comment-Comp/CommentSection";
 
 export const DescriptionAlert = () => {
   const { isDescriptionOpen, closeDescription, currentTask } = useToggle();
@@ -77,8 +78,8 @@ export const DescriptionAlert = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="mt-5">
-                    <p className="text-lg font-semibold">Activity</p>
+                  <div>
+                    <CommentSection taskId={currentTask._id} />
                   </div>
                 </div>
               </div>

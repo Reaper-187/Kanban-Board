@@ -11,7 +11,15 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown, Ellipsis, NotepadText, Pen, Trash } from "lucide-react";
+import {
+  ChevronDown,
+  Ellipsis,
+  File,
+  MessageCircleMore,
+  NotepadText,
+  Pen,
+  Trash,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -140,23 +148,47 @@ export const columns: ColumnDef<Task>[] = [
     cell: () => {
       return (
         <div className="flex">
-          <div className="flex -space-x-3 bg-red-200">
+          <div className="flex -space-x-3">
             <img
               className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
+              // src="https://via.placeholder.com/40"
               alt="Avatar 1"
             />
             <img
               className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
+              // src="https://via.placeholder.com/40"
               alt="Avatar 2"
             />
             <img
               className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
+              // src="https://via.placeholder.com/40"
               alt="Avatar 3"
             />
           </div>
+        </div>
+      );
+    },
+  },
+  {
+    // accessorKey: "member" später dann wenn fetch usw implentiert ist
+    enableHiding: false,
+    header: "Attechments",
+    cell: ({ row }) => {
+      const accumFiles = row.original.file?.length;
+      return (
+        <div className="flex space-x-2">
+          <span className="flex items-center">
+            <File size={15} />{" "}
+            <p>
+              <p className="p-2 rounded-m bg-grey-300">
+                {accumFiles ?? 0} file
+              </p>
+            </p>
+          </span>
+          <span className="flex items-center">
+            <MessageCircleMore size={15} />
+            <p>12</p>
+          </span>
         </div>
       );
     },

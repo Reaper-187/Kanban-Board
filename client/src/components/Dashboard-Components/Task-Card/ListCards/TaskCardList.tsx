@@ -52,7 +52,7 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
         </h3>
       </div>
 
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-8">
         <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm">
           <Calendar size={16} />
           <span className="font-medium">
@@ -62,9 +62,17 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
         </div>
 
         <div className="flex justify-between gap-3">
-          <div className="flex space-x-2">
+          <div
+            className="flex space-x-2 cursor-pointer"
+            onClick={() => openDescription(task)}
+          >
             <span className="flex items-center">
-              <File size={15} /> <p>12</p>
+              <File size={15} />{" "}
+              <p>
+                <p className="p-2 rounded-m bg-grey-300">
+                  {task?.file?.length ?? 0} file
+                </p>
+              </p>
             </span>
             <span className="flex items-center">
               <MessageCircleMore size={15} />

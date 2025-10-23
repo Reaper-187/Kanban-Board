@@ -27,7 +27,7 @@ const importanceColor: Record<keyof Color, string> = {
 };
 
 export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
-  const { openModal, openDescription } = useToggle();
+  const { openModal, openDescription, currentTask } = useToggle();
 
   const colorPick = importanceColor[task.importance as keyof Color];
 
@@ -128,7 +128,12 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
             onClick={() => openDescription(task)}
           >
             <span className="flex items-center">
-              <File size={15} /> <p>12</p>
+              <File size={15} />{" "}
+              <p>
+                <p className="p-2 rounded-m bg-grey-300">
+                  {task?.file?.length ?? 0} file
+                </p>
+              </p>
             </span>
             <span className="flex items-center">
               <MessageCircleMore size={15} />

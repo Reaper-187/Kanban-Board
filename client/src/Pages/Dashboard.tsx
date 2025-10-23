@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 
 export const Dashboard = () => {
-  const [viewType, setViewType] = useState<string>("table");
+  const [viewType, setViewType] = useState<string>("kanban");
 
   const [filterStauts, setFilterStatus] = useState<string>("");
 

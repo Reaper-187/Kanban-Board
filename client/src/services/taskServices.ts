@@ -32,6 +32,23 @@ export const fetchTask = async (): Promise<Task[]> => {
   return response.data;
 };
 
+export const fetchCommentTask = async (_id: string): Promise<Task[]> => {
+  const response = await axios.get<Task[]>(`${TASK_API}/${_id}`);
+  return response.data;
+};
+
+export const createCommentTask = async (
+  _id: string,
+  commentText: string
+): Promise<Task> => {
+  const response = await axios.post<Task>(`${TASK_API}/${_id}`, {
+    commentText,
+  });
+  console.log(response);
+
+  return response.data;
+};
+
 export const updateTask = async (
   _id: string,
   updates: Partial<RequestData>

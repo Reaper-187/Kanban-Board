@@ -21,6 +21,7 @@ export type Task = {
   importance: Importance;
   file: File[] | null;
   date: Date;
+  comment: string;
 };
 
 export interface RequestData {
