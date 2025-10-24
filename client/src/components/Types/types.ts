@@ -21,7 +21,12 @@ export type Task = {
   importance: Importance;
   file: File[] | null;
   date: Date;
-  comment: string;
+  comment: {
+    userId: string;
+    userName: string;
+    text: string;
+    timeStamp: Date;
+  }[];
 };
 
 export interface RequestData {

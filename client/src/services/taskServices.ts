@@ -39,10 +39,10 @@ export const fetchCommentTask = async (_id: string): Promise<Task[]> => {
 
 export const createCommentTask = async (
   _id: string,
-  commentText: string
+  comment: Task["comment"]
 ): Promise<Task> => {
   const response = await axios.post<Task>(`${TASK_API}/${_id}`, {
-    commentText,
+    comment,
   });
   console.log(response);
 

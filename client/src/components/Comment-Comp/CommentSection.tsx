@@ -10,14 +10,24 @@ type TaskIdProps = {
 };
 
 export const CommentSection = ({ taskId }: TaskIdProps) => {
-  const [commentText, setCommentText] = useState("");
+  const [comment, setComment] = useState({
+    userId: "1234",
+    userName: "Max Mustermann",
+    text: "",
+    timeStamp: new Date(),
+  });
 
-  const handleChange = (e: any) => {
-    setCommentText(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setComment((prev) => ({
+      ...prev,
+      text: value,
+    }));
   };
+
   const submitComment = (e: React.FormEvent) => {
     e.preventDefault();
-    postComment({ commentText });
+    postComment({ comment: [comment] });
   };
 
   const { mutate: postComment } = useCreateComment(taskId);
@@ -38,12 +48,12 @@ export const CommentSection = ({ taskId }: TaskIdProps) => {
         <Input
           placeholder="Add Your Comment"
           onChange={(e) => handleChange(e)}
-          value={commentText}
+          value={comment.text}
         />
         <Button
           type="submit"
           variant="outline"
-          disabled={commentText.length <= 0 ? true : false}
+          disabled={comment.text === "" ? true : false}
         >
           <Send />
         </Button>
