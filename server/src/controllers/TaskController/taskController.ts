@@ -122,3 +122,25 @@ exports.deleteTask = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error deleting task", error });
   }
 };
+
+exports.createComment = async (req: Request, res: Response) => {
+  try {
+    const userId = "123456";
+    const userName = "Sample-Name";
+    const { id: _id } = req.params;
+    const comment = req.body;
+
+    const task = await Task.findById(_id);
+    if (!task) return res.status(404).json({ message: "Task not found" });
+
+    const newComment = await Task.findByIdAndUpdate(
+      _id,
+      { $push: { ...comment, userId, userName } },
+      { new: true }
+    );
+
+    console.log("comment:", newComment);
+  } catch (err) {
+    console.error("Error beim erstellen des comments", err);
+  }
+};

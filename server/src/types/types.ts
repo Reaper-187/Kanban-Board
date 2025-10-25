@@ -4,6 +4,7 @@ export type Task = {
   status: string;
   importance: Importance;
   file: File[];
+  comment: string;
   date: Date | undefined;
 };
 
