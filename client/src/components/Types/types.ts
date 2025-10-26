@@ -22,10 +22,7 @@ export type Task = {
   file: File[] | null;
   date: Date;
   comment: {
-    userId: string;
-    userName: string;
     text: string;
-    timeStamp: Date;
   }[];
 };
 

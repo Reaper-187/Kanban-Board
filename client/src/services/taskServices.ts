@@ -32,20 +32,24 @@ export const fetchTask = async (): Promise<Task[]> => {
   return response.data;
 };
 
-export const fetchCommentTask = async (_id: string): Promise<Task[]> => {
-  const response = await axios.get<Task[]>(`${TASK_API}/${_id}`);
+type CommentType = {
+  _id: string;
+  userName: string;
+  text: string;
+  timeStamp: Date;
+};
+
+export const fetchCommentTask = async (_id: string): Promise<CommentType[]> => {
+  const response = await axios.get<CommentType[]>(`${TASK_API}/${_id}`);
   return response.data;
 };
 
 export const createCommentTask = async (
   _id: string,
-  comment: Task["comment"]
+  comment: { text: string }
 ): Promise<Task> => {
-  const response = await axios.post<Task>(`${TASK_API}/${_id}`, {
-    comment,
-  });
+  const response = await axios.post<Task>(`${TASK_API}/${_id}`, comment);
   console.log(response);
-
   return response.data;
 };
 

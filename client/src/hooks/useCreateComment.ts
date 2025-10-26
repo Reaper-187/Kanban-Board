@@ -6,27 +6,32 @@ import type { Task } from "@/components/Types/types";
 export const useCreateComment = (taskId: string) => {
   const queryClient = useQueryClient();
   const query = { queryKey: ["comment", taskId] };
-  return useMutation({
-    mutationFn: ({ comment }: { comment: Task["comment"] }) =>
-      createCommentTask(taskId, comment),
-    onMutate: async ({ comment }) => {
+
+  return useMutation<
+    Task,
+    Error,
+    { text: string },
+    { previousComments?: Task["comment"] }
+  >({
+    mutationFn: (comment) => createCommentTask(taskId, comment),
+
+    onMutate: async (comment) => {
       await queryClient.cancelQueries(query);
-      const previousComments = queryClient.getQueryData<Task["comment"][]>([
+
+      const previousComments = queryClient.getQueryData<Task["comment"]>([
         "comment",
         taskId,
       ]);
-      queryClient.setQueryData<Task["comment"][]>(
+
+      queryClient.setQueryData<Task["comment"]>(
         ["comment", taskId],
-        (old = []) => [...old, { ...comment }]
+        (old = []) => [...old, { text: comment.text }]
       );
 
       return { previousComments };
     },
-    onError: (
-      err: Error,
-      _variables,
-      context?: { previousComments?: Task["comment"][] }
-    ) => {
+
+    onError: (err, _variables, context) => {
       if (context?.previousComments) {
         queryClient.setQueryData(["comment", taskId], context.previousComments);
         toast("comment cannot be added to the Task");
@@ -35,7 +40,7 @@ export const useCreateComment = (taskId: string) => {
     },
 
     onSettled: async () => {
-      return queryClient.invalidateQueries(query);
+      await queryClient.invalidateQueries(query);
     },
   });
 };

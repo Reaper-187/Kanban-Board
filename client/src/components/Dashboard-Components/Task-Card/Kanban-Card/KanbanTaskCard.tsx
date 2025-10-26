@@ -129,11 +129,11 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           >
             <span className="flex items-center">
               <File size={15} />{" "}
-              <p>
+              <div>
                 <p className="p-2 rounded-m bg-grey-300">
                   {task?.file?.length ?? 0} file
                 </p>
-              </p>
+              </div>
             </span>
             <span className="flex items-center">
               <MessageCircleMore size={15} />
