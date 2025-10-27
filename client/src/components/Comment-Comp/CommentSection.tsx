@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Send } from "lucide-react";
@@ -21,6 +20,7 @@ export const CommentSection = ({ taskId }: TaskIdProps) => {
   const submitComment = (e: React.FormEvent) => {
     e.preventDefault();
     postComment({ text: comment });
+    setComment("");
   };
 
   const { mutate: postComment } = useCreateComment(taskId);
@@ -28,28 +28,46 @@ export const CommentSection = ({ taskId }: TaskIdProps) => {
   const { data: fetchTaskComments = [] } = useQuery({
     queryFn: async () => {
       const data = await fetchCommentTask(taskId);
-      return data;
+      // Neueste zuerst
+      const sortedData = data.sort(
+        (a, b) =>
+          new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime()
+      );
+      return sortedData;
     },
     queryKey: ["comment", taskId],
   });
-  const date = fetchTaskComments.map((comment) => comment.timeStamp);
-  console.log(date);
 
   return (
     <form onSubmit={submitComment}>
       <p className="text-lg font-semibold mb-2">Activity</p>
-      <Card className="h-[200px] overflow-y-auto divide-y-4 divide-gray-200">
-        {fetchTaskComments.map((comment) => (
-          <div className="p-1" key={comment._id}>
-            <span className="flex gap-3">
-              <p>{comment.userName}</p>
 
-              {/* <p>{comment.timeStamp.toLocaleString()}</p> */}
+      <div className="h-[300px] rounded-lg overflow-y-auto divide-y-2 divide-gray-300 odd:bg-gray-100">
+        {fetchTaskComments.map((comment) => (
+          <div
+            className="space-y-2 p-1 odd:bg-gray-100 p-3 text-xs"
+            key={comment._id}
+          >
+            <span className="flex gap-5">
+              <p className="font-semibold">User: {comment.userName}</p>
+
+              <p>
+                Date:
+                {" " +
+                  new Date(comment.timeStamp).toLocaleString("de-DE", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+              </p>
             </span>
-            <p>{comment.text}</p>
+            <p className="text-base">{comment.text}</p>
           </div>
         ))}
-      </Card>
+      </div>
+
       <div className="flex w-full gap-2 mt-2">
         <Input
           placeholder="Add Your Comment"
