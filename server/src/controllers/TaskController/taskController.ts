@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UploadedFile } from "../../types/types";
 const Task = require("../../models/TaskSchema");
 import fs from "fs/promises";
+
 interface MulterRequest extends Request {
   files?: Express.Multer.File[];
 }
@@ -127,20 +128,43 @@ exports.createComment = async (req: Request, res: Response) => {
   try {
     const userId = "123456";
     const userName = "Sample-Name";
-    const { id: _id } = req.params;
-    const comment = req.body;
+    const { id } = req.params;
 
-    const task = await Task.findById(_id);
-    if (!task) return res.status(404).json({ message: "Task not found" });
+    const newComment = {
+      userId,
+      userName,
+      text: req.body.text,
+      timeStamp: new Date(),
+    };
 
-    const newComment = await Task.findByIdAndUpdate(
-      _id,
-      { $push: { ...comment, userId, userName } },
+    const newTaksComment = await Task.findByIdAndUpdate(
+      id,
+      { $push: { comment: newComment } },
       { new: true }
     );
+    if (!newTaksComment)
+      return res.status(404).json({ message: "Task not found" });
 
-    console.log("comment:", newComment);
+    res.status(200).json(newTaksComment);
   } catch (err) {
-    console.error("Error beim erstellen des comments", err);
+    console.error("Error beim Erstellen des Comments:", err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.getTaskComments = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const task = await Task.findById(id);
+    const allComments = task.comment;
+
+    if (!allComments)
+      return res.status(404).json({ message: "no comments for this Task" });
+
+    res.status(200).json(allComments);
+  } catch (err) {
+    console.error("Error beim laden der Comments:", err);
+    res.status(500).json({ message: "Server Error" });
   }
 };

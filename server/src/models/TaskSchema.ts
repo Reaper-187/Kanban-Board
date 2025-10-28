@@ -7,7 +7,14 @@ interface TaskType extends Document {
   status: string;
   importance: Importance;
   file: File[];
-  comment: string[];
+  comment: [
+    {
+      userId: String;
+      userName: String;
+      text: String;
+      timeStamp: Date;
+    }
+  ];
   date: Date;
 }
 
@@ -31,9 +38,15 @@ const taskSchema = new Schema<TaskType>({
     type: [],
     default: null,
   },
-  comment: {
-    type: [String],
-  },
+  comment: [
+    {
+      userId: { type: String, required: true },
+      userName: { type: String, required: true },
+      text: { type: String, required: true },
+      timeStamp: { type: Date, default: Date.now },
+    },
+  ],
+
   date: {
     type: Date,
     default: Date.now,
