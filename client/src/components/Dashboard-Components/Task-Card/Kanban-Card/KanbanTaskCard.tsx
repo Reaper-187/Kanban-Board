@@ -27,7 +27,7 @@ const importanceColor: Record<keyof Color, string> = {
 };
 
 export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
-  const { openModal, openDescription, currentTask } = useToggle();
+  const { openModal, openDescription } = useToggle();
 
   const colorPick = importanceColor[task.importance as keyof Color];
 
@@ -62,7 +62,7 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           <button
             type="button"
             onClick={() => openModal(task)}
-            className="p-1 rounded-full transition duration-300 cursor-pointer hover:bg-gray-200"
+            className="p-1 rounded-full transition duration-300 cursor-pointer hover:text-secondary-foreground"
           >
             <Pen size={15} className="cursor-pointer" />
           </button>
@@ -89,7 +89,7 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           <span
             className={
               colorPick
-                ? `${colorPick} px-2 py-1 rounded-xl text-xs sm:text-sm`
+                ? `${colorPick} px-2 py-1 rounded-xl text-primary-foreground sm:text-sm`
                 : ""
             }
           >
@@ -104,7 +104,7 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           </span>
         </div>
         <span className="w-full bg-gray-400 h-[1px]"></span>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <div className="flex -space-x-3">
             <img
               className="w-6 h-6 rounded-full border-2 border-white"
@@ -124,20 +124,22 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           </div>
 
           <div
-            className="flex space-x-2 cursor-pointer"
+            className="flex space-x-1 cursor-pointer text-gray-400 hover:text-black duration-300 transition"
             onClick={() => openDescription(task)}
           >
             <span className="flex items-center">
               <File size={15} />{" "}
               <div>
-                <p className="p-2 rounded-m bg-grey-300">
+                <p className="p-1 rounded-m bg-grey-300">
                   {task?.file?.length ?? 0} file
                 </p>
               </div>
             </span>
             <span className="flex items-center">
               <MessageCircleMore size={15} />
-              <p>12</p>
+              <p className="p-1 rounded-m bg-grey-300">
+                {task?.comment.length ?? 0} comments
+              </p>
             </span>
           </div>
         </div>

@@ -5,13 +5,27 @@ export type Column = {
   title: string;
   outcome: number;
   Icon: LucideIcon;
+  color: string;
 };
 
 export const COLUMNS: Column[] = [
-  { id: "TODO", title: "To Do", outcome: 0, Icon: Flag },
-  { id: "IN_PROGRESS", title: "In Progress", outcome: 0, Icon: Flag },
-  { id: "DONE", title: "Done", outcome: 0, Icon: Flag },
+  { id: "TODO", title: "To Do", outcome: 0, Icon: Flag, color: "bg-red-500" },
+  {
+    id: "IN_PROGRESS",
+    title: "In Progress",
+    outcome: 0,
+    Icon: Flag,
+    color: "bg-yellow-500",
+  },
+  { id: "DONE", title: "Done", outcome: 0, Icon: Flag, color: "bg-green-500" },
 ];
+
+export type TaskFile = {
+  _id: string;
+  path: string;
+  name: string;
+  size: number;
+};
 
 export type Task = {
   _id: string;
@@ -19,7 +33,7 @@ export type Task = {
   description: string;
   status: string;
   importance: Importance;
-  file: File[] | null;
+  file: TaskFile[] | null;
   date: Date;
   comment: {
     text: string;

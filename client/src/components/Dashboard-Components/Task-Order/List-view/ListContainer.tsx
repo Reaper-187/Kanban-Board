@@ -36,11 +36,13 @@ export const ListContainer = ({
           <AccordionTrigger>
             <div className="flex self-center px-2">
               <div className="flex gap-4">
-                <span className="rounded-full bg-green-400 p-1 flex w-fit items-center justify-center">
+                <span
+                  className={`rounded-full ${column.color} p-1 flex w-fit items-center justify-center`}
+                >
                   <column.Icon size={16} />
                 </span>
                 <p className="font-bold">{column.title}</p>
-                <span className="bg-gray-200 rounded-sm px-1 text-sm  text-center w-fit">
+                <span className="bg-primary text-primary-foreground rounded-sm px-1 text-sm  text-center w-fit">
                   {tasks.length} Tasks
                 </span>
               </div>

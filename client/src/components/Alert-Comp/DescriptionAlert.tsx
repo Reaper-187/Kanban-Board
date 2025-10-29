@@ -38,7 +38,7 @@ export const DescriptionAlert = () => {
               <div className="space-y-5">
                 <div>
                   <p className="text-lg font-semibold">Description:</p>
-                  <p className="text-gray-700 flex self-center">
+                  <p className="text-secondary-foreground flex self-center">
                     {currentTask.description}
                   </p>
                 </div>
@@ -60,7 +60,7 @@ export const DescriptionAlert = () => {
                           currentTask?.file.map((f) => (
                             <li
                               key={f.name}
-                              className="flex items-center justify-between text-sm bg-gray-100 p-2 my-1 rounded-md space-x-2"
+                              className="flex items-center justify-between text-sm bg-secondary text-secondary-foreground p-2 my-1 rounded-md space-x-2"
                             >
                               <p className="truncate">{f.name}</p>
                               <p className="truncate">
@@ -71,7 +71,11 @@ export const DescriptionAlert = () => {
                                 target="_blank"
                                 href={import.meta.env.VITE_API_STATIC + f.path}
                               >
-                                <DownloadIcon />
+                                <DownloadIcon
+                                  className={
+                                    "scale-90 hover:scale-110 transition druation-300"
+                                  }
+                                />
                               </a>
                             </li>
                           ))}

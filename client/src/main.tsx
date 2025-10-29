@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { Dashboard } from "./Pages/Dashboard.tsx";
 import { Settings } from "./Pages/Settings.tsx";
+import { ThemeContextProvider } from "./Context/ThemeContext.tsx";
 
 const router = createBrowserRouter([
   // {
@@ -73,6 +74,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeContextProvider>
+      <RouterProvider router={router} />
+    </ThemeContextProvider>
   </StrictMode>
 );

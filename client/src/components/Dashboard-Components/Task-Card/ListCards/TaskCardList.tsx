@@ -68,18 +68,18 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
           >
             <span className="flex items-center">
               <File size={15} />{" "}
-              <p>
+              <div>
                 <p className="p-2 rounded-m bg-grey-300">
                   {task?.file?.length ?? 0} file
                 </p>
-              </p>
+              </div>
             </span>
             <span className="flex items-center">
               <MessageCircleMore size={15} />
               <p>12</p>
             </span>
           </div>
-          <div className="flex -space-x-3">
+          <div className="flex -space-x-3 items-center">
             <img
               className="w-6 h-6 rounded-full border-2 border-white"
               src="https://via.placeholder.com/40"
@@ -102,7 +102,7 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
           <span
             className={
               colorPick
-                ? `${colorPick} px-2 py-1 rounded-xl text-xs sm:text-sm`
+                ? `${colorPick} px-2 py-1 rounded-xl text-xs text-primary-foreground sm:text-sm`
                 : ""
             }
           >

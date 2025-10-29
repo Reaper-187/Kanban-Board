@@ -71,8 +71,12 @@ export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
             key={f.name}
             className="flex items-center justify-between text-sm bg-gray-100 p-2 rounded-md"
           >
-            <p className="truncate">{f.name}</p>
-            <p className="truncate">{f.size} Kb</p>
+            <p className="truncate font-semibold text-primary-foreground">
+              {f.name}
+            </p>
+            <p className="truncate font-semibold text-primary-foreground">
+              {f.size} Kb
+            </p>
             <X
               size={16}
               className={

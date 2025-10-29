@@ -119,7 +119,7 @@ export const columns: ColumnDef<Task>[] = [
         <div
           className={
             colorPick
-              ? `${colorPick} px-2 py-1 w-fit rounded-xl text-xs sm:text-sm`
+              ? `${colorPick} px-2 py-1 w-fit rounded-xl text-xs text-primary-foreground sm:text-sm`
               : ""
           }
         >
@@ -148,7 +148,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: () => {
       return (
         <div className="flex">
-          <div className="flex -space-x-3">
+          <div className="flex -space-x-3 flex">
             <img
               className="w-6 h-6 rounded-full border-2 border-white"
               // src="https://via.placeholder.com/40"
