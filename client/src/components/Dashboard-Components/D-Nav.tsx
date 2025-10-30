@@ -37,22 +37,38 @@ export const DashboardNav = ({
             <Input placeholder="Search tasks...." />
             <span className="bg-gray-400 ml-5 w-[1px] h-[90%]"></span>
           </div>
-          <div className="space-x-5">
-            <Button value="All Tasks" onClick={handleStatusFilter}>
+          <div className="space-x-3 flex flex-wrap gap-1">
+            <Button
+              className="w-[70px] lg:w-fit"
+              value="All Tasks"
+              onClick={handleStatusFilter}
+            >
               All Tasks
             </Button>
-            <Button value="TODO" onClick={handleStatusFilter}>
+            <Button
+              className="w-[70px]"
+              value="TODO"
+              onClick={handleStatusFilter}
+            >
               To do
             </Button>
-            <Button value="IN_PROGRESS" onClick={handleStatusFilter}>
+            <Button
+              className="w-[70px]"
+              value="IN_PROGRESS"
+              onClick={handleStatusFilter}
+            >
               Doing
             </Button>
-            <Button value="DONE" onClick={handleStatusFilter}>
+            <Button
+              className="w-[70px]"
+              value="DONE"
+              onClick={handleStatusFilter}
+            >
               Done
             </Button>
           </div>
         </div>
-        <div className="space-x-5 mr-5">
+        <div className="flex flex-wrap space-x-3 mr-5">
           <DropdownSorting
             value={sortOrder}
             onChangeSort={(val) => setSortOrder(val as SortOrder)}
