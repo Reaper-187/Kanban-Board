@@ -1,6 +1,6 @@
 import { ListContainer } from "../List-view/ListContainer";
-import { KanbanHeader } from "../Kanban-view/KanbanHeader";
-import type { Column as ColumnType, Task } from "@/components/Types/types";
+import { KanbanContainer } from "../Kanban-view/KanbanContainer";
+import { type Column as ColumnType, type Task } from "@/components/Types/types";
 import type { ColumnProps } from "./StatusTypes";
 
 export type HeaderProps = {
@@ -18,7 +18,7 @@ export const StatusView = ({
   switch (viewType) {
     case "kanban":
       return (
-        <KanbanHeader
+        <KanbanContainer
           column={column}
           tasks={tasks}
           onStatusChange={onStatusChange}
