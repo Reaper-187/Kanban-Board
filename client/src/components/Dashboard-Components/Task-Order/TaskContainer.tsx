@@ -17,6 +17,8 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchTask } from "@/services/taskServices";
 import { useUpdateTask } from "@/hooks/useUpdateTask";
 import { TableContainer } from "./Table-view/TableContainer";
+import { KanbanMobile } from "./KanbanResponsive/KanbanMobile";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 export const TaskContainer = ({
   viewType,
@@ -30,6 +32,9 @@ export const TaskContainer = ({
     dateOrder: undefined,
     importance: [],
   });
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const { data: fetchTaskData = [] } = useQuery({
     queryFn: fetchTask,
@@ -106,7 +111,17 @@ export const TaskContainer = ({
       }`}
     >
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-        {viewType === "table" ? (
+        {isMobile ? (
+          <KanbanMobile
+            column={COLUMNS[activeIndex]}
+            tasks={filteredData.filter(
+              (task) => task.status === COLUMNS[activeIndex].id
+            )}
+            onStatusChange={handleStatusChange}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+          />
+        ) : viewType === "table" ? (
           <TableContainer
             tasks={filteredData}
             onStatusChange={handleStatusChange}

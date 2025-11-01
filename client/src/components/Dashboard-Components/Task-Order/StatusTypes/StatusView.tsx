@@ -2,6 +2,7 @@ import { ListContainer } from "../List-view/ListContainer";
 import { KanbanContainer } from "../Kanban-view/KanbanContainer";
 import { type Column as ColumnType, type Task } from "@/components/Types/types";
 import type { ColumnProps } from "./StatusTypes";
+import { KanbanMobile } from "../KanbanResponsive/KanbanMobile";
 
 export type HeaderProps = {
   column: ColumnType;
