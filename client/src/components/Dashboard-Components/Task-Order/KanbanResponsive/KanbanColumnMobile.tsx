@@ -1,4 +1,5 @@
 import type { Column, Task } from "@/components/Types/types";
+import { useToggle } from "@/Context/AddBtnContext";
 import { PlusIcon } from "lucide-react";
 
 type KanbanHeaderColumnProps = {
@@ -10,10 +11,11 @@ export const KanbanColumnMobile = ({
   column,
   tasks,
 }: KanbanHeaderColumnProps) => {
+  const { openModal } = useToggle();
   if (!column) return null;
 
   return (
-    <div className="flex justify-around items-center gap-2">
+    <div className="flex justify-around items-center gap-2 ">
       <span className={`rounded-full ${column?.color} p-1`}>
         <column.Icon size={13} />
       </span>
@@ -23,7 +25,7 @@ export const KanbanColumnMobile = ({
       </span>
       <button
         type="button"
-        // onClick={() => openModal()}
+        onClick={() => openModal()}
         className="p-1 rounded-full transition duration-300 cursor-pointer text-secondary-foreground hover:bg-primary hover:text-primary-foreground"
         aria-label="Add task"
       >

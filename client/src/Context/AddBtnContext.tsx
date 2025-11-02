@@ -1,5 +1,11 @@
 import type { Task } from "@/components/Types/types";
-import { useState, createContext, type ReactNode, useContext } from "react";
+import {
+  useState,
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+} from "react";
 
 export type AddTaskModal = {
   isOpen: boolean;
@@ -24,6 +30,19 @@ export const AddBtnProvider = ({ children }: { children: ReactNode }) => {
   const [multipleTasks, setMultipleTasks] = useState<Task[] | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+
+  //Scroll-sperre wenn Alert true ist
+  useEffect(() => {
+    if (isOpen || isAlertOpen || isDescriptionOpen) {
+      document.body.style.overflow = "hidden"; // scroll sperren
+    } else {
+      document.body.style.overflow = "auto"; // scroll wieder aktivieren
+    }
+
+    return () => {
+      document.body.style.overflow = "auto"; // cleanup, falls vergessen
+    };
+  }, [isOpen, isAlertOpen, isDescriptionOpen]);
 
   const openModal = (task?: Task) => {
     setCurrentTask(task ?? null);

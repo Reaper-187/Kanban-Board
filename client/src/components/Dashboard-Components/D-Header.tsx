@@ -2,6 +2,7 @@ import { useToggle } from "@/Context/AddBtnContext";
 import { Button } from "../ui/button";
 import { CardHeader } from "../ui/card";
 import { Kanban, ListChevronsDownUp, Plus, Table } from "lucide-react";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 type ViewType = "kanban" | "list" | "table";
 interface DashboardHeaderProps {
@@ -10,12 +11,17 @@ interface DashboardHeaderProps {
 
 export const DashboardHeader = ({ toggleView }: DashboardHeaderProps) => {
   const { openModal } = useToggle();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   return (
     <>
       <CardHeader>
-        <div className="w-1/2 flex justify-between items-center gap-4 lg:gap-0 lg:w-full ">
-          <div className="flex items-center gap-3">
+        <div
+          className={`flex ${
+            isMobile ? "justify-center" : "w-1/2 justify-between"
+          } items-center gap-4 lg:gap-0 lg:w-full`}
+        >
+          <div className={isMobile ? "hidden" : "flex items-center gap-3"}>
             <h1 className="font-semibold md:text-lg lg:text-xl">Tasks</h1>
             <div className="flex gap-5">
               <Button

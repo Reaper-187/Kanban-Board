@@ -63,9 +63,6 @@ export const DescriptionAlert = () => {
                               className="flex items-center justify-between text-sm bg-secondary text-secondary-foreground p-2 my-1 rounded-md space-x-2"
                             >
                               <p className="truncate">{f.name}</p>
-                              <p className="truncate">
-                                {(f.size / 1200).toFixed(2)}/Kb
-                              </p>
                               <a
                                 key={f.path}
                                 target="_blank"

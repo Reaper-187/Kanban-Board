@@ -261,7 +261,7 @@ export const AddTask = () => {
                         delete
                       </span>
                       <Button
-                        className="w-full cursor-pointer md:w-fit font-semibold"
+                        className="w-fit cursor-pointer md:w-fit font-semibold"
                         type="submit"
                         disabled={isPending}
                       >

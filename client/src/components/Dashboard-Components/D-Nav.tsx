@@ -1,3 +1,4 @@
+import { useMediaQuery } from "@uidotdev/usehooks";
 import {
   DropdownFilterStatus,
   DropdownSorting,
@@ -27,10 +28,16 @@ export const DashboardNav = ({
     filter(e.currentTarget.value);
   };
 
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   return (
     <>
-      <div className="flex justify-between p-2">
-        <div className="flex space-x-5">
+      <div
+        className={`flex ${
+          isMobile ? "justify-center" : "justify-between"
+        } p-2`}
+      >
+        <div className={isMobile ? "hidden" : "flex space-x-5"}>
           <div
             className={viewType === "table" ? "hidden" : "flex items-center"}
           >
@@ -68,7 +75,7 @@ export const DashboardNav = ({
             </Button>
           </div>
         </div>
-        <div className="flex flex-wrap space-x-3 mr-5">
+        <div className={`flex flex-wrap space-x-3 ${!isMobile && "mr-3"}`}>
           <DropdownSorting
             value={sortOrder}
             onChangeSort={(val) => setSortOrder(val as SortOrder)}

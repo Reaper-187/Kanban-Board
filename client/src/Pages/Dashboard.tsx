@@ -23,14 +23,14 @@ export const Dashboard = () => {
     <>
       <Card className="w-full">
         <DashboardHeader toggleView={setViewType} />
-        {/* <DashboardNav
+        <DashboardNav
           filter={setFilterStatus}
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
           importanceFilter={importanceFilter}
           setImportanceFilter={setImportanceFilter}
           viewType={viewType}
-        /> */}
+        />
 
         <TaskContainer
           viewType={viewType}

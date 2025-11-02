@@ -69,12 +69,12 @@ export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
         currentTask?.file.map((f) => (
           <li
             key={f.name}
-            className="flex items-center justify-between text-sm bg-gray-100 p-2 rounded-md"
+            className="flex items-center justify-between text-sm bg-secondary p-2 rounded-md"
           >
-            <p className="truncate font-semibold text-primary-foreground">
+            <p className="truncate font-semibold text-secondary-foreground">
               {f.name}
             </p>
-            <p className="truncate font-semibold text-primary-foreground">
+            <p className="truncate font-semibold text-secondary-foreground">
               {f.size} Kb
             </p>
             <X

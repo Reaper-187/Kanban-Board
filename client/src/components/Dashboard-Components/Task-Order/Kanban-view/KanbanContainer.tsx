@@ -15,7 +15,7 @@ export const KanbanContainer = ({
 
   return (
     <section className="min-w-80 w-80 shrink-0 flex flex-col">
-      <Card className="flex items-center justify-between px-3 py-3 mb-2">
+      <Card className="flex items-center justify-between p-3 mb-2">
         <div ref={setNodeRef} className="min-h-30 min-w-full">
           <KanbanHeader column={column} tasks={tasks} />
           <div className="flex flex-col gap-2 ">
