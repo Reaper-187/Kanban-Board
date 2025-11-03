@@ -34,6 +34,7 @@ export type Task = {
   status: string;
   importance: Importance;
   file: TaskFile[] | null;
+  newFiles?: File[] | null;
   date: Date;
   comment: {
     text: string;

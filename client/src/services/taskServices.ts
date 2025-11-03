@@ -55,26 +55,23 @@ export const createCommentTask = async (
 
 export const updateTask = async (
   _id: string,
-  updates: Partial<RequestData>
-): Promise<RequestData> => {
+  updates: Partial<Task>
+): Promise<Task> => {
   const formData = new FormData();
 
   if (updates.topic) formData.append("topic", updates.topic);
   if (updates.description) formData.append("description", updates.description);
   if (updates.importance) formData.append("importance", updates.importance);
+  if (updates.status) formData.append("status", updates.status);
   if (updates.date) formData.append("date", updates.date.toString());
 
-  updates.file?.forEach((file) => {
+  updates.newFiles?.forEach((file) => {
     formData.append("newFiles", file);
   });
 
-  const response = await axios.patch<RequestData>(
-    `${TASK_API}/${_id}`,
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    }
-  );
+  const response = await axios.patch<Task>(`${TASK_API}/${_id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 
   return response.data;
 };
