@@ -6,6 +6,8 @@ import {
 import type { ImportanceFilter, SortOrder } from "../Types/types";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Plus } from "lucide-react";
+import { useToggle } from "@/Context/AddBtnContext";
 
 interface DashboardNavProps {
   filter: (status: string) => void; // Oder: React.Dispatch<React.SetStateAction<string>>
@@ -24,6 +26,8 @@ export const DashboardNav = ({
   setImportanceFilter,
   viewType,
 }: DashboardNavProps) => {
+  const { openModal } = useToggle();
+
   const handleStatusFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
     filter(e.currentTarget.value);
   };
@@ -84,6 +88,14 @@ export const DashboardNav = ({
             value={importanceFilter}
             onChangeMultiFilter={(newValues) => setImportanceFilter(newValues)}
           />
+
+          <Button
+            className={isMobile ? "cursor-pointer" : "hidden"}
+            onClick={() => openModal()}
+          >
+            <Plus />
+            <span className="hidden md:inline">Add Task</span>
+          </Button>
         </div>
       </div>
     </>

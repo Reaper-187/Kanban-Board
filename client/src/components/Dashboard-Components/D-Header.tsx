@@ -17,9 +17,11 @@ export const DashboardHeader = ({ toggleView }: DashboardHeaderProps) => {
     <>
       <CardHeader>
         <div
-          className={`flex ${
-            isMobile ? "justify-center" : "w-1/2 justify-between"
-          } items-center gap-4 lg:gap-0 lg:w-full`}
+          className={
+            isMobile
+              ? "hidden"
+              : `flex w-1/2 justify-between items-center gap-4 lg:gap-0 lg:w-full`
+          }
         >
           <div className={isMobile ? "hidden" : "flex items-center gap-3"}>
             <h1 className="font-semibold md:text-lg lg:text-xl">Tasks</h1>

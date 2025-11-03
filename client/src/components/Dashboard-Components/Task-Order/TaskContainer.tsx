@@ -106,9 +106,9 @@ export const TaskContainer = ({
 
   return (
     <div
-      className={`${
+      className={
         viewType != "kanban" ? "w-full p-1 gap-4" : "flex gap-4 mx-auto"
-      }`}
+      }
     >
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         {isMobile ? (

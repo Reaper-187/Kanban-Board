@@ -179,11 +179,11 @@ export const columns: ColumnDef<Task>[] = [
         <div className="flex space-x-2">
           <span className="flex items-center">
             <File size={15} />{" "}
-            <p>
+            <div>
               <p className="p-2 rounded-m bg-grey-300">
                 {accumFiles ?? 0} file
               </p>
-            </p>
+            </div>
           </span>
           <span className="flex items-center">
             <MessageCircleMore size={15} />
