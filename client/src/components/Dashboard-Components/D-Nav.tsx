@@ -16,6 +16,8 @@ interface DashboardNavProps {
   importanceFilter: ImportanceFilter[];
   setImportanceFilter: (singleImportance: ImportanceFilter[]) => void;
   viewType: string;
+  serachFilter: string;
+  searchFilterFunc: (filterTaks: string) => void;
 }
 
 export const DashboardNav = ({
@@ -25,11 +27,17 @@ export const DashboardNav = ({
   importanceFilter,
   setImportanceFilter,
   viewType,
+  serachFilter,
+  searchFilterFunc,
 }: DashboardNavProps) => {
   const { openModal } = useToggle();
 
   const handleStatusFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
     filter(e.currentTarget.value);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    searchFilterFunc(e.target.value);
   };
 
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -45,7 +53,11 @@ export const DashboardNav = ({
           <div
             className={viewType === "table" ? "hidden" : "flex items-center"}
           >
-            <Input placeholder="Search tasks...." />
+            <Input
+              placeholder="Search tasks...."
+              onChange={handleSearchChange}
+              value={serachFilter}
+            />
             <span className="bg-gray-400 ml-5 w-[1px] h-[90%]"></span>
           </div>
           <div className="space-x-3 flex flex-wrap gap-1">

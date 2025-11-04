@@ -19,6 +19,8 @@ export const Dashboard = () => {
     []
   );
 
+  const [searchFilter, setSerachFilter] = useState("");
+
   return (
     <>
       <Card className="w-full">
@@ -30,6 +32,8 @@ export const Dashboard = () => {
           importanceFilter={importanceFilter}
           setImportanceFilter={setImportanceFilter}
           viewType={viewType}
+          serachFilter={searchFilter}
+          searchFilterFunc={setSerachFilter}
         />
 
         <TaskContainer
@@ -37,6 +41,7 @@ export const Dashboard = () => {
           filtertrigger={filterStauts}
           sortOrder={sortOrder}
           singleFilter={importanceFilter}
+          serachFilter={searchFilter}
         />
 
         <AddTask />

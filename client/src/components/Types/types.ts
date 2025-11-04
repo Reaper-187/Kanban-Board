@@ -61,6 +61,7 @@ export interface TaskContainerProps {
   sortOrder: SortOrder;
   singleFilter: ImportanceFilter[];
   viewType: string;
+  serachFilter: string;
 }
 
 export type Importance =

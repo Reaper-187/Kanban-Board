@@ -20,11 +20,14 @@ import { TableContainer } from "./Table-view/TableContainer";
 import { KanbanMobile } from "./KanbanResponsive/KanbanMobile";
 import { useMediaQuery } from "@uidotdev/usehooks";
 
+const searchableFields = ["topic", "description", "status", "importance"];
+
 export const TaskContainer = ({
   viewType,
   filtertrigger,
   sortOrder,
   singleFilter,
+  serachFilter,
 }: TaskContainerProps) => {
   const [sortOptions, setSortOptions] = useState<SortOptions>({
     status: [],
@@ -125,15 +128,29 @@ export const TaskContainer = ({
             onStatusChange={handleStatusChange}
           />
         ) : (
-          visibleColumns.map((column) => (
-            <StatusTypes
-              key={column.id}
-              column={column}
-              tasks={filteredData.filter((task) => task.status === column.id)}
-              onStatusChange={handleStatusChange}
-              viewType={viewType}
-            />
-          ))
+          visibleColumns.map((column) => {
+            const filteredTasks = filteredData
+              // Filter nach Status
+              .filter((task) => task.status === column.id)
+              // wenn SearchFilter aktiv
+              .filter((task) =>
+                serachFilter
+                  ? task.topic
+                      .toLowerCase()
+                      .includes(serachFilter.toLowerCase())
+                  : true
+              );
+
+            return (
+              <StatusTypes
+                key={column.id}
+                column={column}
+                tasks={filteredTasks}
+                onStatusChange={handleStatusChange}
+                viewType={viewType}
+              />
+            );
+          })
         )}
 
         <DragOverlay dropAnimation={null}>
