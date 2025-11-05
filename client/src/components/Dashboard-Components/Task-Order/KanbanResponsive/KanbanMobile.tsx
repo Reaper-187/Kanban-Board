@@ -4,6 +4,8 @@ import { KanbanTaskCard } from "../../Task-Card/Kanban-Card/KanbanTaskCard";
 import { Card } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { MoveLeft, MoveRight } from "lucide-react";
 
 type KanbanColumnProps = {
   column: Column;
@@ -26,7 +28,7 @@ export const KanbanMobile = ({
   return (
     <div className="w-full flex flex-col items-center">
       <div className="flex justify-between w-full px-4 mb-2">
-        <button
+        <Button
           onClick={() => {
             setDirection(-1);
             setActiveIndex((prev) =>
@@ -34,10 +36,10 @@ export const KanbanMobile = ({
             );
           }}
         >
-          ◀
-        </button>
+          <MoveLeft />
+        </Button>
 
-        <button
+        <Button
           onClick={() => {
             setDirection(1);
             setActiveIndex((prev) =>
@@ -45,8 +47,8 @@ export const KanbanMobile = ({
             );
           }}
         >
-          ▶
-        </button>
+          <MoveRight />
+        </Button>
       </div>
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div

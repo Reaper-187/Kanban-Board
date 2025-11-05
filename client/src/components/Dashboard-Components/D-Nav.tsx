@@ -106,7 +106,7 @@ export const DashboardNav = ({
             onClick={() => openModal()}
           >
             <Plus />
-            <span className="hidden md:inline">Add Task</span>
+            <span className="hidden text-xs md:inline">Add Task</span>
           </Button>
         </div>
       </div>

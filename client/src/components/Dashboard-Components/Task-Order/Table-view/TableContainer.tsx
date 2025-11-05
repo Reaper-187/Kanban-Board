@@ -119,7 +119,7 @@ export const columns: ColumnDef<Task>[] = [
         <div
           className={
             colorPick
-              ? `${colorPick} px-2 py-1 w-fit rounded-xl text-xs text-primary-foreground sm:text-sm`
+              ? `${colorPick} px-2 py-1 w-fit rounded-xl text-xs text-secondary-foreground sm:text-sm`
               : ""
           }
         >

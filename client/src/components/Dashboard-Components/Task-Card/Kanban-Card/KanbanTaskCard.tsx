@@ -89,7 +89,7 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           <span
             className={
               colorPick
-                ? `${colorPick} px-2 py-1 rounded-xl text-primary-foreground sm:text-sm`
+                ? `${colorPick} px-2 py-1 rounded-xl text-black font-semibold sm:text-sm`
                 : ""
             }
           >
