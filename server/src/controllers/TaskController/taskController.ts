@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "../../types/types";
-const Task = require("../../models/TaskSchema");
+const Task = require("../../models/TaskModel/TaskSchema");
 import fs from "fs/promises";
 
 interface MulterRequest extends Request {

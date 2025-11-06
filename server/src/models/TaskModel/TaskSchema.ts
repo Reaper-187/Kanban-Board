@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { Importance } from "../types/types";
+import { Importance } from "../../types/types";
 
 interface TaskType extends Document {
   topic: string;

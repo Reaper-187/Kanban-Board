@@ -6,6 +6,7 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express");
 const cors = require("cors");
 const taskRoute = require("./routes/Tasks/taskRoute");
+const authRouter = require("./routes/Auth/authRouter");
 const { connectToDB } = require("./config/dbConnection");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(
 
 app.use(express.json());
 
+app.use("/api", authRouter);
 app.use("/api", taskRoute);
 app.use("/uploads", express.static("uploads"));
 
