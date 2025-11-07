@@ -5,11 +5,14 @@ if (process.env.NODE_ENV !== "production") {
 }
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
+const { connectToDB } = require("./config/dbConnection");
+const MongoStore = require("connect-mongo");
 const taskRoute = require("./routes/Tasks/taskRoute");
 const authRouter = require("./routes/Auth/authRouter");
-const { connectToDB } = require("./config/dbConnection");
-
 const app = express();
+
+app.set("trust proxy", 1);
 
 const PORT = process.env.PORT || 5000;
 const FRONTEND_URL = process.env.FRONTEND_URL;
@@ -18,6 +21,20 @@ app.use(
   cors({
     origin: FRONTEND_URL,
     credentials: true,
+  })
+);
+
+app.use(
+  session({
+    name: "connect.sid",
+    secret: process.env.VITE_SECRET_KEY,
+    resave: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      collectionName: "sessions",
+    }),
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 60000 * 60, sameSite: "lax" },
   })
 );
 
