@@ -19,8 +19,6 @@ router.post("/auth/logout", logOutUser);
 
 // router.get("/authChecking", authStatus);
 
-// router.post("/logout", logout);
-
 // router.get("/verifyUser", verifySession);
 
 // router.post("/forgotPw", forgotPw);

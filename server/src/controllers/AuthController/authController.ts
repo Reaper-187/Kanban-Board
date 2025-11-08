@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 const bcrypt = require("bcrypt");
 const User = require("../../models/UserModel/UserSchema");
 
@@ -63,6 +63,30 @@ exports.loginUser = async (req: Request, res: Response) => {
   }
 };
 
-exports.logOutUser = async (req: Request, res: Response) => {
-  console.log("GET OK");
+export const logOutUser = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.session) {
+      return res.status(400).json({ message: "No active session" });
+    }
+
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return next(err);
+      }
+
+      // später will ich was testen
+      // req.session.destroy((err) => {
+      //   if (err) return next(err);
+      //   res.clearCookie("connect.sid");
+      //   res.redirect("/");
+      // });
+
+      res.clearCookie("connect.sid"); // kein muss - löscht auch das Cookie im Browser
+      return res.status(200).json({ message: "Logout successful" });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 };

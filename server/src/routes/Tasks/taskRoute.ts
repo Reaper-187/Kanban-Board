@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { authVerification } from "../../middleware/authentication/authenticationMiddleware";
 const {
   addTask,
   getTask,
@@ -20,6 +21,6 @@ router.post("/tasks/:id", createComment);
 
 router.patch("/tasks/:id", upload.array("newFiles", 10), updateTask);
 
-router.delete("/tasks", deleteTask);
+router.delete("/tasks", authVerification(["admin"]), deleteTask);
 
 module.exports = router;

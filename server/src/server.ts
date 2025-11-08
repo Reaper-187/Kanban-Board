@@ -34,7 +34,12 @@ app.use(
       collectionName: "sessions",
     }),
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 60000 * 60, sameSite: "lax" },
+    cookie: {
+      secure: false,
+      httpOnly: true,
+      maxAge: 60000 * 60,
+      sameSite: "lax",
+    },
   })
 );
 
