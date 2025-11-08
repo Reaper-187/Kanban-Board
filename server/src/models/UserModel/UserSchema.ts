@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-type UserRole = "Admin" | "Regular-User" | "Guest";
+type UserRole = "admin" | "user" | "guest";
 
 interface UserType extends Document {
   userRole: UserRole;
@@ -20,7 +20,7 @@ interface UserType extends Document {
 const userSchema = new Schema<UserType>({
   userRole: {
     type: String,
-    default: "Regular-User",
+    default: "user",
   },
   firstName: {
     type: String,

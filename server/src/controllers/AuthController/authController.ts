@@ -52,7 +52,9 @@ exports.loginUser = async (req: Request, res: Response) => {
     const comparedPw = await bcrypt.compare(password, findUserAccount.password);
     if (!comparedPw) return res.status(400).json("wrong email or password");
 
-    // später noch session speichern usw.
+    // bei Anfragen wird so indentifiziert ob der user auth ist
+    req.session.userId = findUserAccount._id;
+    req.session.userRole = findUserAccount.role;
 
     res.status(200).json("Login successfully");
   } catch (err) {

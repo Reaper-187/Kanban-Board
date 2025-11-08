@@ -1,3 +1,14 @@
+export type UserRole = "admin" | "user";
+
+import "express-session";
+
+declare module "express-session" {
+  interface SessionData {
+    userId: string;
+    userRole: UserRole;
+  }
+}
+
 export type Task = {
   topic: string;
   description: string;
