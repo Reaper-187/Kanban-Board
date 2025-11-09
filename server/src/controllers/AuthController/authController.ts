@@ -38,6 +38,12 @@ exports.registUser = async (req: Request, res: Response) => {
   }
 };
 
+type SessionInfo = {
+  sessionUserID: string;
+  sessionUserRole: string;
+  isAuthenticated: boolean;
+};
+
 exports.loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -51,12 +57,13 @@ exports.loginUser = async (req: Request, res: Response) => {
 
     const comparedPw = await bcrypt.compare(password, findUserAccount.password);
     if (!comparedPw) return res.status(400).json("wrong email or password");
-
     // bei Anfragen wird so indentifiziert ob der user auth ist
-    req.session.userId = findUserAccount._id;
-    req.session.userRole = findUserAccount.role;
-
-    res.status(200).json("Login successfully");
+    const sessionInfo: SessionInfo = {
+      sessionUserID: (req.session.userId = findUserAccount._id),
+      sessionUserRole: (req.session.userRole = findUserAccount.role),
+      isAuthenticated: true,
+    };
+    res.status(200).json(sessionInfo);
   } catch (err) {
     console.error("Fehler beim versuch dich Einzuloggen", err);
     res.status(500).json("Login failed");

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { useToggle } from "@/Context/AddBtnContext";
-import { useDeleteTask } from "@/hooks/useDelete";
+import { useDeleteTask } from "@/hooks/TaskHooks/useDelete";
 
 export function DeleteAlert() {
   const { mutate } = useDeleteTask();

@@ -15,7 +15,7 @@ import { KanbanTaskCard } from "../Task-Card/Kanban-Card/KanbanTaskCard";
 import { processTasks, type SortOptions } from "@/Utilitys/sortTasks";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTask } from "@/services/taskServices";
-import { useUpdateTask } from "@/hooks/useUpdateTask";
+import { useUpdateTask } from "@/hooks/TaskHooks/useUpdateTask";
 import { TableContainer } from "./Table-view/TableContainer";
 import { KanbanMobile } from "./KanbanResponsive/KanbanMobile";
 import { useMediaQuery } from "@uidotdev/usehooks";
