@@ -10,16 +10,17 @@ import {
 import { Dashboard } from "./Pages/Dashboard.tsx";
 import { Settings } from "./Pages/Settings.tsx";
 import { ThemeContextProvider } from "./Context/ThemeContext.tsx";
+import { Login } from "./Pages/Auth-Pages/Login.tsx";
 
 const router = createBrowserRouter([
-  // {
-  //   path: "/login",
-  //   element: (
-  //     <GuestRoute>
-  //       <Login />
-  //     </GuestRoute>
-  //   ),
-  // },
+  {
+    path: "/login",
+    element: (
+      <Login />
+      // <GuestRoute>
+      // </GuestRoute>
+    ),
+  },
   // {
   //   path: "/register",
   //   element: (
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
   {
     element: <App />,
     children: [
-      { path: "/", element: <Navigate to="/tasks" replace /> },
+      { path: "/", element: <Navigate to="/login" replace /> },
       {
         path: "tasks",
         element: <Dashboard />,
