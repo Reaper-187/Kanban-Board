@@ -1,4 +1,4 @@
-import { Home, Settings } from "lucide-react";
+import { Home, LogOutIcon, Settings } from "lucide-react";
 
 import {
   Sidebar,
@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavLink } from "react-router-dom";
+import { LogoutButton } from "../Logout/LogoutButton";
 
 // Menu items.
 const items = [
@@ -33,7 +34,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="flex flex-col content-between">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -44,6 +45,7 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <LogoutButton />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

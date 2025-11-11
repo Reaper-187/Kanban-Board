@@ -1,19 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { fetchLogin } from "@/services/authServices";
+import { fetchLogout } from "@/services/authServices";
 import { useNavigate } from "react-router-dom";
 
-export const useLogin = () => {
+export const useLogout = () => {
   let navigate = useNavigate();
 
   return useMutation({
-    mutationFn: fetchLogin,
+    mutationFn: fetchLogout,
     onSuccess: async () => {
-      navigate("/tasks");
-      toast("Welcome back");
+      navigate("/login");
+      toast("See you soon");
     },
     onError: (err: Error) => {
-      toast("Login Failed");
+      toast("Logout Failed");
       console.error("Fehler beim Login", err);
     },
   });

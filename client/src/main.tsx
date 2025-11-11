@@ -11,6 +11,9 @@ import { Dashboard } from "./Pages/Dashboard.tsx";
 import { Settings } from "./Pages/Settings.tsx";
 import { ThemeContextProvider } from "./Context/ThemeContext.tsx";
 import { Login } from "./Pages/Auth-Pages/Login.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -75,8 +78,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeContextProvider>
-      <RouterProvider router={router} />
-    </ThemeContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeContextProvider>
+        <RouterProvider router={router} />
+      </ThemeContextProvider>
+    </QueryClientProvider>
   </StrictMode>
 );
