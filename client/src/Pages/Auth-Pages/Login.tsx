@@ -1,8 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/AuthHooks/useLogin";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff, Github, Mail, User } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import z from "zod";
 
 const loginFormSchema = z.object({
@@ -13,6 +22,8 @@ const loginFormSchema = z.object({
 type FormLogin = z.infer<typeof loginFormSchema>;
 
 export const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -32,33 +43,99 @@ export const Login = () => {
   };
 
   return (
-    <Card className="absolute top-1/2 -translate-y-1/2 flex justify-self-center">
-      <form className="space-y-5" onSubmit={handleSubmit(handleLogin)}>
-        <div className="space-y-3">
-          <input
-            className="bg-black ml-2 text-red-400"
-            type="email"
-            placeholder="email"
-            {...register("email")}
-          />
-          {errors.email && (
-            <p className="text-red-300">{errors.email.message}</p>
-          )}
-        </div>
-        <div className="space-y-3">
-          <input
-            className="bg-black ml-2 text-red-400"
-            type="password"
-            placeholder="password"
-            {...register("password")}
-          />
-          {errors.password && (
-            <p className="text-red-500">{errors.password.message}</p>
-          )}
-        </div>
+    <div className="w-full min-h-screen flex items-center justify-center p-4">
+      <Card className="w-full md:w-1/2 lg:w-1/3">
+        <CardHeader>
+          <CardTitle className="flex justify-self-center text-2xl md:text-3xl lg:text-4xl">
+            Login
+          </CardTitle>
+          <CardDescription className="text-center">
+            Hey, Enter your details to get sign in to your account
+          </CardDescription>
+        </CardHeader>
 
-        <Button type="submit">Submit</Button>
-      </form>
-    </Card>
+        <form
+          className="px-5 flex flex-col gap-6"
+          onSubmit={handleSubmit(handleLogin)}
+        >
+          <div className="space-y-5">
+            <Input
+              className="text-red-400"
+              type="email"
+              placeholder="email"
+              {...register("email")}
+            />
+            {errors.email && (
+              <p className="text-red-300">{errors.email.message}</p>
+            )}
+            <div className="relative">
+              <Input
+                {...register("password")}
+                placeholder="password"
+                type={showPassword ? "text" : "password"}
+              />
+              {errors.password && (
+                <div className="text-red-600">{errors.password.message}</div>
+              )}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="text-red-500">{errors.password.message}</p>
+            )}
+          </div>
+          <Link to={"#"}>forgot password</Link>
+          <Button className="w-full" type="submit">
+            Sign in
+          </Button>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-primary-foreground px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+        </form>
+        <div className="grid grid-cols-2 gap-4 px-4 ">
+          <Button
+            className="w-full font-semibold"
+
+            // onClick={() => {
+            //   window.location.href = API_GHUBAUTHN;
+            // }}
+          >
+            <Github className="mr-2 h-4 w-4" />
+            Github
+          </Button>
+
+          <Button
+            className="w-full font-semibold"
+
+            // onClick={() => {
+            //   window.location.href = API_GAUTHN;
+            // }}
+          >
+            <Mail className="mr-2 h-4 w-4" />
+            Google
+          </Button>
+          <Button
+            className="w-full col-span-2 font-semibold"
+
+            //   onClick={loginAsGuest}
+          >
+            <User className="mr-2 h-4 w-4" />
+            Guest for Test
+          </Button>
+        </div>
+      </Card>
+    </div>
   );
 };
