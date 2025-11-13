@@ -12,6 +12,8 @@ import { Settings } from "./Pages/Settings.tsx";
 import { ThemeContextProvider } from "./Context/ThemeContext.tsx";
 import { Login } from "./Pages/Auth-Pages/Login.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Header } from "./Pages/Auth-Pages/Header/Header.tsx";
+import { Register } from "./Pages/Auth-Pages/Register.tsx";
 
 const queryClient = new QueryClient();
 
@@ -19,19 +21,25 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: (
-      <Login />
+      <>
+        <Header />
+        <Login />
+      </>
       // <GuestRoute>
       // </GuestRoute>
     ),
   },
-  // {
-  //   path: "/register",
-  //   element: (
+  {
+    path: "/register",
+    element: (
+      <>
+        <Header />
+        <Register />,
+      </>
+    ),
+  },
   //     <GuestRoute>
-  //       <Register />
   //     </GuestRoute>
-  //   ),
-  // },
   // {
   //   path: "/reset-password-authentication",
   //   element: <ForgotPw />,
