@@ -87,15 +87,22 @@ export const Login = () => {
             )}
           </div>
           <Link to={"#"}>forgot password</Link>
-          <Button className="w-full" type="submit">
-            Sign in
-          </Button>
+          <div className="w-full grid grid-cols-2 gap-4">
+            <Button className="w-full" type="submit">
+              Sign in
+            </Button>
+            <Button className="w-full" type="submit">
+              <Link className="w-full" to={"/register"}>
+                Switch to Register
+              </Link>
+            </Button>
+          </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center ">
               <span className="w-full border-t " />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-primary-foreground px-2 text-muted-foreground">
+              <span className="bg-primary-foreground px-2 text-muted-foreground rounded-md">
                 Or continue with
               </span>
             </div>
