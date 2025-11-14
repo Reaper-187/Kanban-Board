@@ -7,7 +7,7 @@ const {
 } = require("../../controllers/AuthController/authController");
 const router = Router();
 
-router.get("/auth", collectUserAtuh);
+router.get("/auth/check-session", collectUserAtuh);
 
 router.post("/auth/regist", registUser);
 

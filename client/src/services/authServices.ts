@@ -2,10 +2,22 @@ import axios from "axios";
 
 const LOGIN_API = import.meta.env.VITE_API_LOGIN;
 const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
+const AUTHCHECK_API = import.meta.env.VITE_API_USERAUTHCHECK;
 
 export type UserLoginProps = {
   email: string | undefined;
   password: string | undefined;
+};
+
+export type UserAuthProps = {
+  userId: string | null;
+  userRole: string | null;
+  isAuthenticated: boolean;
+};
+
+export const checkUserAuth = async (): Promise<UserAuthProps> => {
+  const response = await axios.get<UserAuthProps>(AUTHCHECK_API);
+  return response.data;
 };
 
 export const fetchLogin = async (

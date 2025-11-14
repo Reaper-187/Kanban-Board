@@ -2,8 +2,27 @@ import { NextFunction, Request, Response } from "express";
 const bcrypt = require("bcrypt");
 const User = require("../../models/UserModel/UserSchema");
 
+type SessionInfo = {
+  userId: string | null;
+  userRole: string | null;
+  isAuthenticated: boolean;
+};
+
 exports.collectUserAtuh = async (req: Request, res: Response) => {
-  console.log("GET OK");
+  try {
+    const { userId, userRole } = req.session;
+    const isAuthenticated = !!userId && !!userRole;
+
+    const sessionInfo: SessionInfo = {
+      userId: userId ?? null,
+      userRole: userRole ?? null,
+      isAuthenticated,
+    };
+    res.status(200).json(sessionInfo);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("Server Error");
+  }
 };
 
 exports.registUser = async (req: Request, res: Response) => {
@@ -38,12 +57,6 @@ exports.registUser = async (req: Request, res: Response) => {
   }
 };
 
-type SessionInfo = {
-  sessionUserID: string;
-  sessionUserRole: string;
-  isAuthenticated: boolean;
-};
-
 exports.loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -58,12 +71,8 @@ exports.loginUser = async (req: Request, res: Response) => {
     const comparedPw = await bcrypt.compare(password, findUserAccount.password);
     if (!comparedPw) return res.status(400).json("wrong email or password");
     // bei Anfragen wird so indentifiziert ob der user auth ist
-    const sessionInfo: SessionInfo = {
-      sessionUserID: (req.session.userId = findUserAccount._id),
-      sessionUserRole: (req.session.userRole = findUserAccount.role),
-      isAuthenticated: true,
-    };
-    res.status(200).json(sessionInfo);
+
+    res.status(200).json("Login successfully");
   } catch (err) {
     console.error("Fehler beim versuch dich Einzuloggen", err);
     res.status(500).json("Login failed");

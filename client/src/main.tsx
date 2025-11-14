@@ -13,27 +13,19 @@ import { ThemeContextProvider } from "./Context/ThemeContext.tsx";
 import { Login } from "./Pages/Auth-Pages/Login.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Register } from "./Pages/Auth-Pages/Register.tsx";
+import { AuthProvider } from "./Context/AuthContext/AuthContext.tsx";
+import { ProtectedRoute } from "./hooks/AuthHooks/protectedRoute.tsx";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: (
-      <>
-        <Login />
-      </>
-      // <GuestRoute>
-      // </GuestRoute>
-    ),
+    element: <Login />,
   },
   {
     path: "/register",
-    element: (
-      <>
-        <Register />,
-      </>
-    ),
+    element: <Register />,
   },
   //     <GuestRoute>
   //     </GuestRoute>
@@ -66,7 +58,11 @@ const router = createBrowserRouter([
   //   ),
   // },
   {
-    element: <App />,
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
     children: [
       { path: "/", element: <Navigate to="/login" replace /> },
       {
@@ -84,9 +80,11 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeContextProvider>
-        <RouterProvider router={router} />
-      </ThemeContextProvider>
+      <AuthProvider>
+        <ThemeContextProvider>
+          <RouterProvider router={router} />
+        </ThemeContextProvider>
+      </AuthProvider>
     </QueryClientProvider>
   </StrictMode>
 );
