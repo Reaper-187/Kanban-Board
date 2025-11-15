@@ -14,18 +14,31 @@ import { Login } from "./Pages/Auth-Pages/Login.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Register } from "./Pages/Auth-Pages/Register.tsx";
 import { AuthProvider } from "./Context/AuthContext/AuthContext.tsx";
-import { ProtectedRoute } from "./hooks/AuthHooks/protectedRoute.tsx";
+import { ProtectedRoute } from "./hooks/AuthHooks/ProtectedRoute.tsx";
+import { PublicRoute } from "./hooks/AuthHooks/PublicRoute.tsx";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <>
+        <PublicRoute>
+          <Login />,
+        </PublicRoute>
+      </>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <>
+        <PublicRoute>
+          <Register />,
+        </PublicRoute>
+      </>
+    ),
   },
   //     <GuestRoute>
   //     </GuestRoute>

@@ -16,7 +16,11 @@ export type UserAuthProps = {
 };
 
 export const checkUserAuth = async (): Promise<UserAuthProps> => {
-  const response = await axios.get<UserAuthProps>(AUTHCHECK_API);
+  const response = await axios.get<UserAuthProps>(AUTHCHECK_API, {
+    withCredentials: true,
+  });
+  console.log("session Check", response.data);
+
   return response.data;
 };
 
@@ -26,14 +30,19 @@ export const fetchLogin = async (
   const response = await axios.post<UserLoginProps>(LOGIN_API, data, {
     withCredentials: true,
   });
+  console.log(response);
 
   return response.data;
 };
 
 export const fetchLogout = async () => {
-  const response = await axios.post(`${LOGOUT_API}`, {
-    withCredentials: true,
-  });
+  const response = await axios.post(
+    LOGOUT_API,
+    {},
+    {
+      withCredentials: true,
+    }
+  );
 
   return response.data;
 };

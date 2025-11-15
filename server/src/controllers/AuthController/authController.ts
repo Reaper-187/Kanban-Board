@@ -72,7 +72,10 @@ exports.loginUser = async (req: Request, res: Response) => {
     if (!comparedPw) return res.status(400).json("wrong email or password");
     // bei Anfragen wird so indentifiziert ob der user auth ist
 
-    res.status(200).json("Login successfully");
+    req.session.userId = findUserAccount._id;
+    req.session.userRole = findUserAccount.userRole;
+
+    res.status(200).json({ message: "Login successfully" });
   } catch (err) {
     console.error("Fehler beim versuch dich Einzuloggen", err);
     res.status(500).json("Login failed");
@@ -90,14 +93,6 @@ export const logOutUser = (req: Request, res: Response, next: NextFunction) => {
         console.error("Error destroying session:", err);
         return next(err);
       }
-
-      // später will ich was testen
-      // req.session.destroy((err) => {
-      //   if (err) return next(err);
-      //   res.clearCookie("connect.sid");
-      //   res.redirect("/");
-      // });
-
       res.clearCookie("connect.sid"); // kein muss - löscht auch das Cookie im Browser
       return res.status(200).json({ message: "Logout successful" });
     });
