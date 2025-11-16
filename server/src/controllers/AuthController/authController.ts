@@ -82,7 +82,11 @@ exports.loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export const logOutUser = (req: Request, res: Response, next: NextFunction) => {
+exports.logOutUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     if (!req.session) {
       return res.status(400).json({ message: "No active session" });
@@ -99,5 +103,21 @@ export const logOutUser = (req: Request, res: Response, next: NextFunction) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.forgotPw = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) return res.status(400).json("Please enter your Email");
+
+    const findUserAccount = await User.findOne({ email });
+    if (!findUserAccount)
+      return res.status(400).json("User not found with this Email");
+
+    res.status(200).json({ message: "found User" });
+  } catch (err) {
+    res.status(500).json("Server Error");
   }
 };

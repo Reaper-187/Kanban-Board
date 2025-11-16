@@ -16,6 +16,9 @@ import { Register } from "./Pages/Auth-Pages/Register.tsx";
 import { AuthProvider } from "./Context/AuthContext/AuthContext.tsx";
 import { ProtectedRoute } from "./hooks/AuthHooks/ProtectedRoute.tsx";
 import { PublicRoute } from "./hooks/AuthHooks/PublicRoute.tsx";
+import { ForgotPw } from "./Pages/Auth-Pages/ForgotPw.tsx";
+import { OneTimeOtp } from "./Pages/Auth-Pages/OneTimeOtp.tsx";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -25,7 +28,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <PublicRoute>
-          <Login />,
+          <Login />
         </PublicRoute>
       </>
     ),
@@ -35,31 +38,35 @@ const router = createBrowserRouter([
     element: (
       <>
         <PublicRoute>
-          <Register />,
+          <Register />
         </PublicRoute>
       </>
     ),
   },
-  //     <GuestRoute>
-  //     </GuestRoute>
-  // {
-  //   path: "/reset-password-authentication",
-  //   element: <ForgotPw />,
-  // },
+  {
+    path: "/reset-password-authentication",
+    element: (
+      <>
+        <PublicRoute>
+          <ForgotPw />
+        </PublicRoute>
+      </>
+    ),
+  },
+  {
+    path: "/multifactor-authentication-oneTimer",
+    element: (
+      <PublicRoute>
+        <OneTimeOtp />
+      </PublicRoute>
+    ),
+  },
   // {
   //   path: "/verifyUser",
   //   element: (
   //     <VerificationRoute>
   //       <Verification />
   //     </VerificationRoute>
-  //   ),
-  // },
-  // {
-  //   path: "/One-Time-Otp",
-  //   element: (
-  //     <OtpRoute>
-  //       <OneTimeOtp />
-  //     </OtpRoute>
   //   ),
   // },
   // {
@@ -92,6 +99,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <Toaster />
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeContextProvider>

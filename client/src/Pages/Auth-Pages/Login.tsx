@@ -86,7 +86,12 @@ export const Login = () => {
               <p className="text-red-600">{errors.password.message}</p>
             )}
           </div>
-          <Link to={"#"}>forgot password</Link>
+          <Link
+            className="text-blue-400 hover:text-blue-500 font-medium"
+            to={"/reset-password-authentication"}
+          >
+            forgot password
+          </Link>
           <div className="w-full grid grid-cols-2 gap-4">
             <Button className="w-full" type="submit">
               Sign in

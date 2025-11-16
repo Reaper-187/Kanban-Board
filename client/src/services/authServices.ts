@@ -3,6 +3,7 @@ import axios from "axios";
 const LOGIN_API = import.meta.env.VITE_API_LOGIN;
 const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
 const AUTHCHECK_API = import.meta.env.VITE_API_USERAUTHCHECK;
+const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
 
 export type UserLoginProps = {
   email: string | undefined;
@@ -43,6 +44,14 @@ export const fetchLogout = async () => {
       withCredentials: true,
     }
   );
+
+  return response.data;
+};
+
+export const forgotPw = async (data: { email: string }): Promise<string> => {
+  const response = await axios.post(FORGOTPW_API, data, {
+    withCredentials: true,
+  });
 
   return response.data;
 };
