@@ -48,8 +48,16 @@ export const fetchLogout = async () => {
   return response.data;
 };
 
-export const forgotPw = async (data: { email: string }): Promise<string> => {
-  const response = await axios.post(FORGOTPW_API, data, {
+export type RequestTokenResponse = {
+  email: string;
+  requestToken?: string;
+  requestTokenExp?: Date;
+};
+
+export const forgotPw = async (
+  data: RequestTokenResponse
+): Promise<RequestTokenResponse> => {
+  const response = await axios.post<RequestTokenResponse>(FORGOTPW_API, data, {
     withCredentials: true,
   });
 

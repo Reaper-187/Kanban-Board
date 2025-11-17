@@ -8,56 +8,47 @@ interface UserType extends Document {
   lastName: string;
   email: string;
   password: string;
-  veryfication: boolean;
-  veryficationToken: string;
   createdOn: Date;
-  tokenExp: Date;
-  otpNum: number;
   blockedAccount: boolean;
-  restCodeExp: Date;
+  verfication: {
+    veryfiStatus: boolean;
+    veryficationToken: string;
+    verifyTokenExp: Date;
+  };
+  otp: {
+    otpNum: number;
+    otpExp: Date;
+  };
+  requestToken: { token: number; tokenExp: Date };
 }
 
+const verificationSchema = new Schema({
+  veryfiStatus: { type: Boolean, default: false },
+  veryficationToken: { type: String },
+  verifyTokenExp: { type: Date },
+});
+
+const otpSchema = new Schema({
+  otpNum: { type: Number },
+  otpExp: { type: Date },
+});
+
+const requestTokenSchema = new Schema({
+  token: { type: Number },
+  tokenExp: { type: Date },
+});
+
 const userSchema = new Schema<UserType>({
-  userRole: {
-    type: String,
-    default: "user",
-  },
-  firstName: {
-    type: String,
-  },
-  lastName: {
-    type: String,
-  },
-  email: {
-    type: String,
-  },
-  password: {
-    type: String,
-  },
-  veryfication: {
-    type: Boolean,
-    default: false,
-  },
-  veryficationToken: {
-    type: String,
-  },
-  createdOn: {
-    type: Date,
-    default: Date.now,
-  },
-  tokenExp: {
-    type: Date,
-  },
-  otpNum: {
-    type: Number,
-  },
-  blockedAccount: {
-    type: Boolean,
-    default: false,
-  },
-  restCodeExp: {
-    type: Date,
-  },
+  userRole: { type: String, default: "user" },
+  firstName: { type: String },
+  lastName: { type: String },
+  email: { type: String },
+  password: { type: String },
+  createdOn: { type: Date, default: Date.now },
+  blockedAccount: { type: Boolean, default: false },
+  verfication: verificationSchema,
+  otp: otpSchema,
+  requestToken: requestTokenSchema,
 });
 
 module.exports = mongoose.model<UserType>("User", userSchema);

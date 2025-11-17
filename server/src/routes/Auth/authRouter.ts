@@ -5,6 +5,7 @@ const {
   loginUser,
   logOutUser,
   forgotPw,
+  verifyOtp,
 } = require("../../controllers/AuthController/authController");
 const router = Router();
 
@@ -18,13 +19,11 @@ router.post("/auth/logout", logOutUser);
 
 router.post("/auth/forgotPw", forgotPw);
 
-// router.get("/authChecking", authStatus);
+router.post("/verifyOtp", verifyOtp);
 
 // router.get("/verifyUser", verifySession);
 
 // router.get("/auth", getUser);
-
-// router.post("/verifyOtp", verifyOtp);
 
 // router.post("/resetPw", resetPw);
 

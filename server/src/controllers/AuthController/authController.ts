@@ -113,11 +113,44 @@ exports.forgotPw = async (req: Request, res: Response) => {
     if (!email) return res.status(400).json("Please enter your Email");
 
     const findUserAccount = await User.findOne({ email });
-    if (!findUserAccount)
-      return res.status(400).json("User not found with this Email");
+    if (!findUserAccount) return res.status(400).json("Email not found");
 
-    res.status(200).json({ message: "found User" });
+    const requestTokenId = Math.floor(100000 + Math.random() * 900000); //10K+ damit kein 0er Code Gen wird
+    const requestTokenExp = Date.now() + 10 * 60 * 1000;
+
+    const generateRadomOTP = Math.floor(100000 + Math.random() * 900000); //10K+ damit kein 0er Code Gen wird
+
+    await User.findOneAndUpdate(
+      { email },
+      {
+        otp: {
+          otpNum: generateRadomOTP,
+          resetCodeExp: Date.now() + 10 * 60 * 1000, // 10 min
+        },
+      },
+      {
+        requestToken: {
+          token: requestTokenId,
+          resetCodeExp: requestTokenExp, // 10 min
+        },
+      }
+    );
+
+    res
+      .status(200)
+      .json({ message: "found User", requestTokenId, requestTokenExp });
   } catch (err) {
     res.status(500).json("Server Error");
+  }
+};
+
+exports.verifyOtp = async (req: Request, res: Response) => {
+  try {
+    const { otpNum } = req.body;
+
+    if (!otpNum) return res.status(400).json("Wrong OTP");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
