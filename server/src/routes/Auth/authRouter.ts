@@ -19,7 +19,7 @@ router.post("/auth/logout", logOutUser);
 
 router.post("/auth/forgotPw", forgotPw);
 
-router.post("/verifyOtp", verifyOtp);
+router.post("/auth/verifyUserOtp", verifyOtp);
 
 // router.get("/verifyUser", verifySession);
 

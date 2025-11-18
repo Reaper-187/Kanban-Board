@@ -115,30 +115,28 @@ exports.forgotPw = async (req: Request, res: Response) => {
     const findUserAccount = await User.findOne({ email });
     if (!findUserAccount) return res.status(400).json("Email not found");
 
-    const requestTokenId = Math.floor(100000 + Math.random() * 900000); //10K+ damit kein 0er Code Gen wird
-    const requestTokenExp = Date.now() + 10 * 60 * 1000;
+    const token = Math.floor(100000 + Math.random() * 900000);
 
-    const generateRadomOTP = Math.floor(100000 + Math.random() * 900000); //10K+ damit kein 0er Code Gen wird
+    const otpNum = Math.floor(100000 + Math.random() * 900000); //10K+ damit kein 0er Code Gen wird
 
     await User.findOneAndUpdate(
       { email },
       {
         otp: {
-          otpNum: generateRadomOTP,
-          resetCodeExp: Date.now() + 10 * 60 * 1000, // 10 min
+          otpNum,
+          otpExp: Date.now() + 10 * 60 * 1000, // 10 min
         },
-      },
-      {
-        requestToken: {
-          token: requestTokenId,
-          resetCodeExp: requestTokenExp, // 10 min
+        resetToken: {
+          token,
+          tokenExp: Date.now() + 10 * 60 * 1000, // 10 min
         },
       }
     );
 
-    res
-      .status(200)
-      .json({ message: "found User", requestTokenId, requestTokenExp });
+    res.status(200).json({
+      message: "found User",
+      token,
+    });
   } catch (err) {
     res.status(500).json("Server Error");
   }
@@ -146,9 +144,38 @@ exports.forgotPw = async (req: Request, res: Response) => {
 
 exports.verifyOtp = async (req: Request, res: Response) => {
   try {
-    const { otpNum } = req.body;
+    const { otpNum, token } = req.body;
 
-    if (!otpNum) return res.status(400).json("Wrong OTP");
+    if (!otpNum) return res.status(400).json("OTP verification failed");
+
+    const userForReset = await User.findOne({ "resetToken.token": token });
+
+    if (!userForReset) return res.status(400).json("Invalid request");
+
+    const tokenExpTime = userForReset.resetToken.tokenExp;
+
+    if (tokenExpTime < Date.now())
+      return res.status(400).json("Invalid request");
+
+    const otpNumDB = userForReset.otp.otpNum;
+
+    const otpExpTime = userForReset.otp.otpExp;
+
+    if (otpExpTime < Date.now())
+      return res.status(400).json("OTP verification failed");
+
+    if (otpNum != otpNumDB)
+      return res.status(400).json("OTP verification failed");
+
+    await User.findOneAndUpdate(
+      { _id: userForReset._id },
+      {
+        otp: { otpNum: null, otpExp: null },
+        resetToken: { token: null, tokenExp: null },
+      }
+    );
+
+    res.status(200).json({ message: "Enter the new Password" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });

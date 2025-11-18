@@ -1,11 +1,19 @@
 import axios from "axios";
 
 const LOGIN_API = import.meta.env.VITE_API_LOGIN;
+const REGISTER_API = import.meta.env.VITE_API_REGISTER;
 const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
 const AUTHCHECK_API = import.meta.env.VITE_API_USERAUTHCHECK;
 const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
 
 export type UserLoginProps = {
+  email: string | undefined;
+  password: string | undefined;
+};
+
+export type UserRegisterProps = {
+  firstName: string | undefined;
+  lastName: string | undefined;
   email: string | undefined;
   password: string | undefined;
 };
@@ -36,6 +44,17 @@ export const fetchLogin = async (
   return response.data;
 };
 
+export const fetchRegister = async (
+  data: UserRegisterProps
+): Promise<UserRegisterProps> => {
+  const response = await axios.post<UserRegisterProps>(REGISTER_API, data, {
+    withCredentials: true,
+  });
+  console.log(response);
+
+  return response.data;
+};
+
 export const fetchLogout = async () => {
   const response = await axios.post(
     LOGOUT_API,
@@ -50,8 +69,7 @@ export const fetchLogout = async () => {
 
 export type RequestTokenResponse = {
   email: string;
-  requestToken?: string;
-  requestTokenExp?: Date;
+  token?: string;
 };
 
 export const forgotPw = async (

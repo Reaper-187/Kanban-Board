@@ -19,7 +19,7 @@ interface UserType extends Document {
     otpNum: number;
     otpExp: Date;
   };
-  requestToken: { token: number; tokenExp: Date };
+  resetToken: { token: number; tokenExp: Date };
 }
 
 const verificationSchema = new Schema({
@@ -33,7 +33,7 @@ const otpSchema = new Schema({
   otpExp: { type: Date },
 });
 
-const requestTokenSchema = new Schema({
+const resetTokenSchema = new Schema({
   token: { type: Number },
   tokenExp: { type: Date },
 });
@@ -48,7 +48,7 @@ const userSchema = new Schema<UserType>({
   blockedAccount: { type: Boolean, default: false },
   verfication: verificationSchema,
   otp: otpSchema,
-  requestToken: requestTokenSchema,
+  resetToken: resetTokenSchema,
 });
 
 module.exports = mongoose.model<UserType>("User", userSchema);

@@ -11,8 +11,7 @@ export const useForgotPw = () => {
     mutationFn: forgotPw,
     onSuccess: async (response: RequestTokenResponse) => {
       await queryClient.setQueryData(["requestToken"], {
-        token: response.requestToken,
-        expiresAt: response.requestTokenExp,
+        token: response.token,
       });
       navigate("/multifactor-authentication-oneTimer");
       toast("You`ll get a n email with a OneTime-Code");
