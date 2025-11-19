@@ -19,6 +19,7 @@ import { PublicRoute } from "./hooks/AuthHooks/PublicRoute.tsx";
 import { ForgotPw } from "./Pages/Auth-Pages/ForgotPw.tsx";
 import { OneTimeOtp } from "./Pages/Auth-Pages/OneTimeOtp.tsx";
 import { Toaster } from "sonner";
+import { NewPwPage } from "./Pages/Auth-Pages/newPwPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -61,20 +62,20 @@ const router = createBrowserRouter([
       </PublicRoute>
     ),
   },
+  {
+    path: "/new-password-authentication",
+    element: (
+      <PublicRoute>
+        <NewPwPage />
+      </PublicRoute>
+    ),
+  },
   // {
   //   path: "/verifyUser",
   //   element: (
   //     <VerificationRoute>
   //       <Verification />
   //     </VerificationRoute>
-  //   ),
-  // },
-  // {
-  //   path: "/change-password",
-  //   element: (
-  //     <OtpRoute>
-  //       <ChangePasswordPage />
-  //     </OtpRoute>
   //   ),
   // },
   {

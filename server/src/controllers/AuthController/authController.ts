@@ -145,10 +145,14 @@ exports.forgotPw = async (req: Request, res: Response) => {
 exports.verifyOtp = async (req: Request, res: Response) => {
   try {
     const { otpNum, token } = req.body;
+    console.log(typeof token);
 
-    if (!otpNum) return res.status(400).json("OTP verification failed");
+    const resetCodeInt = Number(otpNum);
+
+    if (!resetCodeInt) return res.status(400).json("OTP verification failed1");
 
     const userForReset = await User.findOne({ "resetToken.token": token });
+    console.log(userForReset);
 
     if (!userForReset) return res.status(400).json("Invalid request");
 
@@ -157,15 +161,15 @@ exports.verifyOtp = async (req: Request, res: Response) => {
     if (tokenExpTime < Date.now())
       return res.status(400).json("Invalid request");
 
-    const otpNumDB = userForReset.otp.otpNum;
+    const resetCodeIntDB = userForReset.otp.otpNum;
 
     const otpExpTime = userForReset.otp.otpExp;
 
     if (otpExpTime < Date.now())
-      return res.status(400).json("OTP verification failed");
+      return res.status(400).json("OTP verification failed2");
 
-    if (otpNum != otpNumDB)
-      return res.status(400).json("OTP verification failed");
+    if (resetCodeInt != resetCodeIntDB)
+      return res.status(400).json("OTP verification failed3");
 
     await User.findOneAndUpdate(
       { _id: userForReset._id },

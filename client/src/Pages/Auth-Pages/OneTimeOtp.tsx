@@ -5,12 +5,15 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useOtp } from "@/hooks/AuthHooks/useOtp";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const formOtpSchema = z.object({
-  otpSent: z
+  otpNum: z
     .string()
     .length(6, { message: "Your one-time password must be 6 digits." })
     .regex(/^\d+$/, { message: "Only numbers are allowed." }),
@@ -19,6 +22,13 @@ const formOtpSchema = z.object({
 type FormOtp = z.infer<typeof formOtpSchema>;
 
 export const OneTimeOtp = () => {
+  const queryClient = useQueryClient();
+  const requestTokenData = queryClient.getQueryData<{ token: number }>([
+    "requestToken",
+  ]);
+
+  const { mutate } = useOtp();
+
   const {
     control,
     handleSubmit,
@@ -26,12 +36,22 @@ export const OneTimeOtp = () => {
   } = useForm<FormOtp>({
     resolver: zodResolver(formOtpSchema),
     defaultValues: {
-      otpSent: "",
+      otpNum: "",
     },
   });
+  {
+    Object.keys(errors).length > 0 && console.log("Validation errors:", errors);
+  }
 
+  if (!requestTokenData) {
+    toast("Something went wrong — no token found.");
+    return;
+  }
   const onSubmit = (data: FormOtp) => {
-    console.log(data);
+    mutate({
+      otpNum: data.otpNum,
+      token: requestTokenData.token,
+    });
   };
 
   return (
@@ -43,7 +63,7 @@ export const OneTimeOtp = () => {
           </h1>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Controller
-              name="otpSent"
+              name="otpNum"
               control={control}
               render={({ field }) => (
                 <>
@@ -61,9 +81,9 @@ export const OneTimeOtp = () => {
                     <InputOTPSlot index={4} />
                     <InputOTPSlot index={5} className="rounded-r-md" />
                   </InputOTP>
-                  {errors.otpSent && (
+                  {errors.otpNum && (
                     <p className="text-sm text-red-500">
-                      {errors.otpSent.message}
+                      {errors.otpNum.message}
                     </p>
                   )}
                 </>

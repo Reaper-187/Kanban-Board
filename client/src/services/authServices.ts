@@ -5,6 +5,7 @@ const REGISTER_API = import.meta.env.VITE_API_REGISTER;
 const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
 const AUTHCHECK_API = import.meta.env.VITE_API_USERAUTHCHECK;
 const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
+const VERIFYOTP_API = import.meta.env.VITE_API_VERIFYOTP;
 
 export type UserLoginProps = {
   email: string | undefined;
@@ -69,13 +70,26 @@ export const fetchLogout = async () => {
 
 export type RequestTokenResponse = {
   email: string;
-  token?: string;
+  token?: number;
 };
 
 export const forgotPw = async (
   data: RequestTokenResponse
 ): Promise<RequestTokenResponse> => {
   const response = await axios.post<RequestTokenResponse>(FORGOTPW_API, data, {
+    withCredentials: true,
+  });
+
+  return response.data;
+};
+
+export type RequestOtp = {
+  otpNum: string;
+  token: number;
+};
+
+export const verifyUserOtp = async (data: RequestOtp): Promise<RequestOtp> => {
+  const response = await axios.post<RequestOtp>(VERIFYOTP_API, data, {
     withCredentials: true,
   });
 
