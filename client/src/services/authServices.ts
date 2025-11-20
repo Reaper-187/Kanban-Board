@@ -6,6 +6,7 @@ const LOGOUT_API = import.meta.env.VITE_API_LOGOUT;
 const AUTHCHECK_API = import.meta.env.VITE_API_USERAUTHCHECK;
 const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
 const VERIFYOTP_API = import.meta.env.VITE_API_VERIFYOTP;
+const RESET_USER_PW_API = import.meta.env.VITE_API_RESETUPW;
 
 export type UserLoginProps = {
   email: string | undefined;
@@ -93,6 +94,24 @@ export const verifyUserOtp = async (data: RequestOtp): Promise<RequestOtp> => {
     withCredentials: true,
   });
 
+  return response.data;
+};
+
+export type RequestResetUserPw = {
+  newUserPw: string;
+  token: number;
+};
+
+export const resetUserPw = async (
+  data: RequestResetUserPw
+): Promise<RequestResetUserPw> => {
+  const response = await axios.post<RequestResetUserPw>(
+    RESET_USER_PW_API,
+    data,
+    {
+      withCredentials: true,
+    }
+  );
   return response.data;
 };
 

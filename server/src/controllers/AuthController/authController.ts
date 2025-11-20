@@ -144,44 +144,90 @@ exports.forgotPw = async (req: Request, res: Response) => {
 
 exports.verifyOtp = async (req: Request, res: Response) => {
   try {
-    const { otpNum, token } = req.body;
-    console.log(typeof token);
+    const { otpNum, token: otpToken } = req.body;
 
     const resetCodeInt = Number(otpNum);
 
-    if (!resetCodeInt) return res.status(400).json("OTP verification failed1");
+    if (!resetCodeInt) return res.status(400).json("OTP verification failed");
 
-    const userForReset = await User.findOne({ "resetToken.token": token });
-    console.log(userForReset);
+    const user = await User.findOne({ "resetToken.token": otpToken });
 
-    if (!userForReset) return res.status(400).json("Invalid request");
+    if (!user) return res.status(400).json("Invalid request");
 
-    const tokenExpTime = userForReset.resetToken.tokenExp;
+    const tokenExpTime = user.resetToken.tokenExp;
 
     if (tokenExpTime < Date.now())
       return res.status(400).json("Invalid request");
 
-    const resetCodeIntDB = userForReset.otp.otpNum;
+    const resetCodeIntDB = user.otp.otpNum;
 
-    const otpExpTime = userForReset.otp.otpExp;
+    const otpExpTime = user.otp.otpExp;
 
     if (otpExpTime < Date.now())
-      return res.status(400).json("OTP verification failed2");
+      return res.status(400).json("OTP verification failed");
 
     if (resetCodeInt != resetCodeIntDB)
-      return res.status(400).json("OTP verification failed3");
+      return res.status(400).json("OTP verification failed");
+
+    const token = Math.floor(100000 + Math.random() * 900000);
 
     await User.findOneAndUpdate(
-      { _id: userForReset._id },
+      { _id: user._id },
       {
         otp: { otpNum: null, otpExp: null },
-        resetToken: { token: null, tokenExp: null },
+        resetToken: {
+          token: token,
+          tokenExp: Date.now() + 10 * 60 * 1000,
+        },
       }
     );
 
-    res.status(200).json({ message: "Enter the new Password" });
+    res.status(200).json({ message: "Enter the new Password", token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.resetUserPw = async (req: Request, res: Response) => {
+  try {
+    const { newUserPw, token: resetPwToken } = req.body;
+
+    if (!newUserPw) return res.status(400).json("password verification failed");
+
+    if (newUserPw.length < 12)
+      return res.status(400).json("password is to short");
+
+    const user = await User.findOne({
+      "resetToken.token": resetPwToken,
+    });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "invalid or expired reset token" });
+    }
+
+    const samePwCheck = await bcrypt.compare(newUserPw, user.password);
+    if (samePwCheck)
+      return res
+        .status(400)
+        .json({ message: "You cant use the same password as the last one" });
+
+    const hashedNewPw = await bcrypt.hash(newUserPw, 10);
+
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      {
+        password: hashedNewPw,
+        resetToken: {
+          token: null,
+          tokenExp: null,
+        },
+      }
+    );
+    res.status(200).json({ message: "password is changed successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
   }
 };

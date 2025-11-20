@@ -23,8 +23,10 @@ type FormOtp = z.infer<typeof formOtpSchema>;
 
 export const OneTimeOtp = () => {
   const queryClient = useQueryClient();
-  const requestTokenData = queryClient.getQueryData<{ token: number }>([
-    "requestToken",
+
+  // token aus dem query-cache ziehen
+  const resetTokenData = queryClient.getQueryData<{ token: number }>([
+    "resetToken",
   ]);
 
   const { mutate } = useOtp();
@@ -39,18 +41,16 @@ export const OneTimeOtp = () => {
       otpNum: "",
     },
   });
-  {
-    Object.keys(errors).length > 0 && console.log("Validation errors:", errors);
-  }
 
-  if (!requestTokenData) {
+  // if-con um ein nicht number typ zu blocken
+  if (!resetTokenData) {
     toast("Something went wrong — no token found.");
     return;
   }
   const onSubmit = (data: FormOtp) => {
     mutate({
       otpNum: data.otpNum,
-      token: requestTokenData.token,
+      token: resetTokenData.token,
     });
   };
 

@@ -9,8 +9,10 @@ export const useOtp = () => {
 
   return useMutation({
     mutationFn: (data: RequestOtp) => verifyUserOtp(data),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["auth"] });
+    onSuccess: async (response: RequestOtp) => {
+      await queryClient.setQueryData(["resetToken"], {
+        token: response.token,
+      });
       navigate("/new-password-authentication");
       toast("Please Enter your New Password");
     },

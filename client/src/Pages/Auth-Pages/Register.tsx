@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/AuthHooks/useLogin";
+import { useRegister } from "@/hooks/AuthHooks/useRegister";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Github, Mail, User } from "lucide-react";
 import { useState } from "react";
@@ -14,14 +15,14 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import z from "zod";
 
-const loginFormSchema = z.object({
+const registerFormSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.string().email("Invalid email format"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-type FormLogin = z.infer<typeof loginFormSchema>;
+type FormRegister = z.infer<typeof registerFormSchema>;
 
 export const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,8 +31,8 @@ export const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormLogin>({
-    resolver: zodResolver(loginFormSchema),
+  } = useForm<FormRegister>({
+    resolver: zodResolver(registerFormSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -40,9 +41,9 @@ export const Register = () => {
     },
   });
 
-  const { mutate } = useLogin();
+  const { mutate } = useRegister();
 
-  const handleLogin = (data: FormLogin) => {
+  const handleRegister = (data: FormRegister) => {
     mutate(data);
   };
 
@@ -60,7 +61,7 @@ export const Register = () => {
 
         <form
           className="px-5 flex flex-col gap-6"
-          onSubmit={handleSubmit(handleLogin)}
+          onSubmit={handleSubmit(handleRegister)}
         >
           <div className="space-y-5">
             <div className="flex gap-4">
@@ -115,7 +116,7 @@ export const Register = () => {
             <Button className="w-full" type="submit">
               Sign in
             </Button>
-            <Button className="w-full" type="submit">
+            <Button className="w-full">
               <Link className="w-full" to={"/login"}>
                 Switch to Login
               </Link>

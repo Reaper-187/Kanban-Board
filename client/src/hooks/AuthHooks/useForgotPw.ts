@@ -10,7 +10,8 @@ export const useForgotPw = () => {
   return useMutation({
     mutationFn: forgotPw,
     onSuccess: async (response: RequestTokenResponse) => {
-      await queryClient.setQueryData(["requestToken"], {
+      // token wird aus res gezogen und in resetToken gespeichert (cache)
+      await queryClient.setQueryData(["resetToken"], {
         token: response.token,
       });
       navigate("/multifactor-authentication-oneTimer");

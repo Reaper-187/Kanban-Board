@@ -8,17 +8,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useNewPw } from "@/hooks/AuthHooks/useNewPw";
 import { Label } from "@radix-ui/react-label";
+import { useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import z from "zod";
 
 const formSchemaForNewPassword = z.object({
-  newPassword: z
+  newUserPw: z
     .string()
-    .min(8, "Password must be at least 8 characters")
+    .min(12, "Password must be at least 12 characters")
     .refine((value) => /[A-Z]/.test(value), {
       message: "Password must contain at least one uppercase letter",
     })
@@ -31,6 +34,12 @@ type FormUserPassword = z.infer<typeof formSchemaForNewPassword>;
 
 export const NewPwPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const queryClient = useQueryClient();
+  const { mutate } = useNewPw();
+
+  const resetPwTokenData = queryClient.getQueryData<{ token: number }>([
+    "resetToken",
+  ]);
 
   const {
     register,
@@ -38,12 +47,20 @@ export const NewPwPage = () => {
     formState: { errors },
   } = useForm<FormUserPassword>({
     defaultValues: {
-      newPassword: "",
+      newUserPw: "",
     },
   });
 
+  if (!resetPwTokenData) {
+    toast("Something went wrong — no token found.");
+    return;
+  }
+
   const onSubmit = (data: FormUserPassword) => {
-    console.log(data);
+    mutate({
+      newUserPw: data.newUserPw,
+      token: resetPwTokenData.token,
+    });
   };
 
   return (
@@ -64,13 +81,11 @@ export const NewPwPage = () => {
               <Label className="text-md">New Password</Label>
               <div className="relative">
                 <Input
-                  {...register("newPassword")}
+                  {...register("newUserPw")}
                   type={showPassword ? "text" : "password"}
                 />
-                {errors.newPassword && (
-                  <div className="text-red-600">
-                    {errors.newPassword.message}
-                  </div>
+                {errors.newUserPw && (
+                  <div className="text-red-600">{errors.newUserPw.message}</div>
                 )}
                 <button
                   type="button"
