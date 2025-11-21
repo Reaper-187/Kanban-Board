@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchRegister } from "@/services/authServices";
 import { useNavigate } from "react-router-dom";
+import type { AxiosError } from "axios";
 
 export const useRegister = () => {
   const queryClient = useQueryClient();
@@ -14,9 +15,9 @@ export const useRegister = () => {
       navigate("/login");
       toast("Welcome 🥷 😊");
     },
-    onError: (err: Error) => {
-      toast("Register Failed");
-      console.error("Fehler beim Login", err);
+    onError: (err: AxiosError<{ message: string }>) => {
+      const errorMessage = err.response?.data?.message || "Register Failed";
+      toast(errorMessage + "📝");
     },
   });
 };

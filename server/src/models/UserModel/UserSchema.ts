@@ -9,7 +9,10 @@ interface UserType extends Document {
   email: string;
   password: string;
   createdOn: Date;
-  blockedAccount: boolean;
+  blockedAccount: {
+    wrongPwCounter: number;
+    blocked: boolean;
+  };
   verfication: {
     veryfiStatus: boolean;
     veryficationToken: string;
@@ -28,6 +31,11 @@ const verificationSchema = new Schema({
   verifyTokenExp: { type: Date },
 });
 
+const blockedAccountSchema = {
+  wrongPwCounter: { type: Number, default: 0 },
+  blocked: { type: Boolean, default: false },
+};
+
 const otpSchema = new Schema({
   otpNum: { type: Number },
   otpExp: { type: Date },
@@ -45,7 +53,7 @@ const userSchema = new Schema<UserType>({
   email: { type: String },
   password: { type: String },
   createdOn: { type: Date, default: Date.now },
-  blockedAccount: { type: Boolean, default: false },
+  blockedAccount: blockedAccountSchema,
   verfication: verificationSchema,
   otp: otpSchema,
   resetToken: resetTokenSchema,

@@ -1,5 +1,6 @@
 import { resetUserPw, type RequestResetUserPw } from "@/services/authServices";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -14,8 +15,9 @@ export const useNewPw = () => {
       navigate("/login");
       toast("Password Changed successfully");
     },
-    onError: (err: Error) => {
-      toast(err.message);
+    onError: (err: AxiosError<{ message: string }>) => {
+      const errorMessage = err.response?.data?.message;
+      toast(errorMessage + "🔒");
     },
   });
 };

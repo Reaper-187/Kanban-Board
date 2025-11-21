@@ -35,7 +35,7 @@ exports.registUser = async (req: Request, res: Response) => {
     const usedEmail = await User.findOne({ email });
 
     if (usedEmail) {
-      return res.status(500).json("Email already exist");
+      return res.status(500).json({ message: "Email already exist" });
     }
 
     const hashedPw = await bcrypt.hash(password, 10);
@@ -62,14 +62,47 @@ exports.loginUser = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password)
-      return res.status(400).json("Please fill up all fields");
+      return res.status(400).json({ message: "Please fill up all fields" });
 
     const findUserAccount = await User.findOne({ email });
     if (!findUserAccount)
-      return res.status(400).json("wrong email or password");
+      return res.status(400).json({ message: "wrong email or password" });
+
+    if (await findUserAccount.blockedAccount.blocked)
+      return res.status(400).json({
+        message: "Your Account is blocked apply to the Admin",
+      });
 
     const comparedPw = await bcrypt.compare(password, findUserAccount.password);
-    if (!comparedPw) return res.status(400).json("wrong email or password");
+
+    if (!comparedPw) {
+      const currentCount = await findUserAccount.blockedAccount.wrongPwCounter;
+      const changeBlockStatus = currentCount >= 3 && true;
+      await User.findOneAndUpdate(
+        { email },
+        {
+          blockedAccount: {
+            wrongPwCounter: currentCount + 1,
+            blocked: changeBlockStatus,
+          },
+        }
+      );
+      const failMessage =
+        currentCount >= 3
+          ? "Your Account got blocked because you failed to many times in a row"
+          : `wrong email or password ${currentCount + 1} time failed`;
+      return res.status(400).json({ message: failMessage });
+    } else {
+      await User.findOneAndUpdate(
+        { email },
+        {
+          blockedAccount: {
+            wrongPwCounter: 0,
+            blocked: false,
+          },
+        }
+      );
+    }
     // bei Anfragen wird so indentifiziert ob der user auth ist
 
     req.session.userId = findUserAccount._id;
@@ -77,7 +110,6 @@ exports.loginUser = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Login successfully" });
   } catch (err) {
-    console.error("Fehler beim versuch dich Einzuloggen", err);
     res.status(500).json("Login failed");
   }
 };
@@ -110,10 +142,12 @@ exports.forgotPw = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
 
-    if (!email) return res.status(400).json("Please enter your Email");
+    if (!email)
+      return res.status(400).json({ message: "Please enter your Email" });
 
     const findUserAccount = await User.findOne({ email });
-    if (!findUserAccount) return res.status(400).json("Email not found");
+    if (!findUserAccount)
+      return res.status(400).json({ message: "Email not found" });
 
     const token = Math.floor(100000 + Math.random() * 900000);
 
@@ -148,26 +182,27 @@ exports.verifyOtp = async (req: Request, res: Response) => {
 
     const resetCodeInt = Number(otpNum);
 
-    if (!resetCodeInt) return res.status(400).json("OTP verification failed");
+    if (!resetCodeInt)
+      return res.status(400).json({ message: "OTP verification failed" });
 
     const user = await User.findOne({ "resetToken.token": otpToken });
 
-    if (!user) return res.status(400).json("Invalid request");
+    if (!user) return res.status(400).json({ message: "Invalid request" });
 
     const tokenExpTime = user.resetToken.tokenExp;
 
     if (tokenExpTime < Date.now())
-      return res.status(400).json("Invalid request");
+      return res.status(400).json({ message: "Invalid request" });
 
     const resetCodeIntDB = user.otp.otpNum;
 
     const otpExpTime = user.otp.otpExp;
 
     if (otpExpTime < Date.now())
-      return res.status(400).json("OTP verification failed");
+      return res.status(400).json({ message: "OTP verification failed" });
 
     if (resetCodeInt != resetCodeIntDB)
-      return res.status(400).json("OTP verification failed");
+      return res.status(400).json({ message: "OTP verification failed" });
 
     const token = Math.floor(100000 + Math.random() * 900000);
 
@@ -193,10 +228,11 @@ exports.resetUserPw = async (req: Request, res: Response) => {
   try {
     const { newUserPw, token: resetPwToken } = req.body;
 
-    if (!newUserPw) return res.status(400).json("password verification failed");
+    if (!newUserPw)
+      return res.status(400).json({ message: "password verification failed" });
 
     if (newUserPw.length < 12)
-      return res.status(400).json("password is to short");
+      return res.status(400).json({ message: "password is to short" });
 
     const user = await User.findOne({
       "resetToken.token": resetPwToken,

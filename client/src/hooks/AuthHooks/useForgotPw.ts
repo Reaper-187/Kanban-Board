@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { forgotPw, type RequestTokenResponse } from "@/services/authServices";
 import { useNavigate } from "react-router-dom";
+import type { AxiosError } from "axios";
 
 export const useForgotPw = () => {
   const queryClient = useQueryClient();
@@ -17,8 +18,9 @@ export const useForgotPw = () => {
       navigate("/multifactor-authentication-oneTimer");
       toast("You`ll get a n email with a OneTime-Code");
     },
-    onError: (err: Error) => {
-      toast(err.message);
+    onError: (err: AxiosError<{ message: string }>) => {
+      const errorMessage = err.response?.data?.message;
+      toast(errorMessage + "🔒");
     },
   });
 };

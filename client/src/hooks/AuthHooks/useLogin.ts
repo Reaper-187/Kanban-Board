@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchLogin } from "@/services/authServices";
 import { useNavigate } from "react-router-dom";
+import type { AxiosError } from "axios";
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -13,11 +14,11 @@ export const useLogin = () => {
       await queryClient.invalidateQueries({ queryKey: ["auth"] });
 
       navigate("/tasks");
-      toast("Welcome back");
+      toast(`Welcome back ${"🔓"}`);
     },
-    onError: (err: Error) => {
-      toast("Login Failed");
-      console.error("Fehler beim Login", err);
+    onError: (err: AxiosError<{ message: string }>) => {
+      const errorMessage = err.response?.data?.message || "Login Failed";
+      toast(errorMessage + "🔒");
     },
   });
 };

@@ -19,7 +19,7 @@ import { PublicRoute } from "./hooks/AuthHooks/PublicRoute.tsx";
 import { ForgotPw } from "./Pages/Auth-Pages/ForgotPw.tsx";
 import { OneTimeOtp } from "./Pages/Auth-Pages/OneTimeOtp.tsx";
 import { Toaster } from "sonner";
-import { NewPwPage } from "./Pages/Auth-Pages/newPwPage.tsx";
+import { NewPwPage } from "./Pages/Auth-Pages/NewPwPage.tsx";
 
 const queryClient = new QueryClient();
 

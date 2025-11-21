@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { verifyUserOtp, type RequestOtp } from "@/services/authServices";
+import type { AxiosError } from "axios";
 
 export const useOtp = () => {
   const queryClient = useQueryClient();
@@ -16,9 +17,9 @@ export const useOtp = () => {
       navigate("/new-password-authentication");
       toast("Please Enter your New Password");
     },
-    onError: (err: Error) => {
-      console.error("Fehler Fehler");
-      toast(err.message);
+    onError: (err: AxiosError<{ message: string }>) => {
+      const errorMessage = err.response?.data?.message;
+      toast(errorMessage + "🔑");
     },
   });
 };
