@@ -1,4 +1,4 @@
-import { checkUserAuth } from "@/services/authServices";
+import { checkUserAuth, getUserInfo } from "@/services/authServices";
 import { useQuery } from "@tanstack/react-query";
 import {
   createContext,
@@ -9,14 +9,23 @@ import {
 } from "react";
 
 export type AuthCheckProps = {
-  userInfo: UserInfoProps;
+  sessionInfo: SessionInfoProps;
   loadingSpinner: string;
+  userInfo: UserInfoProps;
 };
 
-export type UserInfoProps = {
+export type SessionInfoProps = {
   isAuthenticated: boolean;
   userId: string | null;
   userRole: string | null;
+};
+
+export type UserInfoProps = {
+  userId: string | null;
+  userRole: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
 };
 
 type LoadingStatus = "loading" | "authenticated" | "unauthenticated";
@@ -24,42 +33,70 @@ type LoadingStatus = "loading" | "authenticated" | "unauthenticated";
 export const AuthContext = createContext<AuthCheckProps | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { data, isLoading, error } = useQuery({
+  const {
+    data: sessionData,
+    isLoading: sessionLoading,
+    error: sessionError,
+  } = useQuery({
     queryKey: ["auth"],
     queryFn: checkUserAuth,
   });
 
-  const [userInfo, setUserInfo] = useState<UserInfoProps>({
-    isAuthenticated: false,
-    userId: null,
-    userRole: null,
+  const { data: userData } = useQuery({
+    queryKey: ["user"],
+    queryFn: getUserInfo,
   });
 
   const [loadingSpinner, setLoadingSpinner] =
     useState<LoadingStatus>("loading");
 
+  const [sessionInfo, setSessionInfo] = useState<SessionInfoProps>({
+    isAuthenticated: false,
+    userId: null,
+    userRole: null,
+  });
+
+  const [userInfo, setUserInfo] = useState<UserInfoProps>({
+    userId: null,
+    userRole: null,
+    firstName: null,
+    lastName: null,
+    email: null,
+  });
+
   useEffect(() => {
-    if (isLoading) {
+    if (sessionLoading) {
       setLoadingSpinner("loading");
-    } else if (error || !data?.isAuthenticated) {
-      setUserInfo({
+    } else if (sessionError || !sessionData?.isAuthenticated) {
+      setSessionInfo({
         isAuthenticated: false,
         userId: null,
         userRole: null,
       });
       setLoadingSpinner("unauthenticated");
-    } else if (data?.isAuthenticated) {
-      setUserInfo({
+    } else if (sessionData?.isAuthenticated) {
+      setSessionInfo({
         isAuthenticated: true,
-        userId: data.userId,
-        userRole: data.userRole,
+        userId: sessionData.userId,
+        userRole: sessionData.userRole,
       });
       setLoadingSpinner("authenticated");
     }
-  }, [data, isLoading, error]);
+  }, [sessionData, sessionLoading, sessionError]);
+
+  useEffect(() => {
+    if (!userData) return;
+    setUserInfo({
+      userId: userData?.userId,
+      userRole: userData?.userRole,
+      firstName: userData?.firstName,
+      lastName: userData?.lastName,
+      email: userData?.email,
+    });
+  }, [userData]);
 
   return (
-    <AuthContext.Provider value={{ userInfo, loadingSpinner }}>
+    <AuthContext.Provider value={{ sessionInfo, loadingSpinner, userInfo }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 const {
-  collectUserAtuh,
+  getUserData,
+  checkUserAuth,
   registUser,
   loginUser,
   logOutUser,
@@ -10,7 +11,9 @@ const {
 } = require("../../controllers/AuthController/authController");
 const router = Router();
 
-router.get("/auth/check-session", collectUserAtuh);
+router.get("/auth/getUserData", getUserData);
+
+router.get("/auth/check-session", checkUserAuth);
 
 router.post("/auth/regist", registUser);
 

@@ -1,4 +1,4 @@
-import { Home, LogOutIcon, Settings } from "lucide-react";
+import { Home, Settings } from "lucide-react";
 
 import {
   Sidebar,
@@ -6,12 +6,13 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavLink } from "react-router-dom";
-import { LogoutButton } from "../Logout/LogoutButton";
+import { SidebarSwitcher } from "./SidebarSwitcher";
 
 // Menu items.
 const items = [
@@ -30,11 +31,14 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar>
+      <SidebarHeader>
+        <SidebarSwitcher />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="flex flex-col content-between">
+            <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -45,7 +49,6 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <LogoutButton />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

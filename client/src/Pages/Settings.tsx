@@ -1,36 +1,62 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Moon, Sun } from "lucide-react";
+import { Copy, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/Context/ThemeContext";
+import { useAuth } from "@/Context/AuthContext/AuthContext";
 
 export function Settings() {
   const { theme, toggleTheme } = useTheme();
+
+  const { userInfo } = useAuth();
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Settings</h1>
 
-      <Tabs defaultValue="profile" className="w-full">
+      <Tabs defaultValue="general" className="w-1/2">
         {/* Tabs Navigation */}
         <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="board">Board</TabsTrigger>
-          <TabsTrigger value="tasks">Tasks</TabsTrigger>
-          <TabsTrigger value="theme">Theme</TabsTrigger>
+          <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="loging&security">Loging & security</TabsTrigger>
         </TabsList>
 
-        {/* --- Profile Settings --- */}
-        <TabsContent value="theme" className="mt-4">
+        <TabsContent value="general" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Theme Settings</CardTitle>
+              <CardTitle>User-Card</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3">
+              <p className="border-b-5 border-b-forderground"></p>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-3">
+                  <Label>Employee-ID :</Label>
+                  <p className="text-md text-blue-400">{userInfo?.userId}</p>
+                </div>
+                <Copy size={18} />
+              </div>
+              <div className="flex gap-3">
+                <Label>Employee-Role :</Label>
+                <p className="text-md text-blue-400">{userInfo?.userRole}</p>
+              </div>
+              <p className="border-b-5 border-b-forderground"></p>
+              <div className="flex gap-3">
+                <Label>Name :</Label>
+                <p className="text-md text-blue-400">{userInfo?.firstName}</p>
+                <p className="text-md text-blue-400">{userInfo?.lastName}</p>
+              </div>
+              <p className="border-b-5 border-b-forderground"></p>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-3">
+                  <Label>Email :</Label>
+                  <p className="text-md text-blue-400">{userInfo?.email}</p>
+                </div>
+                <Copy size={18} />
+              </div>
+              <p className="border-b-5 border-b-forderground"></p>
               <Card className="flex justify-between items-center flex-row p-1 ">
-                Theme Switch
+                <Label>Apperiance</Label>
+
                 <div
                   onClick={() => toggleTheme()}
                   className={`relative w-14 h-8 flex items-center rounded-full px-1 cursor-pointer transition-colors duration-300 ${
@@ -49,66 +75,13 @@ export function Settings() {
             </CardContent>
           </Card>
         </TabsContent>
-
-        <TabsContent value="profile" className="mt-4">
+        <TabsContent value="login&security" className="mt-4">
           <Card>
             <CardHeader>
               <CardTitle>Profile Settings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <Label>Name</Label>
-                <Input placeholder="Your name" />
-              </div>
-              <div>
-                <Label>Email</Label>
-                <Input type="email" placeholder="Your email" />
-              </div>
-              <div>
-                <Label>Password</Label>
-                <Input type="password" placeholder="********" />
-              </div>
-              <Button>Save Changes</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* --- Board Settings --- */}
-        <TabsContent value="board" className="mt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Board Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label>Board Name</Label>
-                <Input placeholder="My Kanban Board" />
-              </div>
-              <div>
-                <Label>Default Columns</Label>
-                <Input placeholder="ToDo, In Progress, Done" />
-              </div>
-              <Button>Update Board</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* --- Task Settings --- */}
-        <TabsContent value="tasks" className="mt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Task Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label>Default Labels</Label>
-                <Input placeholder="Bug, Feature, Urgent" />
-              </div>
-              <div>
-                <Label>Work in Progress Limit</Label>
-                <Input type="number" placeholder="e.g. 3" />
-              </div>
-              <Button>Save Task Settings</Button>
+              <p>Change Password</p>
             </CardContent>
           </Card>
         </TabsContent>

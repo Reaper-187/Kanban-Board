@@ -8,7 +8,7 @@ export const LogoutButton = () => {
   };
   return (
     <>
-      <Button className="bg-red-400" onClick={handleLogout}>
+      <Button className="bg-red-400 w-full" onClick={handleLogout}>
         Logout
       </Button>
     </>

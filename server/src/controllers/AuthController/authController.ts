@@ -8,7 +8,7 @@ type SessionInfo = {
   isAuthenticated: boolean;
 };
 
-exports.collectUserAtuh = async (req: Request, res: Response) => {
+exports.checkUserAuth = async (req: Request, res: Response) => {
   try {
     const { userId, userRole } = req.session;
     const isAuthenticated = !!userId && !!userRole;
@@ -19,6 +19,31 @@ exports.collectUserAtuh = async (req: Request, res: Response) => {
       isAuthenticated,
     };
     res.status(200).json(sessionInfo);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("Server Error");
+  }
+};
+
+exports.getUserData = async (req: Request, res: Response) => {
+  try {
+    const { userId: _id } = req.session;
+
+    if (!_id) return;
+
+    const user = await User.findOne({ _id });
+
+    if (!user) return;
+
+    const userData = {
+      userId: _id,
+      userRole: user.userRole,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    };
+
+    res.status(200).json(userData);
   } catch (err) {
     console.error(err);
     res.status(500).json("Server Error");

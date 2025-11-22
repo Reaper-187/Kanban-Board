@@ -7,17 +7,21 @@ const AUTHCHECK_API = import.meta.env.VITE_API_USERAUTHCHECK;
 const FORGOTPW_API = import.meta.env.VITE_API_FORGOTPW;
 const VERIFYOTP_API = import.meta.env.VITE_API_VERIFYOTP;
 const RESET_USER_PW_API = import.meta.env.VITE_API_RESETUPW;
+const USER_INFO_API = import.meta.env.VITE_API_USERINFO;
 
-export type UserLoginProps = {
-  email: string | undefined;
-  password: string | undefined;
+export type UserProps = {
+  userId: string | null;
+  userRole: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
 };
 
-export type UserRegisterProps = {
-  firstName: string | undefined;
-  lastName: string | undefined;
-  email: string | undefined;
-  password: string | undefined;
+export const getUserInfo = async (): Promise<UserProps> => {
+  const response = await axios.get<UserProps>(USER_INFO_API, {
+    withCredentials: true,
+  });
+  return response.data;
 };
 
 export type UserAuthProps = {
@@ -25,14 +29,16 @@ export type UserAuthProps = {
   userRole: string | null;
   isAuthenticated: boolean;
 };
-
 export const checkUserAuth = async (): Promise<UserAuthProps> => {
   const response = await axios.get<UserAuthProps>(AUTHCHECK_API, {
     withCredentials: true,
   });
-  console.log("session Check", response.data);
-
   return response.data;
+};
+
+export type UserLoginProps = {
+  email: string | undefined;
+  password: string | undefined;
 };
 
 export const fetchLogin = async (
@@ -41,9 +47,15 @@ export const fetchLogin = async (
   const response = await axios.post<UserLoginProps>(LOGIN_API, data, {
     withCredentials: true,
   });
-  console.log(response);
-
   return response.data;
+};
+
+export type UserRegisterProps = {
+  _id?: string;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  email: string | undefined;
+  password: string | undefined;
 };
 
 export const fetchRegister = async (
@@ -52,8 +64,6 @@ export const fetchRegister = async (
   const response = await axios.post<UserRegisterProps>(REGISTER_API, data, {
     withCredentials: true,
   });
-  console.log(response);
-
   return response.data;
 };
 
