@@ -1,64 +1,115 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Moon, Sun } from "lucide-react";
+import { Copy, Check, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/Context/ThemeContext";
 import { useAuth } from "@/Context/AuthContext/AuthContext";
+import { useState } from "react";
+import { NewPwPage } from "./Auth-Pages/NewPwPage";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ChangePw } from "./Auth-Pages/ChangePw";
 
 export function Settings() {
-  const { theme, toggleTheme } = useTheme();
-
   const { userInfo } = useAuth();
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedId, setCopiedId] = useState(false);
+
+  const copyEmailToClipboard = async () => {
+    if (!userInfo.email) return;
+    await navigator.clipboard.writeText(userInfo.email);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2000);
+  };
+
+  const copyIdToClipboard = async () => {
+    if (!userInfo.userId) return;
+    await navigator.clipboard.writeText(userInfo.userId);
+    setCopiedId(true);
+    setTimeout(() => setCopiedId(false), 2000);
+  };
+
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Settings</h1>
 
-      <Tabs defaultValue="general" className="w-1/2">
-        {/* Tabs Navigation */}
+      <Tabs defaultValue="general" className="w-full">
         <TabsList>
           <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="loging&security">Loging & security</TabsTrigger>
+          <TabsTrigger value="login&security">Login & security</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="general" className="mt-4">
+        <TabsContent value="general" className="mt-4 w-1/2">
           <Card>
             <CardHeader>
               <CardTitle>User-Card</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="border-b-5 border-b-forderground"></p>
+
               <div className="flex items-center justify-between">
                 <div className="flex gap-3">
                   <Label>Employee-ID :</Label>
-                  <p className="text-md text-blue-400">{userInfo?.userId}</p>
+                  <p className="text-md text-blue-400">{userInfo.userId}</p>
                 </div>
-                <Copy size={18} />
+                <button
+                  onClick={copyIdToClipboard}
+                  className={`p-1 rounded-lg transition-all duration-300 cursor-pointer ${
+                    copiedId
+                      ? "bg-green-100 text-green-600 scale-110"
+                      : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:scale-105"
+                  }`}
+                >
+                  {copiedId ? (
+                    <Check size={18} className="animate-pulse" />
+                  ) : (
+                    <Copy size={18} />
+                  )}
+                </button>
               </div>
+
               <div className="flex gap-3">
                 <Label>Employee-Role :</Label>
                 <p className="text-md text-blue-400">{userInfo?.userRole}</p>
               </div>
               <p className="border-b-5 border-b-forderground"></p>
+
               <div className="flex gap-3">
                 <Label>Name :</Label>
                 <p className="text-md text-blue-400">{userInfo?.firstName}</p>
                 <p className="text-md text-blue-400">{userInfo?.lastName}</p>
               </div>
               <p className="border-b-5 border-b-forderground"></p>
+
               <div className="flex items-center justify-between">
                 <div className="flex gap-3">
                   <Label>Email :</Label>
-                  <p className="text-md text-blue-400">{userInfo?.email}</p>
+                  <p className="text-md text-blue-400">{userInfo.email}</p>
                 </div>
-                <Copy size={18} />
+                <button
+                  onClick={copyEmailToClipboard}
+                  className={`p-1 rounded-lg transition-all duration-300 cursor-pointer ${
+                    copiedEmail
+                      ? "bg-green-100 text-green-600 scale-110"
+                      : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:scale-105"
+                  }`}
+                >
+                  {copiedEmail ? (
+                    <Check size={18} className="animate-pulse" />
+                  ) : (
+                    <Copy size={18} />
+                  )}
+                </button>
               </div>
-              <p className="border-b-5 border-b-forderground"></p>
-              <Card className="flex justify-between items-center flex-row p-1 ">
-                <Label>Apperiance</Label>
 
+              <p className="border-b-5 border-b-forderground"></p>
+
+              <Card className="flex justify-between items-center flex-row p-1">
+                <Label>Appearance</Label>
                 <div
-                  onClick={() => toggleTheme()}
+                  onClick={toggleTheme}
                   className={`relative w-14 h-8 flex items-center rounded-full px-1 cursor-pointer transition-colors duration-300 ${
                     theme === "dark" ? "bg-gray-700" : "bg-yellow-400"
                   }`}
@@ -75,15 +126,9 @@ export function Settings() {
             </CardContent>
           </Card>
         </TabsContent>
+
         <TabsContent value="login&security" className="mt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>Change Password</p>
-            </CardContent>
-          </Card>
+          <ChangePw />
         </TabsContent>
       </Tabs>
     </div>

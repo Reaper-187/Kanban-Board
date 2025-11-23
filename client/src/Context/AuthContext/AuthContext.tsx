@@ -33,20 +33,6 @@ type LoadingStatus = "loading" | "authenticated" | "unauthenticated";
 export const AuthContext = createContext<AuthCheckProps | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const {
-    data: sessionData,
-    isLoading: sessionLoading,
-    error: sessionError,
-  } = useQuery({
-    queryKey: ["auth"],
-    queryFn: checkUserAuth,
-  });
-
-  const { data: userData } = useQuery({
-    queryKey: ["user"],
-    queryFn: getUserInfo,
-  });
-
   const [loadingSpinner, setLoadingSpinner] =
     useState<LoadingStatus>("loading");
 
@@ -62,6 +48,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     firstName: null,
     lastName: null,
     email: null,
+  });
+
+  const {
+    data: sessionData,
+    isLoading: sessionLoading,
+    error: sessionError,
+  } = useQuery({
+    queryKey: ["auth"],
+    queryFn: checkUserAuth,
+  });
+
+  const { data: userData } = useQuery({
+    queryKey: ["user"],
+    queryFn: getUserInfo,
+    enabled: sessionInfo.isAuthenticated, // getUserInfo geht erst los wenn true ist
   });
 
   useEffect(() => {
