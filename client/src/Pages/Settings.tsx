@@ -5,9 +5,6 @@ import { Copy, Check, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/Context/ThemeContext";
 import { useAuth } from "@/Context/AuthContext/AuthContext";
 import { useState } from "react";
-import { NewPwPage } from "./Auth-Pages/NewPwPage";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { ChangePw } from "./Auth-Pages/ChangePw";
 
 export function Settings() {

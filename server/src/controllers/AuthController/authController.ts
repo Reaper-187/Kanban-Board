@@ -292,3 +292,34 @@ exports.resetUserPw = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+exports.changePw = async (req: Request, res: Response) => {
+  try {
+    const { userId: _id } = req.session;
+
+    const { currentPw, newPw } = req.body;
+
+    if (!_id) return res.status(400).json({ message: "verification failed" });
+
+    const user = await User.findOne({ _id });
+
+    if (!user) return res.status(400).json({ message: "verification failed" });
+
+    const oldPwCheck = await bcrypt.compare(currentPw, user.password);
+    if (!oldPwCheck)
+      return res.status(400).json({ message: "verification failed" });
+
+    const hashedNewPw = await bcrypt.hash(newPw, 10);
+
+    await User.findOneAndUpdate(
+      { _id },
+      {
+        password: hashedNewPw,
+      }
+    );
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
