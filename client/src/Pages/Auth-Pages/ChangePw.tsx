@@ -10,13 +10,19 @@ import z from "zod";
 
 const newPwSchema = z
   .object({
-    currentPw: z.string().min(8, "Password must be at least 8 charachters"),
-    newPw: z.string().min(8, "Password must be at least 8 charachters"),
+    currentPw: z.string().min(8, "Password must be at least 8 characters"),
+    newPw: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Must contain at least one lowercase letter")
+      .regex(/[0-9]/, "Must contain at least one number")
+      .regex(/[^A-Za-z0-9]/, "Must contain at least one special character"),
     confirmPw: z.string().min(8),
   })
   .refine((data) => data.newPw === data.confirmPw, {
     message: "Passwords don't match",
-    path: ["confirmPw"], // Fehler wird bei confirmPw angezeigt
+    path: ["confirmPw"],
   });
 
 type NewPwForm = z.infer<typeof newPwSchema>;
@@ -29,6 +35,7 @@ export const ChangePw = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<NewPwForm>({
     resolver: zodResolver(newPwSchema),
   });
@@ -37,13 +44,26 @@ export const ChangePw = () => {
     mutate(data);
   };
 
+  const checkPasswordCriteria = (password: string = "") => {
+    return {
+      minLength: password.length > 7,
+      hasUppercase: /[A-Z]/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecial: /[^A-Za-z0-9]/.test(password),
+    };
+  };
+
   const criteriaList = [
     "Minumum characters 8",
     "One uppercase charachter",
     "One lowercase charachter",
-    "One speacial charachter",
     "One number",
+    "One speacial charachter",
   ];
+
+  // Diese Funktion prüft das aktuelle Passwort
+  const passwordChecks = checkPasswordCriteria(watch("newPw"));
 
   return (
     <>
@@ -87,11 +107,14 @@ export const ChangePw = () => {
             </div>
             <p className="text-red-500">{errors.newPw?.message}</p>
 
-            <div className="ml-5">
-              {criteriaList.map((criteria) => (
-                <li key={criteria}>{criteria ?? ""}</li>
-              ))}
-            </div>
+            {criteriaList.map((criterion, index) => {
+              const isMet = Object.values(passwordChecks)[index];
+              return (
+                <div className={isMet ? "text-green-500" : "text-gray-500"}>
+                  <li className="ml-5">{criterion}</li>
+                </div>
+              );
+            })}
 
             <p>Confirm New Password</p>
             <div className="relative">

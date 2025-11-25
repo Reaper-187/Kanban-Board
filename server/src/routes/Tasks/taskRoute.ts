@@ -1,5 +1,5 @@
-import { Router, Request, Response } from "express";
-import { authVerification } from "../../middleware/authentication/authenticationMiddleware";
+import { Router } from "express";
+import { roleAuthMiddleware } from "../../middleware/authentication/roleAuthMiddleware";
 const {
   addTask,
   getTask,
@@ -19,8 +19,13 @@ router.get("/tasks/:id", getTaskComments);
 
 router.post("/tasks/:id", createComment);
 
-router.patch("/tasks/:id", upload.array("newFiles", 10), updateTask);
+router.patch(
+  "/tasks/:id",
+  roleAuthMiddleware(["admin", "user"]),
+  upload.array("newFiles", 10),
+  updateTask
+);
 
-router.delete("/tasks", authVerification(["admin"]), deleteTask);
+router.delete("/tasks", roleAuthMiddleware(["admin"]), deleteTask);
 
 module.exports = router;

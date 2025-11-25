@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteTask } from "@/services/taskServices";
 import type { Task } from "@/components/Types/types";
 import { toast } from "sonner";
+import type { AxiosError } from "axios";
 
 type DeletePayload = { _id: string[] };
 
@@ -20,9 +21,9 @@ export const useDeleteTask = () => {
       );
       return { previousTasks };
     },
-    onError: (err, variables, context) => {
-      toast("Task/s cannot delete");
-      console.error(err.message);
+    onError: (err: AxiosError<{ message: string }>, variables, context) => {
+      const errorMessage = err.response?.data?.message || "Delete Task Failed";
+      toast(errorMessage + "❌");
       queryClient.setQueryData(["tasks"], context?.previousTasks);
     },
     onSettled: async () => {

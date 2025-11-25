@@ -21,13 +21,11 @@ import z from "zod";
 const formSchemaForNewPassword = z.object({
   newUserPw: z
     .string()
-    .min(12, "Password must be at least 12 characters")
-    .refine((value) => /[A-Z]/.test(value), {
-      message: "Password must contain at least one uppercase letter",
-    })
-    .refine((value) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value), {
-      message: "Password must contain at least one special character",
-    }),
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Must contain at least one number")
+    .regex(/[^A-Za-z0-9]/, "Must contain at least one special character"),
 });
 
 type FormUserPassword = z.infer<typeof formSchemaForNewPassword>;
@@ -44,6 +42,7 @@ export const NewPwPage = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormUserPassword>({
     defaultValues: {
@@ -62,6 +61,27 @@ export const NewPwPage = () => {
       token: resetPwTokenData.token,
     });
   };
+
+  const checkPasswordCriteria = (password: string = "") => {
+    return {
+      minLength: password.length > 7,
+      hasUppercase: /[A-Z]/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecial: /[^A-Za-z0-9]/.test(password),
+    };
+  };
+
+  const criteriaList = [
+    "Minumum characters 8",
+    "One uppercase charachter",
+    "One lowercase charachter",
+    "One number",
+    "One speacial charachter",
+  ];
+
+  // Diese Funktion prüft das aktuelle Passwort
+  const passwordChecks = checkPasswordCriteria(watch("newUserPw"));
 
   return (
     <>
@@ -95,6 +115,16 @@ export const NewPwPage = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
+
+              {criteriaList.map((criterion, index) => {
+                const isMet = Object.values(passwordChecks)[index];
+                return (
+                  <div className={isMet ? "text-green-500" : "text-gray-500"}>
+                    <li className="ml-5">{criterion}</li>
+                  </div>
+                );
+              })}
+
               <Button className="w-full font-semibold" type="submit">
                 save new password
               </Button>

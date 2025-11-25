@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks/AuthHooks/useLogin";
 import { useRegister } from "@/hooks/AuthHooks/useRegister";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Github, Mail, User } from "lucide-react";
@@ -19,7 +18,13 @@ const registerFormSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.string().email("Invalid email format"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Must contain at least one number")
+    .regex(/[^A-Za-z0-9]/, "Must contain at least one special character"),
 });
 
 type FormRegister = z.infer<typeof registerFormSchema>;
@@ -30,6 +35,7 @@ export const Register = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormRegister>({
     resolver: zodResolver(registerFormSchema),
@@ -46,6 +52,27 @@ export const Register = () => {
   const handleRegister = (data: FormRegister) => {
     mutate(data);
   };
+
+  const checkPasswordCriteria = (password: string = "") => {
+    return {
+      minLength: password.length > 7,
+      hasUppercase: /[A-Z]/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecial: /[^A-Za-z0-9]/.test(password),
+    };
+  };
+
+  const criteriaList = [
+    "Minumum characters 8",
+    "One uppercase charachter",
+    "One lowercase charachter",
+    "One number",
+    "One speacial charachter",
+  ];
+
+  // Diese Funktion prüft das aktuelle Passwort
+  const passwordChecks = checkPasswordCriteria(watch("password"));
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center p-4 bg-[url(/public/r2.jpg)] bg-cover ">
@@ -107,6 +134,14 @@ export const Register = () => {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+            {criteriaList.map((criterion, index) => {
+              const isMet = Object.values(passwordChecks)[index];
+              return (
+                <div className={isMet ? "text-green-500" : "text-gray-500"}>
+                  <li className="ml-5">{criterion}</li>
+                </div>
+              );
+            })}
             {errors.password && (
               <p className="text-red-600">{errors.password.message}</p>
             )}

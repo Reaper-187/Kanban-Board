@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserRole } from "../../types/types";
 
-export const authVerification = (allowedRoles: UserRole[]) => {
+export const roleAuthMiddleware = (allowedRoles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.session) {
@@ -11,7 +11,7 @@ export const authVerification = (allowedRoles: UserRole[]) => {
       const { userId, userRole } = req.session;
 
       if (!userId || !userRole) {
-        return res.status(401).json("Unauthorized");
+        return res.status(401).json({ message: "Unauthorized for your Role" });
       }
 
       if (!allowedRoles.includes(userRole)) {
