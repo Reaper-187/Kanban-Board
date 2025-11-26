@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/Context/AuthContext/AuthContext";
 import { useChangePW } from "@/hooks/AuthHooks/useChangePw";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { motion } from "framer-motion";
 import z from "zod";
 
 const newPwSchema = z
@@ -29,6 +31,8 @@ type NewPwForm = z.infer<typeof newPwSchema>;
 
 export const ChangePw = () => {
   const { mutate } = useChangePW();
+  const { userInfo } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -68,6 +72,21 @@ export const ChangePw = () => {
   return (
     <>
       <Card>
+        {userInfo.userRole === "guest" && (
+          <motion.div
+            className="text-xl text-red-500 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              stiffness: 50,
+              repeat: Infinity,
+              repeatType: "reverse",
+              duration: 1,
+            }}
+          >
+            <p>Guests are not allowed change the Password</p>
+          </motion.div>
+        )}
         <CardHeader>
           <CardTitle>Change Password</CardTitle>
         </CardHeader>
@@ -132,7 +151,11 @@ export const ChangePw = () => {
               </button>
             </div>
             <p className="text-red-500">{errors.confirmPw?.message}</p>
-            <Button className="w-full bg-indigo-500" type="submit">
+            <Button
+              className="w-full bg-indigo-500"
+              type="submit"
+              disabled={userInfo.userRole === "guest" ? true : false}
+            >
               Change Password
             </Button>
           </form>

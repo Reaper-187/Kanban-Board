@@ -9,6 +9,7 @@ const VERIFYOTP_API = import.meta.env.VITE_API_VERIFYOTP;
 const RESET_USER_PW_API = import.meta.env.VITE_API_RESETUPW;
 const USER_INFO_API = import.meta.env.VITE_API_USERINFO;
 const CHANGE_PW_API = import.meta.env.VITE_API_CHANGEPW;
+const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
 
 export type UserProps = {
   userId: string | null;
@@ -140,16 +141,13 @@ export const userChangePw = async (
   return response.data;
 };
 
-// interface UserLoginProps {
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   password: string;
-//   veryfication: boolean;
-//   veryficationToken: string;
-//   createdOn: Date;
-//   tokenExp: Date;
-//   otpNum: number;
-//   blockedAccount: boolean;
-//   restCodeExp: Date;
-// }
+export const guestAccess = async () => {
+  const response = await axios.post(
+    GUEST_ACCESS_API,
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};

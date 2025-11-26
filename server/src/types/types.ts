@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "user";
+export type UserRole = "admin" | "user" | "guest";
 
 import "express-session";
 
@@ -6,6 +6,7 @@ declare module "express-session" {
   interface SessionData {
     userId: string;
     userRole: UserRole;
+    guestExpires?: Date;
   }
 }
 

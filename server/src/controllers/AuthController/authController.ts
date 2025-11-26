@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 const bcrypt = require("bcrypt");
 const User = require("../../models/UserModel/UserSchema");
+const Guest = require("../../models/UserModel/GuestSchema");
 
 type SessionInfo = {
   userId: string | null;
@@ -27,11 +28,14 @@ exports.checkUserAuth = async (req: Request, res: Response) => {
 
 exports.getUserData = async (req: Request, res: Response) => {
   try {
-    const { userId: _id } = req.session;
+    const { userId: _id, userRole } = req.session;
 
     if (!_id) return;
 
-    const user = await User.findOne({ _id });
+    const identType =
+      userRole === "user" || userRole === "admin" ? User : Guest;
+
+    const user = await identType.findOne({ _id });
 
     if (!user) return;
 
@@ -147,6 +151,10 @@ exports.logOutUser = async (
   try {
     if (!req.session) {
       return res.status(400).json({ message: "No active session" });
+    }
+
+    if (req.session.userRole === "guest") {
+      await Guest.findByIdAndDelete(req.session.userId);
     }
 
     req.session.destroy((err) => {

@@ -1,4 +1,6 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
+import { checkGuestExpiry } from "../../middleware/authentication/guestExpMiddleware";
+import { roleAuthMiddleware } from "../../middleware/authentication/roleAuthMiddleware";
 const {
   getUserData,
   checkUserAuth,
@@ -10,6 +12,9 @@ const {
   resetUserPw,
   changePw,
 } = require("../../controllers/AuthController/authController");
+const {
+  guestAccess,
+} = require("../../controllers/AuthController/guestController");
 const router = Router();
 
 router.get("/auth/getUserData", getUserData);
@@ -28,6 +33,8 @@ router.post("/auth/verifyUserOtp", verifyOtp);
 
 router.post("/auth/resetUserPw", resetUserPw);
 
-router.post("/auth/changePw", changePw);
+router.post("/auth/changePw", roleAuthMiddleware(["admin", "user"]), changePw);
+
+router.post("/auth/guestLogin", checkGuestExpiry, guestAccess);
 
 module.exports = router;

@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { guestAccessHook } from "@/hooks/AuthHooks/useGuestAccess";
 import { useLogin } from "@/hooks/AuthHooks/useLogin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Github, Mail, User } from "lucide-react";
@@ -36,10 +37,12 @@ export const Login = () => {
     },
   });
 
-  const { mutate } = useLogin();
+  const { mutate: userLogin } = useLogin();
+
+  const { mutate: guestLogin } = guestAccessHook();
 
   const handleLogin = (data: FormLogin) => {
-    mutate(data);
+    userLogin(data);
   };
 
   return (
@@ -137,8 +140,7 @@ export const Login = () => {
           </Button>
           <Button
             className="w-full col-span-2 font-semibold"
-
-            //   onClick={loginAsGuest}
+            onClick={() => guestLogin()}
           >
             <User className="mr-2 h-4 w-4" />
             Guest for Test

@@ -19,7 +19,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL;
 
 app.use(
   cors({
-    origin: FRONTEND_URL,
+    origin: [FRONTEND_URL, "https://irwin-initiatory-hester.ngrok-free.dev"],
     credentials: true,
   })
 );
@@ -56,7 +56,7 @@ app.get("/", (req: Request, res: Response) => {
 async function startServer() {
   try {
     await connectToDB();
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running at: ${PORT}`);
     });
   } catch (error) {
