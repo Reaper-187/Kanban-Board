@@ -20,9 +20,8 @@ export const createTask = async (data: RequestData): Promise<RequestData> => {
 
   const response = await axios.post<RequestData>(TASK_API, formData, {
     headers: { "Content-Type": "multipart/form-data" },
+    withCredentials: true,
   });
-
-  console.log("response", response);
 
   return response.data;
 };

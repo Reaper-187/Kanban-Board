@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateTask } from "@/services/taskServices";
 import type { Task } from "@/components/Types/types";
+import type { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export const useUpdateTask = () => {
   const queryClient = useQueryClient();
@@ -22,13 +24,15 @@ export const useUpdateTask = () => {
       return { previousTasks };
     },
     onError: (
-      err: Error,
+      err: AxiosError<{ message: string }>,
       newTodo: { _id: string; updates: Partial<Task> },
       context?: { previousTasks?: Task[] }
     ) => {
       if (context?.previousTasks) {
         queryClient.setQueryData(["tasks"], context.previousTasks);
       }
+      const errorMessage = err.response?.data?.message;
+      toast(errorMessage + "🔒");
     },
     onSettled: async () => {
       return queryClient.invalidateQueries(query);

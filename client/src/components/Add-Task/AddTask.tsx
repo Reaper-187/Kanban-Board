@@ -34,7 +34,7 @@ const ACCEPTED_FILE_TYPES = [
 ];
 
 const formTaskSchema = z.object({
-  _id: z.string().optional(),
+  taskId: z.string().optional(),
   topic: z.string(),
   description: z.string(),
   importance: z.enum(["Urgent", "High", "Lead", "Internal", "Medium", "Low"]),
@@ -75,14 +75,6 @@ export const AddTask = () => {
     formState: { errors },
   } = useForm<FormTask>({
     resolver: zodResolver(formTaskSchema),
-    defaultValues: {
-      _id: "",
-      topic: "",
-      description: "",
-      importance: "Medium",
-      file: null,
-      date: new Date(),
-    },
   });
 
   useEffect(() => {

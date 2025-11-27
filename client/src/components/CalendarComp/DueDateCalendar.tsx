@@ -3,7 +3,6 @@ import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -58,7 +57,7 @@ export function Calendar24({ value, onChange }: DateAndTimeProps) {
           </PopoverContent>
         </Popover>
       </div>
-      <div className="flex flex-col gap-3">
+      {/* <div className="flex flex-col gap-3">
         <Label htmlFor="time-picker" className="px-1">
           Time
         </Label>
@@ -69,7 +68,7 @@ export function Calendar24({ value, onChange }: DateAndTimeProps) {
           defaultValue="10:30:00"
           className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
-      </div>
+      </div> */}
     </div>
   );
 }

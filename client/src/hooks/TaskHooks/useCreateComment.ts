@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCommentTask } from "@/services/taskServices";
 import { toast } from "sonner";
 import type { Task } from "@/components/Types/types";
+import type { AxiosError } from "axios";
 
 export const useCreateComment = (taskId: string) => {
   const queryClient = useQueryClient();
@@ -9,7 +10,7 @@ export const useCreateComment = (taskId: string) => {
 
   return useMutation<
     Task,
-    Error,
+    AxiosError<{ message: string }>,
     { text: string },
     { previousComments?: Task["comment"] }
   >({
@@ -31,11 +32,11 @@ export const useCreateComment = (taskId: string) => {
       return { previousComments };
     },
 
-    onError: (err, _variables, context) => {
+    onError: (err: AxiosError<{ message: string }>, _variables, context) => {
       if (context?.previousComments) {
         queryClient.setQueryData(["comment", taskId], context.previousComments);
-        toast("comment cannot be added to the Task");
-        console.error("Fehler beim Erstellen des Comments", err);
+        const errorMessage = err.response?.data?.message;
+        toast(errorMessage + "🔒");
       }
     },
 

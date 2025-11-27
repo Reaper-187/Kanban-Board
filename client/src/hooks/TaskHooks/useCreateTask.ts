@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTask } from "@/services/taskServices";
 import { toast } from "sonner";
+import type { AxiosError } from "axios";
 
 export const useCreateTask = (reset: () => void) => {
   const queryClient = useQueryClient();
@@ -12,9 +13,9 @@ export const useCreateTask = (reset: () => void) => {
       toast("Task Added successfully");
       reset();
     },
-    onError: (err: Error) => {
-      toast("Task cannot Added");
-      console.error("Fehler beim Erstellen:", err);
+    onError: (err: AxiosError<{ message: string }>) => {
+      const errorMessage = err.response?.data?.message;
+      toast(errorMessage + "🔒");
     },
   });
 };

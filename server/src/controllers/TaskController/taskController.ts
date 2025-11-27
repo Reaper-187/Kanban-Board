@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { UploadedFile } from "../../types/types";
 const Task = require("../../models/TaskModel/TaskSchema");
 import fs from "fs/promises";
+const User = require("../../models/UserModel/UserSchema");
+const Guest = require("../../models/UserModel/GuestSchema");
 
 interface MulterRequest extends Request {
   files?: Express.Multer.File[];
@@ -9,8 +11,22 @@ interface MulterRequest extends Request {
 
 exports.addTask = async (req: MulterRequest, res: Response) => {
   try {
-    const { _id, ...taskData } = req.body;
+    const { ...taskData } = req.body;
+    const { userId: _id, userRole } = req.session;
     const newFiles = req.files;
+
+    if (userRole === "guest" && newFiles && newFiles.length > 0) {
+      return res.status(400).json({ message: "Guests cannot add files" });
+    }
+
+    const user =
+      userRole === "guest"
+        ? await Guest.findOne({ _id })
+        : await User.findOne({ _id });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
 
     const fileInfos = newFiles
       ? newFiles.map((file) => ({
@@ -20,6 +36,7 @@ exports.addTask = async (req: MulterRequest, res: Response) => {
           size: file.size,
         }))
       : [];
+
     const newTask = new Task({
       ...taskData,
       file: fileInfos,
@@ -45,7 +62,12 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
   try {
     const files = req.files;
     const { id } = req.params;
+    const { userRole } = req.session;
     const updates = req.body;
+
+    if (userRole === "guest" && files && files.length > 0) {
+      return res.status(400).json({ message: "Guests cannot add files" });
+    }
 
     // Aktuellen task nochmal holen für die files
     const task = await Task.findById(id);
@@ -78,7 +100,7 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    res.json(updatedTask);
+    res.status(200).json(updatedTask);
   } catch (error) {
     res.status(500).json({ message: "Error updating task", error });
   }
@@ -118,7 +140,7 @@ exports.deleteTask = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    res.json(deleteTask);
+    res.status(200).json(deleteTask);
   } catch (error) {
     res.status(500).json({ message: "Error deleting task", error });
   }
