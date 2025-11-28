@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+
 import { Send } from "lucide-react";
 import { useCreateComment } from "@/hooks/TaskHooks/useCreateComment";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCommentTask } from "@/services/taskServices";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 type TaskIdProps = {
   taskId: string;
