@@ -75,6 +75,21 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
+    const diffs: any = {};
+    for (const key of Object.keys(updates)) {
+      const oldValue = task[key];
+      const newValue = updates[key];
+
+      console.log("CHECK:", key, "old:", oldValue, "new:", newValue);
+
+      if (oldValue !== newValue) {
+        diffs[key] = { from: oldValue, to: newValue };
+        console.log("Diffs1", diffs);
+      }
+    }
+
+    console.log("diffs2", diffs);
+
     // Alte files speichern wegen der zsm führung
     const existingFiles = task.file || [];
 
