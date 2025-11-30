@@ -6,17 +6,19 @@ const Guest = require("../../models/UserModel/GuestSchema");
 type SessionInfo = {
   userId: string | null;
   userRole: string | null;
+  lastName: string | null;
   isAuthenticated: boolean;
 };
 
 exports.checkUserAuth = async (req: Request, res: Response) => {
   try {
-    const { userId, userRole } = req.session;
+    const { userId, userRole, lastName } = req.session;
     const isAuthenticated = !!userId && !!userRole;
 
     const sessionInfo: SessionInfo = {
       userId: userId ?? null,
       userRole: userRole ?? null,
+      lastName: lastName ?? null,
       isAuthenticated,
     };
     res.status(200).json(sessionInfo);
@@ -135,6 +137,7 @@ exports.loginUser = async (req: Request, res: Response) => {
     // bei Anfragen wird so indentifiziert ob der user auth ist
 
     req.session.userId = findUserAccount._id;
+    req.session.lastName = findUserAccount.lastName;
     req.session.userRole = findUserAccount.userRole;
 
     res.status(200).json({ message: "Login successfully" });

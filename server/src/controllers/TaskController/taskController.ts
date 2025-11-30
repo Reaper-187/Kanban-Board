@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "../../types/types";
-const Task = require("../../models/TaskModel/TaskSchema");
 import fs from "fs/promises";
+const Task = require("../../models/TaskModel/TaskSchema");
+const Log = require("../../models/Acitvity-Logs/LogsScheama");
 const User = require("../../models/UserModel/UserSchema");
 const Guest = require("../../models/UserModel/GuestSchema");
 
@@ -62,7 +63,7 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
   try {
     const files = req.files;
     const { id } = req.params;
-    const { userRole } = req.session;
+    const { userId, userRole, lastName } = req.session;
     const updates = req.body;
 
     if (userRole === "guest" && files && files.length > 0) {
@@ -75,20 +76,30 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    const diffs: any = {};
-    for (const key of Object.keys(updates)) {
+    const changes: { [key: string]: { old: any; new: any } } = {};
+
+    const updateKeys = Object.keys(updates);
+
+    for (const key of updateKeys) {
       const oldValue = task[key];
       const newValue = updates[key];
-
-      console.log("CHECK:", key, "old:", oldValue, "new:", newValue);
-
       if (oldValue !== newValue) {
-        diffs[key] = { from: oldValue, to: newValue };
-        console.log("Diffs1", diffs);
+        // ...speicherst du den Unterschied in 'changes'
+        changes[key] = {
+          old: oldValue,
+          new: newValue,
+        };
       }
     }
 
-    console.log("diffs2", diffs);
+    const newLog = new Log({
+      taskId: id,
+      userLastName: lastName,
+      userId: userId,
+      payload: changes,
+    });
+
+    await newLog.save();
 
     // Alte files speichern wegen der zsm führung
     const existingFiles = task.file || [];
@@ -202,6 +213,22 @@ exports.getTaskComments = async (req: Request, res: Response) => {
     res.status(200).json(allComments);
   } catch (err) {
     console.error("Error beim laden der Comments:", err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.getLogAcitvity = async (req: Request, res: Response) => {
+  try {
+    const { id: taskId } = req.params;
+
+    const logsForTask = await Log.findOne({ taskId });
+
+    if (!logsForTask)
+      return res.status(400).json({ message: "no logs avaylible" });
+
+    res.status(200).json(logsForTask);
+  } catch (err) {
+    console.error("Error beim laden der logs:", err);
     res.status(500).json({ message: "Server Error" });
   }
 };

@@ -5,6 +5,7 @@ import "express-session";
 declare module "express-session" {
   interface SessionData {
     userId: string;
+    lastName: string;
     userRole: UserRole;
     guestExpires?: Date;
   }

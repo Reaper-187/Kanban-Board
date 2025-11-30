@@ -7,6 +7,7 @@ const {
   deleteTask,
   createComment,
   getTaskComments,
+  getLogAcitvity,
 } = require("../../controllers/TaskController/taskController");
 const upload = require("../../middleware/multer/uploadMiddleware");
 const router = Router();
@@ -15,7 +16,9 @@ router.post("/tasks", upload.array("file", 10), addTask);
 
 router.get("/tasks", getTask);
 
-router.get("/tasks/:id", getTaskComments);
+router.get("/tasks/comments/:id", getTaskComments);
+
+router.get("/tasks/logs/:id", getLogAcitvity);
 
 router.post("/tasks/:id", createComment);
 
