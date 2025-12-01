@@ -29,6 +29,7 @@ export const getUserInfo = async (): Promise<UserProps> => {
 export type UserAuthProps = {
   userId: string | null;
   userRole: string | null;
+  lastName: string | null;
   isAuthenticated: boolean;
 };
 export const checkUserAuth = async (): Promise<UserAuthProps> => {

@@ -41,7 +41,7 @@ export const CommentSection = ({ taskId }: TaskIdProps) => {
 
   return (
     <form onSubmit={submitComment}>
-      <p className="text-lg font-semibold mb-2">Activity</p>
+      <p className="text-lg font-semibold mb-2">Comments:</p>
 
       <div className="h-[300px] rounded-lg overflow-y-auto divide-y-2 divide-gray-300 odd:bg-gray-100">
         {fetchTaskComments.map((comment) => (

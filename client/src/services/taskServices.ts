@@ -3,6 +3,8 @@ import type { Task, RequestData } from "@/components/Types/types";
 import axios from "axios";
 
 const TASK_API = import.meta.env.VITE_API_TASK;
+const TASK_LOGS_API = import.meta.env.VITE_API_TASK_LOGS;
+const TASK_COMMENTS_API = import.meta.env.VITE_API_TASK_COMMENTS;
 
 export const createTask = async (data: RequestData): Promise<RequestData> => {
   const formData = new FormData();
@@ -38,8 +40,12 @@ type CommentType = {
   timeStamp: Date;
 };
 
-export const fetchCommentTask = async (_id: string): Promise<CommentType[]> => {
-  const response = await axios.get<CommentType[]>(`${TASK_API}/${_id}`);
+export const fetchCommentTask = async (
+  taskId: string
+): Promise<CommentType[]> => {
+  const response = await axios.get<CommentType[]>(
+    `${TASK_COMMENTS_API}/${taskId}`
+  );
   return response.data;
 };
 
@@ -70,6 +76,7 @@ export const updateTask = async (
 
   const response = await axios.patch<Task>(`${TASK_API}/${_id}`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
+    withCredentials: true,
   });
 
   return response.data;
@@ -77,7 +84,28 @@ export const updateTask = async (
 
 type DeletePayload = { _id: string[] };
 
-export const deleteTask = async (_id: DeletePayload): Promise<Task> => {
-  const response = await axios.delete<Task>(TASK_API, { data: _id });
+export const deleteTask = async (taskId: DeletePayload): Promise<Task> => {
+  const response = await axios.delete<Task>(TASK_API, { data: taskId });
+  return response.data;
+};
+
+export type LogsType = {
+  taskId: string;
+  _id: string;
+  userLastName: string;
+  payload: LogPayload;
+  timeStamp: Date;
+};
+
+type LogPayload = {
+  [key: string]: {
+    from: any;
+    to: any;
+  };
+};
+export const fetchLogTask = async (taskId: string): Promise<LogsType[]> => {
+  const response = await axios.get<LogsType[]>(`${TASK_LOGS_API}/${taskId}`, {
+    withCredentials: true,
+  });
   return response.data;
 };

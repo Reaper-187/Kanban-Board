@@ -8,8 +8,8 @@ type DescriptionBodyProps = {
 
 export const DescriptionBody = ({ currentTask }: DescriptionBodyProps) => {
   return (
-    <div className="space-y-5">
-      <div>
+    <div className="space-y-1">
+      <div className="flex gap-3">
         <p className="text-lg font-semibold">Description:</p>
         <p className="text-secondary-foreground flex self-center">
           {currentTask.description}
@@ -26,6 +26,7 @@ export const DescriptionBody = ({ currentTask }: DescriptionBodyProps) => {
                 file
               </p>
             </div>
+            <p className="w-full bg-gray-300 h-[1px]"></p>
             <div>
               {currentTask?.file &&
                 currentTask?.file.map((f) => (

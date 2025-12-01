@@ -76,7 +76,7 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    const changes: { [key: string]: { old: any; new: any } } = {};
+    const changes: { [key: string]: { from: any; to: any } } = {};
 
     const updateKeys = Object.keys(updates);
 
@@ -86,8 +86,8 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
       if (oldValue !== newValue) {
         // ...speicherst du den Unterschied in 'changes'
         changes[key] = {
-          old: oldValue,
-          new: newValue,
+          from: oldValue,
+          to: newValue,
         };
       }
     }
@@ -221,7 +221,7 @@ exports.getLogAcitvity = async (req: Request, res: Response) => {
   try {
     const { id: taskId } = req.params;
 
-    const logsForTask = await Log.findOne({ taskId });
+    const logsForTask = await Log.find({ taskId });
 
     if (!logsForTask)
       return res.status(400).json({ message: "no logs avaylible" });

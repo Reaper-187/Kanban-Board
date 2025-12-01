@@ -18,6 +18,7 @@ export type SessionInfoProps = {
   isAuthenticated: boolean;
   userId: string | null;
   userRole: string | null;
+  lastName: string | null;
 };
 
 export type UserInfoProps = {
@@ -40,6 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isAuthenticated: false,
     userId: null,
     userRole: null,
+    lastName: null,
   });
 
   const [userInfo, setUserInfo] = useState<UserInfoProps>({
@@ -73,6 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated: false,
         userId: null,
         userRole: null,
+        lastName: null,
       });
       setLoadingSpinner("unauthenticated");
     } else if (sessionData?.isAuthenticated) {
@@ -80,6 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated: true,
         userId: sessionData.userId,
         userRole: sessionData.userRole,
+        lastName: sessionData.lastName,
       });
       setLoadingSpinner("authenticated");
     }
