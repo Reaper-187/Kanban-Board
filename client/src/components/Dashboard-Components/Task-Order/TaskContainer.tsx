@@ -55,6 +55,7 @@ export const TaskContainer = ({
     setActiveTask(task);
   };
 
+  // für status änderung durch button
   const handleStatusChange = (_id: string, updates: Partial<Task>) => {
     mutate({ _id, updates });
   };
@@ -66,6 +67,14 @@ export const TaskContainer = ({
 
     const taskId = active.id as string;
     const newStatus = over.id as Task["status"];
+
+    const task = fetchTaskData.find((t) => t._id === taskId);
+    if (!task) return;
+
+    // Wenn alter Status gleich neuer Status => nichts tun (req sparen)
+    if (task.status === newStatus) {
+      return;
+    }
 
     mutate({
       _id: taskId,

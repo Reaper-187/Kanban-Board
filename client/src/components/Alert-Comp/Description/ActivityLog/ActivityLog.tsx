@@ -70,7 +70,7 @@ export const ActivityLog = ({ taskId }: TaskIdProps) => {
                   {Object.entries(log.payload).map(
                     ([key, value]: [string, any]) => (
                       <div key={key}>
-                        {key}: {value.old} → {value.new}
+                        {key}: {value.from} → {value.to}
                       </div>
                     )
                   )}

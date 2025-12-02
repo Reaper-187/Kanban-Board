@@ -2,11 +2,11 @@ import type { Task } from "@/components/Types/types";
 import { DownloadIcon } from "lucide-react";
 import { CommentSection } from "./Comment-Comp/CommentSection";
 
-type DescriptionBodyProps = {
+type DescriptionInfosProps = {
   currentTask: Task;
 };
 
-export const DescriptionBody = ({ currentTask }: DescriptionBodyProps) => {
+export const DescriptionInfos = ({ currentTask }: DescriptionInfosProps) => {
   return (
     <div className="space-y-1">
       <div className="flex gap-3">

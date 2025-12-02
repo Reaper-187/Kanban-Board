@@ -80,9 +80,11 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
 
     const updateKeys = Object.keys(updates);
 
+    // Wenn keine Änderungen → update abbrechen
     for (const key of updateKeys) {
       const oldValue = task[key];
       const newValue = updates[key];
+
       if (oldValue !== newValue) {
         // ...speicherst du den Unterschied in 'changes'
         changes[key] = {
@@ -90,6 +92,13 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
           to: newValue,
         };
       }
+    }
+
+    const hasFileChanges = files && files.length > 0;
+    const hasFieldChanges = Object.keys(changes).length > 0;
+
+    if (!hasFieldChanges && !hasFileChanges) {
+      return res.status(200).json({ message: "No changes detected", task });
     }
 
     const newLog = new Log({
