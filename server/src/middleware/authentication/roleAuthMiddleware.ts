@@ -7,9 +7,7 @@ export const roleAuthMiddleware = (allowedRoles: UserRole[]) => {
       if (!req.session) {
         return res.status(401).json("Unauthorized: No session");
       }
-
       const { userId, userRole } = req.session;
-
       if (!userId || !userRole) {
         return res.status(401).json({ message: "Unauthorized for your Role" });
       }

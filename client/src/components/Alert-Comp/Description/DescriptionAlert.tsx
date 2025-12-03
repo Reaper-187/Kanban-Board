@@ -1,8 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardHeader } from "../../ui/card";
 import { useToggle } from "@/Context/AddBtnContext";
-
-import { DescriptionBody } from "./Description-Body";
+import { DescriptionInfos } from "./Description-Info";
 import { X } from "lucide-react";
 import { Tabs } from "@/components/ui/tabs";
 import { TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
@@ -22,7 +21,7 @@ export const DescriptionAlert = () => {
         >
           <motion.div
             initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            animate={{ y: 0, opacity: 11 }}
             exit={{ y: -10, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="w-full max-w-2xl mx-auto"
@@ -42,16 +41,17 @@ export const DescriptionAlert = () => {
               </CardHeader>
 
               {/* ---------- TABS ---------- */}
-              <Tabs defaultValue="descriptionBody" className="mt-2">
+              <Tabs defaultValue="DescriptionInfos" className="mt-2">
                 <TabsList className="mb-5 flex gap-3 ">
                   <TabsTrigger
-                    className="p-1 cursor-pointer bg-muted text-muted-foreground w-fit rounded-md"
-                    value="descriptionBody"
+                    className="transition duration-300 bg-ring p-1 rounded-md cursor-pointer text-primary-foreground hover:bg-primary-foreground hover:text-secondary-foreground"
+                    value="DescriptionInfos"
                   >
                     Description
                   </TabsTrigger>
+
                   <TabsTrigger
-                    className="p-1 cursor-pointer bg-muted text-muted-foreground w-fit rounded-md"
+                    className="transition duration-300 bg-ring p-1 rounded-md cursor-pointer text-primary-foreground hover:bg-primary-foreground hover:text-secondary-foreground"
                     value="activityLogs"
                   >
                     Activity Logs
@@ -59,8 +59,8 @@ export const DescriptionAlert = () => {
                 </TabsList>
 
                 {/* ---------- TAB: DESCRIPTION ---------- */}
-                <TabsContent value="descriptionBody">
-                  <DescriptionBody currentTask={currentTask} />
+                <TabsContent value="DescriptionInfos">
+                  <DescriptionInfos currentTask={currentTask} />
                 </TabsContent>
 
                 {/* ---------- TAB: ACTIVITY LOGS ---------- */}

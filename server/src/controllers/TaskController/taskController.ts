@@ -150,6 +150,7 @@ exports.deleteTask = async (req: Request, res: Response) => {
 
     // const task = await Task.findById({ _id: id });
     const tasksToDelete = await Task.find({ _id: { $in: _id } });
+
     const extractingFiles = tasksToDelete
       .map((eachPath: any) => eachPath.file)
       .flat(1);
@@ -159,13 +160,10 @@ exports.deleteTask = async (req: Request, res: Response) => {
       }
     );
 
-    console.log(filesToDeleteFromUploads);
-
     for (const filePath of filesToDeleteFromUploads) {
       const fileName = filePath.split("/").pop(); // Nur den Dateinamen extrahieren
       if (filesInFolder.includes(fileName)) {
         await fs.unlink(`${uploadDir}/${fileName}`);
-        console.log("Gelöscht:", fileName);
       }
     }
 

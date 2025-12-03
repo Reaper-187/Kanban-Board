@@ -43,10 +43,10 @@ export const CommentSection = ({ taskId }: TaskIdProps) => {
     <form onSubmit={submitComment}>
       <p className="text-lg font-semibold mb-2">Comments:</p>
 
-      <div className="h-[300px] rounded-lg overflow-y-auto divide-y-2 divide-gray-300 odd:bg-gray-100">
+      <div className="h-[300px] rounded-lg overflow-y-auto divide-gray-300 odd:bg-gray-100">
         {fetchTaskComments.map((comment) => (
           <div
-            className="space-y-2 p-1 bg-secondary text-secondary-foreground odd:bg-gray-100 odd:text-primary-foreground odd:bg-primary p-3 text-xs"
+            className="space-y-2 bg-secondary text-secondary-foreground odd:bg-ring odd:text-primary-foreground odd:bg-primary p-3 text-xs"
             key={comment._id}
           >
             <span className="flex gap-5">

@@ -44,7 +44,8 @@ export const fetchCommentTask = async (
   taskId: string
 ): Promise<CommentType[]> => {
   const response = await axios.get<CommentType[]>(
-    `${TASK_COMMENTS_API}/${taskId}`
+    `${TASK_COMMENTS_API}/${taskId}`,
+    { withCredentials: true }
   );
   return response.data;
 };
@@ -53,8 +54,9 @@ export const createCommentTask = async (
   _id: string,
   comment: { text: string }
 ): Promise<Task> => {
-  const response = await axios.post<Task>(`${TASK_API}/${_id}`, comment);
-  console.log(response);
+  const response = await axios.post<Task>(`${TASK_API}/${_id}`, comment, {
+    withCredentials: true,
+  });
   return response.data;
 };
 
@@ -85,7 +87,10 @@ export const updateTask = async (
 type DeletePayload = { _id: string[] };
 
 export const deleteTask = async (taskId: DeletePayload): Promise<Task> => {
-  const response = await axios.delete<Task>(TASK_API, { data: taskId });
+  const response = await axios.delete<Task>(TASK_API, {
+    data: taskId,
+    withCredentials: true,
+  });
   return response.data;
 };
 

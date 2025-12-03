@@ -32,12 +32,12 @@ export const ActivityLog = ({ taskId }: TaskIdProps) => {
 
   return (
     <>
-      <Card className="h-[350px] flex flex-col">
+      <Card className="h-[650px] flex flex-col">
         <CardHeader>
           <h3 className="text-lg font-semibold">Activity Log</h3>
         </CardHeader>
 
-        <CardContent className="flex-1 overflow-y-auto space-y-4 pr-2">
+        <CardContent className="flex-1 overflow-y-auto space-y-5 pr-2">
           {fetchTaskLogs.length === 0 && (
             <p className="text-sm text-muted-foreground">
               Keine Logs vorhanden.

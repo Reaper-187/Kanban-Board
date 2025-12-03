@@ -32,7 +32,7 @@ export const useUpdateTask = () => {
         queryClient.setQueryData(["tasks"], context.previousTasks);
       }
       const errorMessage = err.response?.data?.message;
-      toast(errorMessage + "🔒");
+      toast(errorMessage + "❌");
     },
     onSettled: async () => {
       return queryClient.invalidateQueries(query);

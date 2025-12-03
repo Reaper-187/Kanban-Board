@@ -19,6 +19,7 @@ export const useDeleteTask = () => {
       queryClient.setQueriesData<Task[]>(query, (old = []) =>
         old.filter((task) => !payload._id.includes(task._id))
       );
+      toast("Task successfully delted");
       return { previousTasks };
     },
     onError: (err: AxiosError<{ message: string }>, variables, context) => {

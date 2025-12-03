@@ -17,7 +17,7 @@ export const DescriptionInfos = ({ currentTask }: DescriptionInfosProps) => {
       </div>
       <p className="w-full bg-gray-300 h-[1px]"></p>
       <div>
-        <div className="grid grid-col-2 mb-5">
+        <div className="grid grid-col-2 mb-2">
           <div>
             <div className="flex items-center">
               <p className="text-lg font-semibold">Attachment</p>
@@ -26,7 +26,7 @@ export const DescriptionInfos = ({ currentTask }: DescriptionInfosProps) => {
                 file
               </p>
             </div>
-            <p className="w-full bg-gray-300 h-[1px]"></p>
+            <p className="w-full bg-gray-300 h-[1px] mb-2"></p>
             <div>
               {currentTask?.file &&
                 currentTask?.file.map((f) => (
