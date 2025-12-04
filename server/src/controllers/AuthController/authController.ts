@@ -2,6 +2,13 @@ import { NextFunction, Request, Response } from "express";
 const bcrypt = require("bcrypt");
 const User = require("../../models/UserModel/UserSchema");
 const Guest = require("../../models/UserModel/GuestSchema");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+// const passport = require("passport");
+
+const EMAIL_USER = process.env.EMAIL_USER;
+const EMAIL_PASS = process.env.EMAIL_PASS;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 type SessionInfo = {
   userId: string | null;
@@ -57,7 +64,7 @@ exports.getUserData = async (req: Request, res: Response) => {
 exports.registUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
-    const { fistName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     if (!user) return;
 
@@ -69,20 +76,82 @@ exports.registUser = async (req: Request, res: Response) => {
 
     const hashedPw = await bcrypt.hash(password, 10);
 
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 Stunden gültig
+
     const newUser = new User({
       ...user,
-      fistName,
+      firstName,
       lastName,
       email,
       password: hashedPw,
+      verification: {
+        veryfiStatus: false,
+        veryficationToken: verificationToken,
+        verifyTokenExp: tokenExpires,
+      },
     });
 
     await newUser.save();
 
-    res.status(200).json("Registration successfully");
+    const verifyLink = `${process.env.FRONTEND_URL}/emailVerify?token=${verificationToken}`;
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: EMAIL_USER,
+      to: email,
+      subject: "E-Mail-Verification",
+      text: `Please click on the current Link, to verify your E-Mail: ${verifyLink}`,
+      html: `<p>Please click on the current Link, to verify your E-Mail:</p>
+             <a href="${verifyLink}">${verifyLink}</a>`,
+    });
+
+    res.status(200).json({
+      message:
+        "Registration successfully - Please check your inbox for the verification.",
+    });
   } catch (err) {
     console.error("Error ", err);
-    res.status(500).json("Registration Failed");
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.emailVerify = async (req: Request, res: Response) => {
+  const { token } = req.query;
+
+  try {
+    // Benutzer mit dem Token finden
+    const user = await User.findOne({ "verfication.verificationToken": token });
+
+    if (!user) {
+      return res.status(400).send("Token is wrong or expired.");
+    }
+
+    if (user.verfication.verifyTokenExp < Date.now()) {
+      return res.status(400).send("Token is wrong or expired.");
+    }
+
+    // Benutzer verifizieren
+    user.verfication.isVerified = true;
+    user.verfication.verificationToken = null; // Token entfernen
+    user.verfication.verifyTokenExp = null; // Ablaufdatum entfernen
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "E-Mail verified successfully! Now you can Sign-in.",
+    });
+  } catch (err) {
+    res.status(500).send("Intern Server-Error.");
   }
 };
 
@@ -179,6 +248,7 @@ exports.forgotPw = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Please enter your Email" });
 
     const findUserAccount = await User.findOne({ email });
+
     if (!findUserAccount)
       return res.status(400).json({ message: "Email not found" });
 
@@ -200,8 +270,43 @@ exports.forgotPw = async (req: Request, res: Response) => {
       }
     );
 
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: EMAIL_USER,
+      to: email,
+      subject: "Password-Reset-OTP",
+      text: `Your OTP is: ${otpNum}`, // Fallback für reine Text-Clients
+      html: `
+        <p>Your 6-digit password reset code is:</p>
+        <div style="
+          font-size: 2em; 
+          font-weight: bold; 
+          border: 2px solid #000; 
+          padding: 10px; 
+          display: inline-block;
+          margin-top: 10px;
+          text-align: center;
+          border-radius: 5px;
+          color: #333;
+          background-color: #f0f0f0;
+        ">
+          ${otpNum}
+        </div>
+        <p>This code is valid for 10 minutes.</p>
+      `,
+    });
+
     res.status(200).json({
-      message: "found User",
+      message: "Reset successfully",
       token,
     });
   } catch (err) {
@@ -331,3 +436,49 @@ exports.changePw = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// exports.handleGoogleCallback = (req, res, next) => {
+//   passport.authenticate("google", (err, user, info) => {
+//     if (err || !user) {
+//       res.redirect(`${FRONTEND_URL}/login`);
+//     }
+
+//     req.logIn(user, (err) => {
+//       if (err) {
+//         res.redirect(`${FRONTEND_URL}/login`);
+//       }
+
+//       req.session.user = {
+//         id: user._id,
+//         email: user.email,
+//         isGuest: false,
+//       };
+
+//       req.session.loggedIn = true;
+
+//       return res.redirect(`${FRONTEND_URL}/dashboard`);
+//     });
+//   })(req, res, next);
+// };
+
+// exports.handleGithubCallback = (req, res, next) => {
+//   passport.authenticate("github", (err, user, info) => {
+//     if (err || !user) {
+//       return res.redirect(`${FRONTEND_URL}/login`);
+//     }
+//     req.logIn(user, (err) => {
+//       if (err) {
+//         return res.redirect(`${FRONTEND_URL}/login`);
+//       }
+
+//       req.session.user = {
+//         id: user._id,
+//         email: user.email,
+//         isGuest: false,
+//       };
+//       req.session.loggedIn = true;
+
+//       return res.redirect(`${FRONTEND_URL}/dashboard`);
+//     });
+//   })(req, res, next);
+// };

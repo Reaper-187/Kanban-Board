@@ -11,6 +11,8 @@ const USER_INFO_API = import.meta.env.VITE_API_USERINFO;
 const CHANGE_PW_API = import.meta.env.VITE_API_CHANGEPW;
 const GUEST_ACCESS_API = import.meta.env.VITE_API_GUEST_ACCESS;
 
+export type ApiMessage = { message: string };
+
 export type UserProps = {
   userId: string | null;
   userRole: string | null;
@@ -43,10 +45,8 @@ export type UserLoginProps = {
   password: string | undefined;
 };
 
-export const fetchLogin = async (
-  data: UserLoginProps
-): Promise<UserLoginProps> => {
-  const response = await axios.post<UserLoginProps>(LOGIN_API, data, {
+export const fetchLogin = async (data: UserLoginProps): Promise<ApiMessage> => {
+  const response = await axios.post<ApiMessage>(LOGIN_API, data, {
     withCredentials: true,
   });
   return response.data;
@@ -62,8 +62,8 @@ export type UserRegisterProps = {
 
 export const fetchRegister = async (
   data: UserRegisterProps
-): Promise<UserRegisterProps> => {
-  const response = await axios.post<UserRegisterProps>(REGISTER_API, data, {
+): Promise<ApiMessage> => {
+  const response = await axios.post<ApiMessage>(REGISTER_API, data, {
     withCredentials: true,
   });
   return response.data;
@@ -116,14 +116,10 @@ export type RequestResetUserPw = {
 
 export const resetUserPw = async (
   data: RequestResetUserPw
-): Promise<RequestResetUserPw> => {
-  const response = await axios.post<RequestResetUserPw>(
-    RESET_USER_PW_API,
-    data,
-    {
-      withCredentials: true,
-    }
-  );
+): Promise<ApiMessage> => {
+  const response = await axios.post<ApiMessage>(RESET_USER_PW_API, data, {
+    withCredentials: true,
+  });
   return response.data;
 };
 
@@ -134,8 +130,8 @@ export type UserChangePwProps = {
 
 export const userChangePw = async (
   data: UserChangePwProps
-): Promise<UserChangePwProps> => {
-  const response = await axios.post<UserChangePwProps>(CHANGE_PW_API, data, {
+): Promise<ApiMessage> => {
+  const response = await axios.post<ApiMessage>(CHANGE_PW_API, data, {
     withCredentials: true,
   });
   return response.data;

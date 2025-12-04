@@ -10,10 +10,10 @@ export const useRegister = () => {
 
   return useMutation({
     mutationFn: fetchRegister,
-    onSuccess: async () => {
+    onSuccess: async (res) => {
       await queryClient.invalidateQueries({ queryKey: ["auth"] });
       navigate("/login");
-      toast("Welcome 🥷 😊");
+      toast(res.message);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       const errorMessage = err.response?.data?.message || "Register Failed";

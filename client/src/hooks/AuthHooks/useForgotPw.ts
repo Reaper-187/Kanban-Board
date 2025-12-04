@@ -16,7 +16,7 @@ export const useForgotPw = () => {
         token: response.token,
       });
       navigate("/multifactor-authentication-oneTimer");
-      toast("You`ll get a n email with a OneTime-Code");
+      toast("You`ll get an email with a OneTime-Code");
     },
     onError: (err: AxiosError<{ message: string }>) => {
       const errorMessage = err.response?.data?.message;

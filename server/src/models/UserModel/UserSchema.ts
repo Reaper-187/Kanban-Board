@@ -13,7 +13,7 @@ interface UserType extends Document {
     wrongPwCounter: number;
     blocked: boolean;
   };
-  verfication: {
+  verification: {
     veryfiStatus: boolean;
     veryficationToken: string;
     verifyTokenExp: Date;
@@ -54,7 +54,7 @@ const userSchema = new Schema<UserType>({
   password: { type: String },
   createdOn: { type: Date, default: Date.now },
   blockedAccount: blockedAccountSchema,
-  verfication: verificationSchema,
+  verification: verificationSchema,
   otp: otpSchema,
   resetToken: resetTokenSchema,
 });

@@ -7,9 +7,9 @@ export const useChangePW = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: UserChangePwProps) => userChangePw(data),
-    onSuccess: async () => {
+    onSuccess: async (res) => {
       await queryClient.cancelQueries({ queryKey: ["auth"] });
-      toast("password changed successfully 😊🔒✌️");
+      toast(res.message + "😊🔒✌️");
     },
     onError: (err: AxiosError<{ message: string }>) => {
       const errorMessage = err.response?.data?.message;
