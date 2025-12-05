@@ -4,7 +4,6 @@ const User = require("../../models/UserModel/UserSchema");
 const Guest = require("../../models/UserModel/GuestSchema");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-// const passport = require("passport");
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
@@ -436,49 +435,3 @@ exports.changePw = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-// exports.handleGoogleCallback = (req, res, next) => {
-//   passport.authenticate("google", (err, user, info) => {
-//     if (err || !user) {
-//       res.redirect(`${FRONTEND_URL}/login`);
-//     }
-
-//     req.logIn(user, (err) => {
-//       if (err) {
-//         res.redirect(`${FRONTEND_URL}/login`);
-//       }
-
-//       req.session.user = {
-//         id: user._id,
-//         email: user.email,
-//         isGuest: false,
-//       };
-
-//       req.session.loggedIn = true;
-
-//       return res.redirect(`${FRONTEND_URL}/dashboard`);
-//     });
-//   })(req, res, next);
-// };
-
-// exports.handleGithubCallback = (req, res, next) => {
-//   passport.authenticate("github", (err, user, info) => {
-//     if (err || !user) {
-//       return res.redirect(`${FRONTEND_URL}/login`);
-//     }
-//     req.logIn(user, (err) => {
-//       if (err) {
-//         return res.redirect(`${FRONTEND_URL}/login`);
-//       }
-
-//       req.session.user = {
-//         id: user._id,
-//         email: user.email,
-//         isGuest: false,
-//       };
-//       req.session.loggedIn = true;
-
-//       return res.redirect(`${FRONTEND_URL}/dashboard`);
-//     });
-//   })(req, res, next);
-// };
