@@ -18,6 +18,11 @@ const {
 const {
   guestAccess,
 } = require("../../controllers/AuthController/guestController");
+const {
+  googleAuth,
+  googleCallback,
+  checkSocialSession,
+} = require("../../controllers/AuthController/googleController");
 const router = Router();
 
 router.get("/auth/getUserData", getUserData);
@@ -42,13 +47,10 @@ router.post("/auth/changePw", roleAuthMiddleware(["admin", "user"]), changePw);
 
 router.post("/auth/guestLogin", checkGuestExpiry, guestAccess);
 
-// router.get(
-//   "/google",
-//   // Leitet den User direkt zur Google-Anmeldeseite weiter und der scope bestimmt auf welche Daten ich zugreifen möchte.
-//   passport.authenticate("google", { scope: ["profile", "email"] })
-// );
+// Leitet den User direkt zur Google-Anmeldeseite weiter und der scope bestimmt auf welche Daten ich zugreifen möchte.
+router.get("auth/google", googleAuth);
 
-// router.get("/google/callback", handleGoogleCallback);
+router.get("/google/callback", googleCallback);
 
 // router.get(
 //   "/github",
@@ -56,5 +58,7 @@ router.post("/auth/guestLogin", checkGuestExpiry, guestAccess);
 // );
 
 // router.get("/github/callback", handleGithubCallback);
+
+router.get("/auth/check-social-session", checkSocialSession);
 
 module.exports = router;

@@ -7,6 +7,12 @@ declare module "express-session" {
     userId: string;
     userRole: UserRole;
     guestExpires?: Date;
+    googleUser?: {
+      id: string;
+      email: string;
+      name: string;
+      picture?: string;
+    };
   }
 }
 
