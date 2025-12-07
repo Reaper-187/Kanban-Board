@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { SessionData } from "express-session";
 const SocialUser = require("../../models/UserModel/SocialSchema");
-
 const initGoogle = require("../../services/googleServices");
 
 const REDIRECT_URL = process.env.GOOGLE_REDIRECT_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 exports.googleAuth = async (req: Request, res: Response) => {
   try {
     const client = await initGoogle(); //holt den client aus der service-func und baut url
+
     if (!client)
       return res.status(400).json({ message: "Authentication failed" });
 
@@ -19,7 +19,7 @@ exports.googleAuth = async (req: Request, res: Response) => {
 
     res.status(200).json({ url: authorizationUrl });
   } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: "Server Error1" });
   }
 };
 
@@ -59,36 +59,15 @@ exports.googleCallback = async (req: Request, res: Response) => {
 
     req.session.googleUser = {
       id: userinfo.sub,
+      userRole: user.userRole,
       email: userinfo.email,
       name: userinfo.name,
       picture: userinfo.picture,
     };
+
     req.session.save();
-
-    res.status(200).json({ success: true });
+    res.redirect(`${FRONTEND_URL}/tasks`);
   } catch (err) {
-    res.status(500).json({ message: "Server Error" });
-  }
-};
-
-type SocialSessionInfo = {
-  userId: string | null;
-  isAuthenticated: boolean;
-};
-
-exports.checkSocialSession = async (req: Request, res: Response) => {
-  try {
-    const user = req.session.googleUser;
-    if (!user) return res.status(400).json({ message: "session expired" });
-    const isAuthenticated = !!user;
-
-    const sessionInfo: SocialSessionInfo = {
-      userId: user.id ?? null,
-      isAuthenticated,
-    };
-
-    res.status(200).json(sessionInfo);
-  } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: "Server Error2" });
   }
 };

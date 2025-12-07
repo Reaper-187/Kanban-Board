@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 const bcrypt = require("bcrypt");
 const User = require("../../models/UserModel/UserSchema");
 const Guest = require("../../models/UserModel/GuestSchema");
+const SocialUser = require("../../models/UserModel/SocialSchema");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
@@ -18,11 +19,16 @@ type SessionInfo = {
 exports.checkUserAuth = async (req: Request, res: Response) => {
   try {
     const { userId, userRole } = req.session;
-    const isAuthenticated = !!userId && !!userRole;
+    const user = req.session.googleUser;
+
+    const normalUserLoggedIn = !!userId && !!userRole;
+    const googleUserLoggedIn = !!user?.id && !!user.userRole;
+
+    const isAuthenticated = normalUserLoggedIn || googleUserLoggedIn;
 
     const sessionInfo: SessionInfo = {
-      userId: userId ?? null,
-      userRole: userRole ?? null,
+      userId: userId ?? user?.id ?? null,
+      userRole: userRole ?? user?.userRole ?? null,
       isAuthenticated,
     };
     res.status(200).json(sessionInfo);
@@ -35,31 +41,44 @@ exports.checkUserAuth = async (req: Request, res: Response) => {
 exports.getUserData = async (req: Request, res: Response) => {
   try {
     const { userId: _id, userRole } = req.session;
+    const googleUser = req.session.googleUser;
 
-    if (!_id) return;
+    let userData;
 
-    const identType =
-      userRole === "user" || userRole === "admin" ? User : Guest;
+    if (_id && userRole) {
+      // normaler User
+      const user = await User.findOne({ _id });
+      if (!user) return res.status(404).json({ message: "User not found" });
 
-    const user = await identType.findOne({ _id });
+      userData = {
+        userId: _id,
+        userRole: user.userRole,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      };
+    } else if (googleUser?.id) {
+      // Social-User (Google)
+      const user = await SocialUser.findOne({ providerId: googleUser.id });
+      if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (!user) return;
-
-    const userData = {
-      userId: _id,
-      userRole: user.userRole,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-    };
+      userData = {
+        userId: user.providerId,
+        userRole: user.userRole,
+        firstName: user.name,
+        lastName: null, // falls du nur einen Namen hast
+        email: user.email,
+      };
+    } else {
+      return res.status(400).json({ message: "No user session found" });
+    }
 
     res.status(200).json(userData);
   } catch (err) {
     console.error(err);
-    res.status(500).json("Server Error");
+    res.status(500).json({ message: "Server Error" });
   }
 };
-
 exports.registUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;

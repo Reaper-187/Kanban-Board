@@ -16,15 +16,20 @@ export type ApiMessage = { message: string };
 export type UserProps = {
   userId: string | null;
   userRole: string | null;
+  name: string | null;
   firstName: string | null;
   lastName: string | null;
   email: string | null;
+  avatar: string | null;
+  provider: "google" | "github" | null;
 };
 
 export const getUserInfo = async (): Promise<UserProps> => {
   const response = await axios.get<UserProps>(USER_INFO_API, {
     withCredentials: true,
   });
+  console.log("response.data", response.data);
+
   return response.data;
 };
 

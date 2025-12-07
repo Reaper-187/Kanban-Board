@@ -21,7 +21,6 @@ const {
 const {
   googleAuth,
   googleCallback,
-  checkSocialSession,
 } = require("../../controllers/AuthController/googleController");
 const router = Router();
 
@@ -48,9 +47,9 @@ router.post("/auth/changePw", roleAuthMiddleware(["admin", "user"]), changePw);
 router.post("/auth/guestLogin", checkGuestExpiry, guestAccess);
 
 // Leitet den User direkt zur Google-Anmeldeseite weiter und der scope bestimmt auf welche Daten ich zugreifen möchte.
-router.get("auth/google", googleAuth);
+router.get("/auth/google", googleAuth);
 
-router.get("/google/callback", googleCallback);
+router.get("/auth/google/callback", googleCallback);
 
 // router.get(
 //   "/github",
@@ -58,7 +57,5 @@ router.get("/google/callback", googleCallback);
 // );
 
 // router.get("/github/callback", handleGithubCallback);
-
-router.get("/auth/check-social-session", checkSocialSession);
 
 module.exports = router;

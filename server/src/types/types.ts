@@ -9,6 +9,7 @@ declare module "express-session" {
     guestExpires?: Date;
     googleUser?: {
       id: string;
+      userRole: UserRole;
       email: string;
       name: string;
       picture?: string;
