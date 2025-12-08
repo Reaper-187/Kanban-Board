@@ -125,7 +125,13 @@ export function Settings() {
         </TabsContent>
 
         <TabsContent value="login&security" className="mt-4">
-          <ChangePw />
+          {userInfo.provider !== null || userInfo.userRole === "guest" ? (
+            <Card className="w-fit p-2 flex justify-self-center text-lg">
+              <p>Not Allowed for your Account</p>
+            </Card>
+          ) : (
+            <ChangePw />
+          )}
         </TabsContent>
       </Tabs>
     </div>

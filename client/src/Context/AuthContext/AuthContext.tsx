@@ -97,15 +97,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserInfo({
       userId: userData.userId ?? null,
       userRole: userData.userRole ?? null,
-
-      firstName: isSocialUser
-        ? userData.name?.split(" ")[0] ?? null
-        : userData.firstName ?? null,
-
+      firstName: userData.firstName,
       lastName: isSocialUser
         ? userData.name?.split(" ")[1] ?? null
         : userData.lastName ?? null,
-
       email: userData.email ?? null,
       avatar: isSocialUser ? userData.avatar ?? null : null,
       provider: isSocialUser ? userData.provider : null,

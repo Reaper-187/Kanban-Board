@@ -28,7 +28,6 @@ export const getUserInfo = async (): Promise<UserProps> => {
   const response = await axios.get<UserProps>(USER_INFO_API, {
     withCredentials: true,
   });
-  console.log("response.data", response.data);
 
   return response.data;
 };

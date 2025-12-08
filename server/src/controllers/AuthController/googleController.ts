@@ -62,7 +62,7 @@ exports.googleCallback = async (req: Request, res: Response) => {
       userRole: user.userRole,
       email: userinfo.email,
       name: userinfo.name,
-      picture: userinfo.picture,
+      provider: userinfo.provider,
     };
 
     req.session.save();

@@ -48,14 +48,15 @@ exports.getUserData = async (req: Request, res: Response) => {
     if (_id && userRole) {
       // normaler User
       const user = await User.findOne({ _id });
-      if (!user) return res.status(404).json({ message: "User not found" });
+      const testUser = await Guest.findOne({ _id });
+      const userTypeLogin = user ? user : testUser;
 
       userData = {
         userId: _id,
-        userRole: user.userRole,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
+        userRole: userTypeLogin.userRole,
+        firstName: userTypeLogin.firstName,
+        lastName: userTypeLogin.lastName,
+        email: userTypeLogin.email,
       };
     } else if (googleUser?.id) {
       // Social-User (Google)
@@ -68,6 +69,7 @@ exports.getUserData = async (req: Request, res: Response) => {
         firstName: user.name,
         lastName: null, // falls du nur einen Namen hast
         email: user.email,
+        provider: user.provider,
       };
     } else {
       return res.status(400).json({ message: "No user session found" });

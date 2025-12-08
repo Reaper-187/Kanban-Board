@@ -12,7 +12,7 @@ declare module "express-session" {
       userRole: UserRole;
       email: string;
       name: string;
-      picture?: string;
+      provider?: string;
     };
   }
 }

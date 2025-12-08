@@ -72,21 +72,6 @@ export const ChangePw = () => {
   return (
     <>
       <Card>
-        {userInfo.userRole === "guest" && (
-          <motion.div
-            className="text-xl text-red-500 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              stiffness: 50,
-              repeat: Infinity,
-              repeatType: "reverse",
-              duration: 1,
-            }}
-          >
-            <p>Guests are not allowed change the Password</p>
-          </motion.div>
-        )}
         <CardHeader>
           <CardTitle>Change Password</CardTitle>
         </CardHeader>
