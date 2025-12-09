@@ -21,7 +21,9 @@ const {
 const {
   googleAuth,
   googleCallback,
-} = require("../../controllers/AuthController/googleController");
+  githubAuth,
+  githubCallback,
+} = require("../../controllers/AuthController/socialController");
 const router = Router();
 
 router.get("/auth/getUserData", getUserData);
@@ -51,11 +53,8 @@ router.get("/auth/google", googleAuth);
 
 router.get("/auth/google/callback", googleCallback);
 
-// router.get(
-//   "/github",
-//   passport.authenticate("github", { scope: ["profile", "email"] })
-// );
+router.get("/auth/github", githubAuth);
 
-// router.get("/github/callback", handleGithubCallback);
+router.get("/auth/github/callback", githubCallback);
 
 module.exports = router;

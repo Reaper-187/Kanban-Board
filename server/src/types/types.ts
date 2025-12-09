@@ -7,7 +7,7 @@ declare module "express-session" {
     userId: string;
     userRole: UserRole;
     guestExpires?: Date;
-    googleUser?: {
+    socialAccUser?: {
       id: string;
       userRole: UserRole;
       email: string;

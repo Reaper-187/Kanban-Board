@@ -19,7 +19,7 @@ type SessionInfo = {
 exports.checkUserAuth = async (req: Request, res: Response) => {
   try {
     const { userId, userRole } = req.session;
-    const user = req.session.googleUser;
+    const user = req.session.socialAccUser;
 
     const normalUserLoggedIn = !!userId && !!userRole;
     const googleUserLoggedIn = !!user?.id && !!user.userRole;
@@ -41,7 +41,7 @@ exports.checkUserAuth = async (req: Request, res: Response) => {
 exports.getUserData = async (req: Request, res: Response) => {
   try {
     const { userId: _id, userRole } = req.session;
-    const googleUser = req.session.googleUser;
+    const googleUser = req.session.socialAccUser;
 
     let userData;
 
