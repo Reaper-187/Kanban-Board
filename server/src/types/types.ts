@@ -8,6 +8,13 @@ declare module "express-session" {
     lastName: string;
     userRole: UserRole;
     guestExpires?: Date;
+    socialAccUser?: {
+      id: string;
+      userRole: UserRole;
+      email: string;
+      name: string;
+      provider?: string;
+    };
   }
 }
 

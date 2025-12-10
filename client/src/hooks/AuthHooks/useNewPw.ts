@@ -10,10 +10,10 @@ export const useNewPw = () => {
 
   return useMutation({
     mutationFn: (data: RequestResetUserPw) => resetUserPw(data),
-    onSuccess: async () => {
+    onSuccess: async (res) => {
       await queryClient.invalidateQueries({ queryKey: ["resetToken"] });
       navigate("/login");
-      toast("Password Changed successfully");
+      toast(res.message);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       const errorMessage = err.response?.data?.message;

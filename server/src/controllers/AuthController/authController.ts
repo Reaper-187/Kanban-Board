@@ -2,23 +2,33 @@ import { NextFunction, Request, Response } from "express";
 const bcrypt = require("bcrypt");
 const User = require("../../models/UserModel/UserSchema");
 const Guest = require("../../models/UserModel/GuestSchema");
+const SocialUser = require("../../models/UserModel/SocialSchema");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+
+const EMAIL_USER = process.env.EMAIL_USER;
+const EMAIL_PASS = process.env.EMAIL_PASS;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 type SessionInfo = {
   userId: string | null;
   userRole: string | null;
-  lastName: string | null;
   isAuthenticated: boolean;
 };
 
 exports.checkUserAuth = async (req: Request, res: Response) => {
   try {
-    const { userId, userRole, lastName } = req.session;
-    const isAuthenticated = !!userId && !!userRole;
+    const { userId, userRole } = req.session;
+    const user = req.session.socialAccUser;
+
+    const normalUserLoggedIn = !!userId && !!userRole;
+    const googleUserLoggedIn = !!user?.id && !!user.userRole;
+
+    const isAuthenticated = normalUserLoggedIn || googleUserLoggedIn;
 
     const sessionInfo: SessionInfo = {
-      userId: userId ?? null,
-      userRole: userRole ?? null,
-      lastName: lastName ?? null,
+      userId: userId ?? user?.id ?? null,
+      userRole: userRole ?? user?.userRole ?? null,
       isAuthenticated,
     };
     res.status(200).json(sessionInfo);
@@ -31,35 +41,50 @@ exports.checkUserAuth = async (req: Request, res: Response) => {
 exports.getUserData = async (req: Request, res: Response) => {
   try {
     const { userId: _id, userRole } = req.session;
+    const googleUser = req.session.socialAccUser;
 
-    if (!_id) return;
+    let userData;
 
-    const identType =
-      userRole === "user" || userRole === "admin" ? User : Guest;
+    if (_id && userRole) {
+      // normaler User
+      const user = await User.findOne({ _id });
+      const testUser = await Guest.findOne({ _id });
+      const userTypeLogin = user ? user : testUser;
 
-    const user = await identType.findOne({ _id });
+      userData = {
+        userId: _id,
+        userRole: userTypeLogin.userRole,
+        firstName: userTypeLogin.firstName,
+        lastName: userTypeLogin.lastName,
+        email: userTypeLogin.email,
+      };
+    } else if (googleUser?.id) {
+      // Social-User (Google)
+      const user = await SocialUser.findOne({ providerId: googleUser.id });
+      if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (!user) return;
-
-    const userData = {
-      userId: _id,
-      userRole: user.userRole,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-    };
+      userData = {
+        userId: user.providerId,
+        userRole: user.userRole,
+        firstName: user.name,
+        lastName: null, // falls du nur einen Namen hast
+        email: user.email,
+        provider: user.provider,
+      };
+    } else {
+      return res.status(400).json({ message: "No user session found" });
+    }
 
     res.status(200).json(userData);
   } catch (err) {
     console.error(err);
-    res.status(500).json("Server Error");
+    res.status(500).json({ message: "Server Error" });
   }
 };
-
 exports.registUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
-    const { fistName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     if (!user) return;
 
@@ -71,20 +96,82 @@ exports.registUser = async (req: Request, res: Response) => {
 
     const hashedPw = await bcrypt.hash(password, 10);
 
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 Stunden gültig
+
     const newUser = new User({
       ...user,
-      fistName,
+      firstName,
       lastName,
       email,
       password: hashedPw,
+      verification: {
+        veryfiStatus: false,
+        veryficationToken: verificationToken,
+        verifyTokenExp: tokenExpires,
+      },
     });
 
     await newUser.save();
 
-    res.status(200).json("Registration successfully");
+    const verifyLink = `${process.env.FRONTEND_URL}/emailVerify?token=${verificationToken}`;
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: EMAIL_USER,
+      to: email,
+      subject: "E-Mail-Verification",
+      text: `Please click on the current Link, to verify your E-Mail: ${verifyLink}`,
+      html: `<p>Please click on the current Link, to verify your E-Mail:</p>
+             <a href="${verifyLink}">${verifyLink}</a>`,
+    });
+
+    res.status(200).json({
+      message:
+        "Registration successfully - Please check your inbox for the verification.",
+    });
   } catch (err) {
     console.error("Error ", err);
-    res.status(500).json("Registration Failed");
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.emailVerify = async (req: Request, res: Response) => {
+  const { token } = req.query;
+
+  try {
+    // Benutzer mit dem Token finden
+    const user = await User.findOne({ "verfication.verificationToken": token });
+
+    if (!user) {
+      return res.status(400).send("Token is wrong or expired.");
+    }
+
+    if (user.verfication.verifyTokenExp < Date.now()) {
+      return res.status(400).send("Token is wrong or expired.");
+    }
+
+    // Benutzer verifizieren
+    user.verfication.isVerified = true;
+    user.verfication.verificationToken = null; // Token entfernen
+    user.verfication.verifyTokenExp = null; // Ablaufdatum entfernen
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "E-Mail verified successfully! Now you can Sign-in.",
+    });
+  } catch (err) {
+    res.status(500).send("Intern Server-Error.");
   }
 };
 
@@ -182,6 +269,7 @@ exports.forgotPw = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Please enter your Email" });
 
     const findUserAccount = await User.findOne({ email });
+
     if (!findUserAccount)
       return res.status(400).json({ message: "Email not found" });
 
@@ -203,8 +291,43 @@ exports.forgotPw = async (req: Request, res: Response) => {
       }
     );
 
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: EMAIL_USER,
+      to: email,
+      subject: "Password-Reset-OTP",
+      text: `Your OTP is: ${otpNum}`, // Fallback für reine Text-Clients
+      html: `
+        <p>Your 6-digit password reset code is:</p>
+        <div style="
+          font-size: 2em; 
+          font-weight: bold; 
+          border: 2px solid #000; 
+          padding: 10px; 
+          display: inline-block;
+          margin-top: 10px;
+          text-align: center;
+          border-radius: 5px;
+          color: #333;
+          background-color: #f0f0f0;
+        ">
+          ${otpNum}
+        </div>
+        <p>This code is valid for 10 minutes.</p>
+      `,
+    });
+
     res.status(200).json({
-      message: "found User",
+      message: "Reset successfully",
       token,
     });
   } catch (err) {

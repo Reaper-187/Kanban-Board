@@ -27,6 +27,8 @@ export type UserInfoProps = {
   firstName: string | null;
   lastName: string | null;
   email: string | null;
+  avatar: string | null;
+  provider: "google" | "github" | null;
 };
 
 type LoadingStatus = "loading" | "authenticated" | "unauthenticated";
@@ -50,6 +52,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     firstName: null,
     lastName: null,
     email: null,
+    avatar: null,
+    provider: null,
   });
 
   const {
@@ -91,12 +95,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!userData) return;
+
+    const isSocialUser = !!userData.provider;
+
     setUserInfo({
-      userId: userData?.userId,
-      userRole: userData?.userRole,
-      firstName: userData?.firstName,
-      lastName: userData?.lastName,
-      email: userData?.email,
+      userId: userData.userId ?? null,
+      userRole: userData.userRole ?? null,
+      firstName: userData.firstName,
+      lastName: isSocialUser
+        ? userData.name?.split(" ")[1] ?? null
+        : userData.lastName ?? null,
+      email: userData.email ?? null,
+      avatar: isSocialUser ? userData.avatar ?? null : null,
+      provider: isSocialUser ? userData.provider : null,
     });
   }, [userData]);
 

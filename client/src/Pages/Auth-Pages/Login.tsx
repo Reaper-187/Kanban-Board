@@ -8,12 +8,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { guestAccessHook } from "@/hooks/AuthHooks/useGuestAccess";
 import { useLogin } from "@/hooks/AuthHooks/useLogin";
+import { getGithubAuth, getGoogleAuth } from "@/services/socialAuthServices";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Github, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import z from "zod";
+
+const GAUTHN_API = import.meta.env.VITE_API_GAUTHN;
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -43,6 +46,24 @@ export const Login = () => {
 
   const handleLogin = (data: FormLogin) => {
     userLogin(data);
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { url } = await getGoogleAuth();
+      window.location.href = url;
+    } catch (err) {
+      console.error("Google login failed", err);
+    }
+  };
+
+  const handleGithubLogin = async () => {
+    try {
+      const { url } = await getGithubAuth();
+      window.location.href = url;
+    } catch (err) {
+      console.error("Google login failed", err);
+    }
   };
 
   return (
@@ -117,24 +138,12 @@ export const Login = () => {
           </div>
         </form>
         <div className="grid grid-cols-2 gap-4 px-4 ">
-          <Button
-            className="w-full font-semibold"
-
-            // onClick={() => {
-            //   window.location.href = API_GHUBAUTHN;
-            // }}
-          >
+          <Button className="w-full font-semibold" onClick={handleGithubLogin}>
             <Github className="mr-2 h-4 w-4" />
             Github
           </Button>
 
-          <Button
-            className="w-full font-semibold"
-
-            // onClick={() => {
-            //   window.location.href = API_GAUTHN;
-            // }}
-          >
+          <Button className="w-full font-semibold" onClick={handleGoogleLogin}>
             <Mail className="mr-2 h-4 w-4" />
             Google
           </Button>

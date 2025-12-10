@@ -149,7 +149,7 @@ export const Register = () => {
           <Link to={"#"}>forgot password</Link>
           <div className="w-full grid grid-cols-2 gap-4">
             <Button className="w-full" type="submit">
-              Sign in
+              Registration
             </Button>
             <Button className="w-full">
               <Link className="w-full" to={"/login"}>
