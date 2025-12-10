@@ -103,7 +103,7 @@ exports.updateTask = async (req: MulterRequest, res: Response) => {
 
     const newLog = new Log({
       taskId: id,
-      userLastName: lastName,
+      lastName: lastName,
       userId: userId,
       payload: changes,
     });

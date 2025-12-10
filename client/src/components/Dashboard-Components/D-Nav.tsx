@@ -54,7 +54,7 @@ export const DashboardNav = ({
             className={viewType === "table" ? "hidden" : "flex items-center"}
           >
             <Input
-              placeholder="Search tasks...."
+              placeholder="Search with Task-ID..."
               onChange={handleSearchChange}
               value={serachFilter}
             />

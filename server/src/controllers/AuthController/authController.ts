@@ -41,7 +41,7 @@ exports.checkUserAuth = async (req: Request, res: Response) => {
 exports.getUserData = async (req: Request, res: Response) => {
   try {
     const { userId: _id, userRole } = req.session;
-    const googleUser = req.session.socialAccUser;
+    const socialAccUser = req.session.socialAccUser;
 
     let userData;
 
@@ -58,9 +58,9 @@ exports.getUserData = async (req: Request, res: Response) => {
         lastName: userTypeLogin.lastName,
         email: userTypeLogin.email,
       };
-    } else if (googleUser?.id) {
+    } else if (socialAccUser?.id) {
       // Social-User (Google)
-      const user = await SocialUser.findOne({ providerId: googleUser.id });
+      const user = await SocialUser.findOne({ providerId: socialAccUser.id });
       if (!user) return res.status(404).json({ message: "User not found" });
 
       userData = {
@@ -226,7 +226,7 @@ exports.loginUser = async (req: Request, res: Response) => {
     req.session.userId = findUserAccount._id;
     req.session.lastName = findUserAccount.lastName;
     req.session.userRole = findUserAccount.userRole;
-
+    req.session.save();
     res.status(200).json({ message: "Login successfully" });
   } catch (err) {
     res.status(500).json("Login failed");

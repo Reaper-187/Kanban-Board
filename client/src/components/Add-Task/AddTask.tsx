@@ -37,6 +37,7 @@ const formTaskSchema = z.object({
   taskId: z.string().optional(),
   topic: z.string(),
   description: z.string(),
+  status: z.string().optional(),
   importance: z.enum(["Urgent", "High", "Lead", "Internal", "Medium", "Low"]),
   file: z
     .any()
@@ -72,7 +73,7 @@ export const AddTask = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<FormTask>({
     resolver: zodResolver(formTaskSchema),
   });
@@ -93,6 +94,8 @@ export const AddTask = () => {
   } = useUpdateTask();
 
   const handleStatusChange = (data: FormTask) => {
+    console.log(data, originalTask);
+
     if (!currentTask?._id || !originalTask) return;
 
     const updates: Partial<FormTask> = {};
@@ -103,11 +106,12 @@ export const AddTask = () => {
       const oldValue = originalTask[key as keyof Task] as unknown;
 
       if (key === "date") {
-        const newTime = newValue ? new Date(newValue as Date).getTime() : null;
+        const newTime = newValue ? new Date(newValue).getTime() : null;
         const oldTime = oldValue ? new Date(oldValue as Date).getTime() : null;
         if (newTime !== oldTime) {
-          updates.date = newValue as Date | undefined;
+          updates.date = newValue as Date;
         }
+        toast("You did no Changes");
         continue;
       }
 
@@ -133,9 +137,11 @@ export const AddTask = () => {
   } = useCreateTask(reset);
 
   const handleAddTask = (data: FormTask) => {
+    console.log("Form data:", data);
     postMutate(data);
     closeModal();
   };
+
   const onSubmitHandler = currentTask?._id ? handleStatusChange : handleAddTask;
 
   const activeError = currentTask?._id ? patchError : postError;
@@ -255,7 +261,7 @@ export const AddTask = () => {
                       <Button
                         className="w-fit cursor-pointer md:w-fit font-semibold"
                         type="submit"
-                        disabled={isPending}
+                        // disabled={isPending || !isDirty}
                       >
                         {isPending ? "Wird gespeichert..." : "Add to Board"}
                       </Button>

@@ -11,6 +11,7 @@ import { useToggle } from "@/Context/AddBtnContext";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import {
   Calendar,
+  Copy,
   Ellipsis,
   File,
   MessageCircleMore,
@@ -40,7 +41,6 @@ const importanceColor: Record<keyof Color, string> = {
 
 export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
   const { openModal, openDescription } = useToggle();
-
   const colorPick = importanceColor[task.importance as keyof Color];
 
   return (
@@ -79,35 +79,31 @@ export const TaskCardList = ({ task, onStatusChange }: TaskCardProps) => {
               <p>12</p>
             </span>
           </div>
-          <div className="flex -space-x-3 items-center">
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
-              alt="Avatar 1"
-            />
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
-              alt="Avatar 2"
-            />
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
-              alt="Avatar 3"
-            />
-          </div>
         </div>
 
         <div className="flex gap-2">
           <span
             className={
               colorPick
-                ? `${colorPick} px-2 py-1 rounded-xl text-xs text-primary-foreground sm:text-sm`
+                ? `${colorPick} px-2 py-1 rounded-xl text-xs text-black font-semibold sm:text-sm`
                 : ""
             }
           >
             {task.importance}
           </span>
+
+          <button
+            title="Copy Task-ID"
+            onClick={() => navigator.clipboard.writeText(task._id)}
+            style={{
+              cursor: "pointer",
+              background: "transparent",
+              border: "none",
+              padding: "4px",
+            }}
+          >
+            <Copy size={18} />
+          </button>
         </div>
 
         <DropdownMenu>

@@ -2,10 +2,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardHeader } from "../../ui/card";
 import { useToggle } from "@/Context/AddBtnContext";
 import { DescriptionInfos } from "./Description-Info";
-import { X } from "lucide-react";
+import { Check, Copy, X } from "lucide-react";
 import { Tabs } from "@/components/ui/tabs";
 import { TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { ActivityLog } from "./ActivityLog/ActivityLog";
+import { useState } from "react";
 
 export const DescriptionAlert = () => {
   const { isDescriptionOpen, closeDescription, currentTask } = useToggle();
@@ -30,7 +31,23 @@ export const DescriptionAlert = () => {
               {/* ---------- HEADER ---------- */}
               <CardHeader className="p-0">
                 <div className="flex justify-between items-center">
-                  <h1 className="text-xl font-semibold">Ticket-Info</h1>
+                  <div className="flex gap-3">
+                    <h1 className="text-xl font-semibold">Ticket-Info</h1>
+                    <button
+                      title="Copy Ticket-ID"
+                      onClick={() =>
+                        navigator.clipboard.writeText(currentTask._id)
+                      }
+                      style={{
+                        cursor: "pointer",
+                        background: "transparent",
+                        border: "none",
+                        padding: "4px",
+                      }}
+                    >
+                      <Copy size={18} />
+                    </button>
+                  </div>
                   <span
                     onClick={closeDescription}
                     className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors"

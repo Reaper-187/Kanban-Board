@@ -21,6 +21,8 @@ exports.guestAccess = async (req: Request, res: Response) => {
     req.session.userId = newGuest._id;
     req.session.userRole = newGuest.userRole;
     req.session.guestExpires = newGuest.expiresAt;
+    req.session.lastName = newGuest.lastName;
+    req.session.save();
 
     res.status(200).json({ message: "Welcome Guest" });
   } catch (err) {

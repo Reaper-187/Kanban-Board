@@ -20,7 +20,7 @@ import { TableContainer } from "./Table-view/TableContainer";
 import { KanbanMobile } from "./KanbanResponsive/KanbanMobile";
 import { useMediaQuery } from "@uidotdev/usehooks";
 
-const searchableFields = ["topic", "description", "status", "importance"];
+const fitlerForATaks = ["_id"];
 
 export const TaskContainer = ({
   viewType,
@@ -143,11 +143,7 @@ export const TaskContainer = ({
               .filter((task) => task.status === column.id)
               // wenn SearchFilter aktiv
               .filter((task) =>
-                serachFilter
-                  ? task.topic
-                      .toLowerCase()
-                      .includes(serachFilter.toLowerCase())
-                  : true
+                serachFilter ? task._id.includes(serachFilter) : true
               );
 
             return (

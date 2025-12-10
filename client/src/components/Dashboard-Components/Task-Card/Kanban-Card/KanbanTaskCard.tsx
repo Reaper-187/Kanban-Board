@@ -104,44 +104,24 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           </span>
         </div>
         <span className="w-full bg-gray-400 h-[1px]"></span>
-        <div className="flex justify-between items-center">
-          <div className="flex -space-x-3">
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
-              alt="Avatar 1"
-            />
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
-              alt="Avatar 2"
-            />
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src="https://via.placeholder.com/40"
-              alt="Avatar 3"
-            />
-          </div>
-
-          <div
-            className="flex space-x-1 cursor-pointer text-gray-400 hover:text-black duration-300 transition"
-            onClick={() => openDescription(task)}
-          >
-            <span className="flex items-center">
-              <File size={15} />{" "}
-              <div>
-                <p className="p-1 rounded-m bg-grey-300">
-                  {task?.file?.length ?? 0} file
-                </p>
-              </div>
-            </span>
-            <span className="flex items-center">
-              <MessageCircleMore size={15} />
+        <div
+          className="flex justify-evenly cursor-pointer text-forderground hover:text-indigo-500 duration-300 transition"
+          onClick={() => openDescription(task)}
+        >
+          <span className="flex items-center">
+            <File size={15} />{" "}
+            <div>
               <p className="p-1 rounded-m bg-grey-300">
-                {task?.comment.length ?? 0} comments
+                {task?.file?.length ?? 0} file
               </p>
-            </span>
-          </div>
+            </div>
+          </span>
+          <span className="flex items-center">
+            <MessageCircleMore size={15} />
+            <p className="p-1 rounded-m bg-grey-300">
+              {task?.comment.length ?? 0} comments
+            </p>
+          </span>
         </div>
       </Card>
     </div>

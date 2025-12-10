@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { fetchLogTask, type LogsType } from "@/services/taskServices";
+import { Copy } from "lucide-react";
 
 type TaskIdProps = {
   taskId: string;
@@ -50,7 +51,19 @@ export const ActivityLog = ({ taskId }: TaskIdProps) => {
               className="border-b pb-3 mb-3 last:border-none"
             >
               <div className="flex justify-between text-sm font-medium">
-                <p>User: {log.userLastName}</p>
+                <p>User: {log.lastName || "provider"}</p>
+                <button
+                  title="Copy User-ID"
+                  onClick={() => navigator.clipboard.writeText(log._id)}
+                  style={{
+                    cursor: "pointer",
+                    background: "transparent",
+                    border: "none",
+                    padding: "4px",
+                  }}
+                >
+                  <Copy size={18} />
+                </button>
                 <p>
                   {new Date(log.timeStamp).toLocaleString("de-DE", {
                     day: "2-digit",

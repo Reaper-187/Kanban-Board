@@ -97,7 +97,7 @@ export const deleteTask = async (taskId: DeletePayload): Promise<Task> => {
 export type LogsType = {
   taskId: string;
   _id: string;
-  userLastName: string;
+  lastName: string;
   payload: LogPayload;
   timeStamp: Date;
 };

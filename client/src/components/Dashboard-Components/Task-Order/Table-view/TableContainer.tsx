@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table";
 import {
   ChevronDown,
+  Copy,
   Ellipsis,
   File,
   MessageCircleMore,
@@ -119,7 +120,7 @@ export const columns: ColumnDef<Task>[] = [
         <div
           className={
             colorPick
-              ? `${colorPick} px-2 py-1 w-fit rounded-xl text-xs text-secondary-foreground sm:text-sm`
+              ? `${colorPick} px-2 py-1 w-fit rounded-xl text-xs text-black font-semibold sm:text-sm`
               : ""
           }
         >
@@ -144,34 +145,6 @@ export const columns: ColumnDef<Task>[] = [
   {
     // accessorKey: "member" später dann wenn fetch usw implentiert ist
     enableHiding: false,
-    header: "Member",
-    cell: () => {
-      return (
-        <div className="flex">
-          <div className="flex -space-x-3 flex">
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              // src="https://via.placeholder.com/40"
-              alt="Avatar 1"
-            />
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              // src="https://via.placeholder.com/40"
-              alt="Avatar 2"
-            />
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              // src="https://via.placeholder.com/40"
-              alt="Avatar 3"
-            />
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    // accessorKey: "member" später dann wenn fetch usw implentiert ist
-    enableHiding: false,
     header: "Attechments",
     cell: ({ row }) => {
       const accumFiles = row.original.file?.length;
@@ -189,6 +162,30 @@ export const columns: ColumnDef<Task>[] = [
             <MessageCircleMore size={15} />
             <p>12</p>
           </span>
+        </div>
+      );
+    },
+  },
+  {
+    // accessorKey: "member" später dann wenn fetch usw implentiert ist
+    enableHiding: false,
+    header: "Task-ID",
+    cell: ({ row }) => {
+      const taskId = row.original._id;
+      return (
+        <div className="flex">
+          <button
+            title="Copy User-ID"
+            onClick={() => navigator.clipboard.writeText(taskId)}
+            style={{
+              cursor: "pointer",
+              background: "transparent",
+              border: "none",
+              padding: "4px",
+            }}
+          >
+            <Copy size={18} />
+          </button>
         </div>
       );
     },

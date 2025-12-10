@@ -27,21 +27,21 @@ export const DashboardHeader = ({ toggleView }: DashboardHeaderProps) => {
             <h1 className="font-semibold md:text-lg lg:text-xl">Tasks</h1>
             <div className="flex gap-5">
               <Button
-                className="cursor-pointer focus:text-blue-400 text-xs sm:text-sm md:text-base flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2"
+                className="cursor-pointer focus:text-indigo-500 text-xs sm:text-sm md:text-base flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2"
                 onClick={() => toggleView("kanban")}
               >
                 <Kanban className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden md:inline">Kanban</span>
               </Button>
               <Button
-                className="cursor-pointer focus:text-blue-400 text-xs sm:text-sm md:text-base flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2"
+                className="cursor-pointer focus:text-indigo-500 text-xs sm:text-sm md:text-base flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2"
                 onClick={() => toggleView("list")}
               >
                 <ListChevronsDownUp className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden md:inline">List</span>
               </Button>
               <Button
-                className="cursor-pointer focus:text-blue-400 text-xs sm:text-sm md:text-base flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2"
+                className="cursor-pointer focus:text-indigo-500 text-xs sm:text-sm md:text-base flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2"
                 onClick={() => toggleView("table")}
               >
                 <Table className="w-3 h-3 sm:w-4 sm:h-4" />

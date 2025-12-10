@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 interface AcitivityLogTypes extends Document {
   taskId: string;
   userId: string;
-  userLastName: string;
+  lastName: string;
   timeStamp: Date;
   payload: Object;
 }
@@ -15,7 +15,7 @@ const ActivityLogsScheam = new Schema<AcitivityLogTypes>({
   userId: {
     type: String,
   },
-  userLastName: {
+  lastName: {
     type: String,
   },
   timeStamp: {
