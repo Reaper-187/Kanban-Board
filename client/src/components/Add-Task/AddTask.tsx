@@ -39,7 +39,7 @@ const formTaskSchema = z.object({
   description: z.string(),
   status: z.string().optional(),
   importance: z.enum(["Urgent", "High", "Lead", "Internal", "Medium", "Low"]),
-  file: z
+  newFiles: z
     .any()
     .optional()
     .or(z.null())
@@ -76,6 +76,9 @@ export const AddTask = () => {
     formState: { errors, isDirty },
   } = useForm<FormTask>({
     resolver: zodResolver(formTaskSchema),
+    defaultValues: {
+      importance: "Medium",
+    },
   });
 
   useEffect(() => {
@@ -94,8 +97,6 @@ export const AddTask = () => {
   } = useUpdateTask();
 
   const handleStatusChange = (data: FormTask) => {
-    console.log(data, originalTask);
-
     if (!currentTask?._id || !originalTask) return;
 
     const updates: Partial<FormTask> = {};
@@ -111,7 +112,6 @@ export const AddTask = () => {
         if (newTime !== oldTime) {
           updates.date = newValue as Date;
         }
-        toast("You did no Changes");
         continue;
       }
 
@@ -124,7 +124,6 @@ export const AddTask = () => {
       toast("You did no Changes");
       return;
     }
-
     patchMutate({ _id: currentTask._id, updates });
     closeModal();
   };
@@ -137,7 +136,6 @@ export const AddTask = () => {
   } = useCreateTask(reset);
 
   const handleAddTask = (data: FormTask) => {
-    console.log("Form data:", data);
     postMutate(data);
     closeModal();
   };
@@ -212,7 +210,7 @@ export const AddTask = () => {
                     <Label>Add File:</Label>
                     <Controller
                       control={control}
-                      name="file"
+                      name="newFiles"
                       render={({ field }) => (
                         <Dropzone
                           value={field.value}
@@ -261,7 +259,7 @@ export const AddTask = () => {
                       <Button
                         className="w-fit cursor-pointer md:w-fit font-semibold"
                         type="submit"
-                        // disabled={isPending || !isDirty}
+                        disabled={isPending || !isDirty}
                       >
                         {isPending ? "Wird gespeichert..." : "Add to Board"}
                       </Button>

@@ -61,6 +61,7 @@ export const Dropzone = ({ currentTask, value, onChange }: FileDataProps) => {
     <div className="space-y-2">
       <Input
         type="file"
+        name="newFile"
         className="cursor-pointer hover:bg-gray-100 transition"
         multiple
         onChange={handleFileChange}

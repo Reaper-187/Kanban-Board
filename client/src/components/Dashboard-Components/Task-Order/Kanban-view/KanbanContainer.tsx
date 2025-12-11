@@ -18,7 +18,7 @@ export const KanbanContainer = ({
       <Card className="flex items-center justify-between p-3 mb-2">
         <div ref={setNodeRef} className="min-h-30 min-w-full">
           <KanbanHeader column={column} tasks={tasks} />
-          <div className="flex flex-col gap-2 ">
+          <div className="flex flex-col gap-2">
             {tasks.map((task) => (
               <KanbanTaskCard
                 key={task._id}

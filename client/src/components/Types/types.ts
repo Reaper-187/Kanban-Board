@@ -45,7 +45,7 @@ export interface RequestData {
   topic: string;
   description: string;
   importance?: Importance;
-  file?: File[] | null;
+  newFiles?: File[] | null;
   date?: Date;
 }
 

@@ -70,10 +70,10 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
 
         <div className="flex justify-between items-start flex-wrap">
           <div>
-            <h3 className="text-base sm:text-lg md:text-xl font-semibold">
+            <h3 className="text-xs md:text-md md:text-xl font-semibold">
               {task.topic}
             </h3>
-            <p>{task.description}</p>
+            <p className="text-xs md:text-md">{task.description}</p>
           </div>
           <span className="md:hidden">
             <DropdownSwitchStatus
@@ -89,7 +89,7 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           <span
             className={
               colorPick
-                ? `${colorPick} px-2 py-1 rounded-xl text-black font-semibold sm:text-sm`
+                ? `${colorPick} px-2 py-1 rounded-xl text-black font-semibold text-xs md:text-md`
                 : ""
             }
           >
@@ -111,14 +111,14 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           <span className="flex items-center">
             <File size={15} />{" "}
             <div>
-              <p className="p-1 rounded-m bg-grey-300">
+              <p className="text-sm md:text-md p-1 rounded-m bg-grey-300">
                 {task?.file?.length ?? 0} file
               </p>
             </div>
           </span>
           <span className="flex items-center">
             <MessageCircleMore size={15} />
-            <p className="p-1 rounded-m bg-grey-300">
+            <p className="text-sm md:text-md p-1 rounded-m bg-grey-300">
               {task?.comment.length ?? 0} comments
             </p>
           </span>

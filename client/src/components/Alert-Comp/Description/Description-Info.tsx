@@ -8,10 +8,10 @@ type DescriptionInfosProps = {
 
 export const DescriptionInfos = ({ currentTask }: DescriptionInfosProps) => {
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 ">
       <div className="flex gap-3">
-        <p className="text-lg font-semibold">Description:</p>
-        <p className="text-secondary-foreground flex self-center">
+        <p className="text-md md:text-lg font-semibold">Description:</p>
+        <p className="text-sm md:text-md text-secondary-foreground flex self-center">
           {currentTask.description}
         </p>
       </div>
@@ -20,8 +20,8 @@ export const DescriptionInfos = ({ currentTask }: DescriptionInfosProps) => {
         <div className="grid grid-col-2 mb-2">
           <div>
             <div className="flex items-center">
-              <p className="text-lg font-semibold">Attachment</p>
-              <p className="p-2 rounded-m bg-grey-300">
+              <p className="text-md md:text-lg font-semibold">Attachment</p>
+              <p className="text-sm md:text-md p-2 rounded-m bg-grey-300">
                 {currentTask.file?.length ? currentTask.file?.length + " " : 0}
                 file
               </p>

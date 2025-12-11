@@ -12,7 +12,7 @@ const {
 const upload = require("../../middleware/multer/uploadMiddleware");
 const router = Router();
 
-router.post("/tasks", upload.array("file", 10), addTask);
+router.post("/tasks/createTask", upload.array("newFiles", 10), addTask);
 
 router.get("/tasks", getTask);
 
@@ -22,7 +22,7 @@ router.get("/tasks/logs/:id", getLogAcitvity);
 
 router.post("/tasks/:id", createComment);
 
-router.patch("/tasks/:id", upload.array("newFiles", 10), updateTask);
+router.patch("/tasks/update/:id", upload.array("newFiles", 10), updateTask);
 
 router.delete("/tasks", roleAuthMiddleware(["admin"]), deleteTask);
 

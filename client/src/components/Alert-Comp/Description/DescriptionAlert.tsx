@@ -32,7 +32,9 @@ export const DescriptionAlert = () => {
               <CardHeader className="p-0">
                 <div className="flex justify-between items-center">
                   <div className="flex gap-3">
-                    <h1 className="text-xl font-semibold">Ticket-Info</h1>
+                    <h1 className="text-md md:text-lg font-semibold">
+                      Ticket-Info
+                    </h1>
                     <button
                       title="Copy Ticket-ID"
                       onClick={() =>
@@ -59,7 +61,7 @@ export const DescriptionAlert = () => {
 
               {/* ---------- TABS ---------- */}
               <Tabs defaultValue="DescriptionInfos" className="mt-2">
-                <TabsList className="mb-5 flex gap-3 ">
+                <TabsList className="mb-5 flex gap-3 text-xs md:text-sm">
                   <TabsTrigger
                     className="transition duration-300 bg-ring p-1 rounded-md cursor-pointer text-primary-foreground hover:bg-primary-foreground hover:text-secondary-foreground"
                     value="DescriptionInfos"

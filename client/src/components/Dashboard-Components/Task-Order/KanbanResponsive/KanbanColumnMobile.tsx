@@ -15,7 +15,7 @@ export const KanbanColumnMobile = ({
   if (!column) return null;
 
   return (
-    <div className="flex justify-around items-center gap-2 ">
+    <div className="flex justify-around items-center gap-2">
       <span className={`rounded-full ${column?.color} p-1`}>
         <column.Icon size={13} />
       </span>

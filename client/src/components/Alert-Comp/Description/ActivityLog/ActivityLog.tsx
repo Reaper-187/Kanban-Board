@@ -35,7 +35,7 @@ export const ActivityLog = ({ taskId }: TaskIdProps) => {
     <>
       <Card className="h-[650px] flex flex-col">
         <CardHeader>
-          <h3 className="text-lg font-semibold">Activity Log</h3>
+          <h3 className="text-md md:text-lg font-semibold">Activity Log</h3>
         </CardHeader>
 
         <CardContent className="flex-1 overflow-y-auto space-y-5 pr-2">
@@ -50,7 +50,7 @@ export const ActivityLog = ({ taskId }: TaskIdProps) => {
               key={`${log._id}-${log.timeStamp}`}
               className="border-b pb-3 mb-3 last:border-none"
             >
-              <div className="flex justify-between text-sm font-medium">
+              <div className="text-xs md:text-md flex justify-between text-sm font-medium">
                 <p>User: {log.lastName || "provider"}</p>
                 <button
                   title="Copy User-ID"

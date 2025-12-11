@@ -1,8 +1,9 @@
-// import type { BackendData } from "@/components/Types/types";
 import type { Task, RequestData } from "@/components/Types/types";
 import axios from "axios";
 
 const TASK_API = import.meta.env.VITE_API_TASK;
+const TASK_API_CREATE = import.meta.env.VITE_API_TASK_CREATE;
+const TASK_API_UPDATE = import.meta.env.VITE_API_TASK_UPDATE;
 const TASK_LOGS_API = import.meta.env.VITE_API_TASK_LOGS;
 const TASK_COMMENTS_API = import.meta.env.VITE_API_TASK_COMMENTS;
 
@@ -14,14 +15,11 @@ export const createTask = async (data: RequestData): Promise<RequestData> => {
   formData.append("importance", data.importance || "Medium");
   formData.append("date", data.date ? data.date.toString() : "");
 
-  if (data.file && data.file.length > 0) {
-    data.file.forEach((file) => {
-      formData.append("file", file);
-    });
-  }
+  data.newFiles?.forEach((file) => {
+    formData.append("newFiles", file);
+  });
 
-  const response = await axios.post<RequestData>(TASK_API, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+  const response = await axios.post<RequestData>(TASK_API_CREATE, formData, {
     withCredentials: true,
   });
 
@@ -76,10 +74,13 @@ export const updateTask = async (
     formData.append("newFiles", file);
   });
 
-  const response = await axios.patch<Task>(`${TASK_API}/${_id}`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-    withCredentials: true,
-  });
+  const response = await axios.patch<Task>(
+    `${TASK_API_UPDATE}/${_id}`,
+    formData,
+    {
+      withCredentials: true,
+    }
+  );
 
   return response.data;
 };

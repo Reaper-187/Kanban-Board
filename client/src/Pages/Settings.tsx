@@ -38,7 +38,7 @@ export function Settings() {
           <TabsTrigger value="login&security">Login & security</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="general" className="mt-4 w-1/2">
+        <TabsContent value="general" className="mt-4 w-full xl:w-1/2 ">
           <Card>
             <CardHeader>
               <CardTitle>User-Card</CardTitle>
@@ -47,9 +47,11 @@ export function Settings() {
               <p className="border-b-5 border-b-forderground"></p>
 
               <div className="flex items-center justify-between">
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <Label>Employee-ID :</Label>
-                  <p className="text-md text-blue-400">{userInfo.userId}</p>
+                  <p className="text-sm md:text-md text-blue-400">
+                    {userInfo.userId}
+                  </p>
                 </div>
                 <button
                   onClick={copyIdToClipboard}
@@ -60,30 +62,38 @@ export function Settings() {
                   }`}
                 >
                   {copiedId ? (
-                    <Check size={18} className="animate-pulse" />
+                    <Check size={15} className="animate-pulse" />
                   ) : (
-                    <Copy size={18} />
+                    <Copy size={15} />
                   )}
                 </button>
               </div>
 
               <div className="flex gap-3">
                 <Label>Employee-Role :</Label>
-                <p className="text-md text-blue-400">{userInfo?.userRole}</p>
+                <p className="text-sm md:text-md text-blue-400">
+                  {userInfo?.userRole}
+                </p>
               </div>
               <p className="border-b-5 border-b-forderground"></p>
 
               <div className="flex gap-3">
                 <Label>Name :</Label>
-                <p className="text-md text-blue-400">{userInfo?.firstName}</p>
-                <p className="text-md text-blue-400">{userInfo?.lastName}</p>
+                <p className="text-sm md:text-md text-blue-400">
+                  {userInfo?.firstName}
+                </p>
+                <p className="text-sm md:text-md text-blue-400">
+                  {userInfo?.lastName}
+                </p>
               </div>
               <p className="border-b-5 border-b-forderground"></p>
 
               <div className="flex items-center justify-between">
                 <div className="flex gap-3">
                   <Label>Email :</Label>
-                  <p className="text-md text-blue-400">{userInfo.email}</p>
+                  <p className="text-sm md:text-md text-blue-400">
+                    {userInfo.email}
+                  </p>
                 </div>
                 <button
                   onClick={copyEmailToClipboard}
@@ -94,9 +104,9 @@ export function Settings() {
                   }`}
                 >
                   {copiedEmail ? (
-                    <Check size={18} className="animate-pulse" />
+                    <Check size={15} className="animate-pulse" />
                   ) : (
-                    <Copy size={18} />
+                    <Copy size={15} />
                   )}
                 </button>
               </div>

@@ -75,7 +75,7 @@ export const ChangePw = () => {
         <CardHeader>
           <CardTitle>Change Password</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 w-1/2">
+        <CardContent className="space-y-4 w-full lg:w-1/2">
           <form className="space-y-3" onSubmit={handleSubmit(handleNewPw)}>
             <p>Old Password</p>
             <div className="relative">

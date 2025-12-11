@@ -42,6 +42,7 @@ exports.addTask = async (req: MulterRequest, res: Response) => {
       ...taskData,
       file: fileInfos,
     });
+
     const savedTask = await newTask.save();
     res.status(201).json(savedTask);
   } catch (error) {
