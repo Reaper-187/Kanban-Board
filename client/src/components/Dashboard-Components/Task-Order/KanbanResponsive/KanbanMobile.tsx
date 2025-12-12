@@ -70,7 +70,7 @@ export const KanbanMobile = ({
           exit="exit"
           transition={{ duration: 0.4, ease: "easeInOut" }}
         >
-          <Card className="p-3 w-[266px]">
+          <Card className="p-3 w-full max-w-sm">
             <KanbanColumnMobile column={column} tasks={activeTasks} />
             <div className="flex flex-col gap-2">
               {tasks.length > 0 ? (
