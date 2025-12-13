@@ -294,7 +294,7 @@ export function TableContainer({ tasks, onStatusChange }: TableProps) {
           className="w-full flex flex-wrap justify-center items-center gap-4"
         >
           <Input
-            placeholder="Search tasks..."
+            placeholder="Search for tasks..."
             value={globalFilter ?? ""}
             onChange={(event) => setGlobalFilter(event.target.value)}
             className="max-w-sm"
