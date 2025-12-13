@@ -117,9 +117,7 @@ export const TaskContainer = ({
   return (
     <div
       className={
-        viewType != "kanban"
-          ? "w-full p-1 gap-4"
-          : "flex gap-4 w-full justify-center"
+        viewType != "kanban" ? "w-full p-1 gap-4" : "flex w-full justify-center"
       }
     >
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>

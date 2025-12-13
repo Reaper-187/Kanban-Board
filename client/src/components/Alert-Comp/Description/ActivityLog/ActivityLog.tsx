@@ -55,14 +55,12 @@ export const ActivityLog = ({ taskId }: TaskIdProps) => {
                 <button
                   title="Copy User-ID"
                   onClick={() => navigator.clipboard.writeText(log._id)}
-                  style={{
-                    cursor: "pointer",
-                    background: "transparent",
-                    border: "none",
-                    padding: "4px",
-                  }}
+                  className="group cursor-pointer bg-transparent border-none text-xs flex gap-2"
                 >
                   <Copy size={18} />
+                  <p className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    Copy-User-id
+                  </p>
                 </button>
                 <p>
                   {new Date(log.timeStamp).toLocaleString("de-DE", {

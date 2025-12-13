@@ -13,17 +13,16 @@ export const DashboardHeader = ({ toggleView }: DashboardHeaderProps) => {
   const { openModal } = useToggle();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  // Wenn mobile gar nichts rendern
+  if (isMobile) {
+    return null;
+  }
+
   return (
     <>
       <CardHeader>
-        <div
-          className={
-            isMobile
-              ? "hidden"
-              : `flex w-1/2 justify-between items-center gap-4 lg:gap-0 lg:w-full`
-          }
-        >
-          <div className={isMobile ? "hidden" : "flex items-center gap-3"}>
+        <div className="flex w-1/2 justify-between items-center gap-4 lg:gap-0 lg:w-full">
+          <div className="flex items-center gap-3">
             <h1 className="font-semibold md:text-lg lg:text-xl">Tasks</h1>
             <div className="flex gap-5">
               <Button

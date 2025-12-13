@@ -26,7 +26,7 @@ export const KanbanMobile = ({
   const [direction, setDirection] = useState(1); // 1 = nach rechts, -1 = nach links
 
   return (
-    <div className="flex flex-col items-center ">
+    <div className="flex flex-col items-center w-full sm:w-[90%] md:w-[60%]">
       <div className="flex justify-between w-full px-4 mb-2">
         <Button
           onClick={() => {
@@ -69,22 +69,24 @@ export const KanbanMobile = ({
           animate="center"
           exit="exit"
           transition={{ duration: 0.4, ease: "easeInOut" }}
+          className="w-full p-5"
         >
-          <Card className="p-3 w-full max-w-sm">
+          <Card className="p-3 w-full">
             <KanbanColumnMobile column={column} tasks={activeTasks} />
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 ">
               {tasks.length > 0 ? (
                 tasks.map((task) => (
-                  <KanbanTaskCard
-                    key={task._id}
-                    task={task}
-                    onStatusChange={(_id, updates) =>
-                      onStatusChange(_id, updates)
-                    }
-                  />
+                  <div key={task._id}>
+                    <KanbanTaskCard
+                      task={task}
+                      onStatusChange={(_id, updates) =>
+                        onStatusChange(_id, updates)
+                      }
+                    />
+                  </div>
                 ))
               ) : (
-                <Card className="flex items-center justify-center w-[266px] h-[266px]">
+                <Card className="flex items-center justify-center w-full h-266px]">
                   <p>No Tasks here</p>
                 </Card>
               )}

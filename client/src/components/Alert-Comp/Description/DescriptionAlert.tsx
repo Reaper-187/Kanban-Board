@@ -31,7 +31,7 @@ export const DescriptionAlert = () => {
               {/* ---------- HEADER ---------- */}
               <CardHeader className="p-0">
                 <div className="flex justify-between items-center">
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 justify-evenly items-center">
                     <h1 className="text-md md:text-lg font-semibold">
                       Ticket-Info
                     </h1>
@@ -40,14 +40,12 @@ export const DescriptionAlert = () => {
                       onClick={() =>
                         navigator.clipboard.writeText(currentTask._id)
                       }
-                      style={{
-                        cursor: "pointer",
-                        background: "transparent",
-                        border: "none",
-                        padding: "4px",
-                      }}
+                      className="group cursor-pointer bg-transparent border-none text-xs flex gap-2"
                     >
                       <Copy size={18} />
+                      <p className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        Copy-Ticket-id
+                      </p>
                     </button>
                   </div>
                   <span

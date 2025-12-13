@@ -45,7 +45,7 @@ import { type Task } from "@/components/Types/types";
 import type { Color } from "../../Task-Card/ListCards/TaskCardList";
 import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
 import { useToggle } from "@/Context/AddBtnContext";
-
+import { motion } from "framer-motion";
 export type TableProps = {
   tasks: Task[];
   onStatusChange: (_id: string, updates: Partial<Task>) => void;
@@ -177,14 +177,12 @@ export const columns: ColumnDef<Task>[] = [
           <button
             title="Copy User-ID"
             onClick={() => navigator.clipboard.writeText(taskId)}
-            style={{
-              cursor: "pointer",
-              background: "transparent",
-              border: "none",
-              padding: "4px",
-            }}
+            className="group cursor-pointer bg-transparent border-none text-xs flex gap-2"
           >
             <Copy size={18} />
+            <p className="opacity-0 group-hover:opacity-100 transition-opacity">
+              Copy-User-id
+            </p>
           </button>
         </div>
       );
@@ -273,62 +271,82 @@ export function TableContainer({ tasks, onStatusChange }: TableProps) {
     },
   });
 
+  const rowVariants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: { delay: i * 0.05, duration: 0.4 },
+    }),
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Search tasks..."
-          value={globalFilter ?? ""}
-          onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, y: 20, x: 10 },
+            visible: { opacity: 1, x: 0, y: 0 },
+          }}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.45 }}
+          className="w-full flex flex-wrap justify-center items-center gap-4"
+        >
+          <Input
+            placeholder="Search tasks..."
+            value={globalFilter ?? ""}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            className="max-w-sm"
+          />
 
-        {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <span
-            className={
-              table.getSelectedRowModel().rows.map((row) => row.original)
-                ? "text-white flex items-center bg-red-500 ml-1 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
-                : "hidden"
-            }
-            onClick={() => {
-              const selectedTasks = table
-                .getSelectedRowModel()
-                .rows.map((row) => row.original as Task);
-              console.log(selectedTasks);
+          {table.getFilteredSelectedRowModel().rows.length > 0 && (
+            <span
+              className={
+                table.getSelectedRowModel().rows.map((row) => row.original)
+                  ? "text-white flex items-center bg-red-500 ml-1 p-1 rounded-sm cursor-pointer hover:text-black transition-all duration-300"
+                  : "hidden"
+              }
+              onClick={() => {
+                const selectedTasks = table
+                  .getSelectedRowModel()
+                  .rows.map((row) => row.original as Task);
+                console.log(selectedTasks);
 
-              multipleDeleteAlert(selectedTasks);
-            }}
-          >
-            <Trash size={20} />
-            delete
-          </span>
-        )}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                multipleDeleteAlert(selectedTasks);
+              }}
+            >
+              <Trash size={20} />
+              delete
+            </span>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </motion.div>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -352,10 +370,15 @@ export function TableContainer({ tasks, onStatusChange }: TableProps) {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
+              table.getRowModel().rows.map((row, index) => (
+                <motion.tr
                   key={row.id}
+                  custom={index}
+                  variants={rowVariants}
+                  initial="hidden"
+                  animate="visible"
                   data-state={row.getIsSelected() && "selected"}
+                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -365,7 +388,7 @@ export function TableContainer({ tasks, onStatusChange }: TableProps) {
                       )}
                     </TableCell>
                   ))}
-                </TableRow>
+                </motion.tr>
               ))
             ) : (
               <TableRow>

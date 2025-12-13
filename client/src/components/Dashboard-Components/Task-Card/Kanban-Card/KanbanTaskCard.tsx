@@ -5,6 +5,8 @@ import type { Task } from "@/components/Types/types";
 import { useDraggable } from "@dnd-kit/core";
 import { DropdownSwitchStatus } from "@/components/DropDownMenu/DropDown";
 import { useToggle } from "@/Context/AddBtnContext";
+import { useMediaQuery } from "@uidotdev/usehooks";
+import { motion } from "framer-motion";
 
 type TaskCardProps = {
   task: Task;
@@ -28,6 +30,7 @@ const importanceColor: Record<keyof Color, string> = {
 
 export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
   const { openModal, openDescription } = useToggle();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const colorPick = importanceColor[task.importance as keyof Color];
 
@@ -41,21 +44,28 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
   };
 
   return (
-    <div
+    <motion.div
       ref={setNodeRef}
       style={style}
       className={`my-1 ${isDragging ? "opacity-0" : ""}`}
+      initial={{ opacity: 0, x: -30, y: -20 }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
     >
       <Card
         id={task._id}
         key={task.status}
-        className="p-3  transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
+        className="p-3 transition duration-300 sm:p-4 md:p-5 flex flex-col gap-2 sm:gap-3 hover:shadow-xl"
       >
         <div className="flex justify-between">
           <div
             {...listeners}
             {...attributes}
-            className="hidden justify-center cursor-grab active:cursor-grabbing md:flex"
+            className={
+              isMobile
+                ? "hidden"
+                : "justify-center cursor-grab active:cursor-grabbing md:flex"
+            }
           >
             <Grip />
           </div>
@@ -75,7 +85,7 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
             </h3>
             <p className="text-xs md:text-md">{task.description}</p>
           </div>
-          <span className="md:hidden">
+          <span className={isMobile ? "" : "hidden"}>
             <DropdownSwitchStatus
               value={task.status}
               onChange={(newStatus) =>
@@ -124,6 +134,6 @@ export const KanbanTaskCard = ({ task, onStatusChange }: TaskCardProps) => {
           </span>
         </div>
       </Card>
-    </div>
+    </motion.div>
   );
 };
