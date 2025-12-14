@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/Spinner/Spinner";
 import { useAuth } from "@/Context/AuthContext/AuthContext";
 import { type PropsWithChildren } from "react";
 import { Navigate } from "react-router-dom";
@@ -8,7 +9,7 @@ export const PublicRoute = ({ children }: PublicRouteProps) => {
   const { loadingSpinner } = useAuth();
 
   if (loadingSpinner === "loading") {
-    return <p>Pleas Wait</p>;
+    return <Spinner />;
   }
   if (loadingSpinner === "authenticated") {
     return <Navigate to="/tasks" replace />;
