@@ -16,8 +16,6 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import z from "zod";
 
-const GAUTHN_API = import.meta.env.VITE_API_GAUTHN;
-
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -40,9 +38,9 @@ export const Login = () => {
     },
   });
 
-  const { mutate: userLogin } = useLogin();
+  const { mutate: userLogin, isPending: loginLoad } = useLogin();
 
-  const { mutate: guestLogin } = guestAccessHook();
+  const { mutate: guestLogin, isPending: guestLoginLoad } = guestAccessHook();
 
   const handleLogin = (data: FormLogin) => {
     userLogin(data);
@@ -65,6 +63,8 @@ export const Login = () => {
       console.error("Google login failed", err);
     }
   };
+
+  const noCheck = loginLoad || guestLoginLoad;
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center p-4 bg-[url(/public/k2.jpg)] bg-cover">
@@ -111,16 +111,17 @@ export const Login = () => {
             )}
           </div>
           <Link
+            hidden={noCheck ? true : false}
             className="text-blue-400 hover:text-blue-500 font-medium"
             to={"/reset-password-authentication"}
           >
             forgot password
           </Link>
           <div className="w-full grid grid-cols-2 gap-4">
-            <Button className="w-full" type="submit">
-              Sign in
+            <Button disabled={noCheck ? true : false} className="w-full">
+              {loginLoad ? "in Progress..." : "Sign in"}
             </Button>
-            <Button className="w-full" type="submit">
+            <Button disabled={noCheck ? true : false} className="w-full">
               <Link className="w-full" to={"/register"}>
                 Switch to Register
               </Link>
@@ -138,21 +139,30 @@ export const Login = () => {
           </div>
         </form>
         <div className="grid grid-cols-2 gap-4 px-4 ">
-          <Button className="w-full font-semibold" onClick={handleGithubLogin}>
+          <Button
+            disabled={noCheck ? true : false}
+            className="w-full font-semibold"
+            onClick={handleGithubLogin}
+          >
             <Github className="mr-2 h-4 w-4" />
             Github
           </Button>
 
-          <Button className="w-full font-semibold" onClick={handleGoogleLogin}>
+          <Button
+            disabled={noCheck ? true : false}
+            className="w-full font-semibold"
+            onClick={handleGoogleLogin}
+          >
             <Mail className="mr-2 h-4 w-4" />
             Google
           </Button>
           <Button
+            disabled={noCheck ? true : false}
             className="w-full col-span-2 font-semibold"
             onClick={() => guestLogin()}
           >
             <User className="mr-2 h-4 w-4" />
-            Guest for Test
+            {guestLoginLoad ? "Guest-Access is creating..." : "Guest for Test"}
           </Button>
         </div>
       </Card>

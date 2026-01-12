@@ -6,7 +6,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { guestAccessHook } from "@/hooks/AuthHooks/useGuestAccess";
 import { useRegister } from "@/hooks/AuthHooks/useRegister";
+import { getGithubAuth, getGoogleAuth } from "@/services/socialAuthServices";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Github, Mail, User } from "lucide-react";
 import { useState } from "react";
@@ -47,11 +49,33 @@ export const Register = () => {
     },
   });
 
-  const { mutate } = useRegister();
+  const { mutate, isPending: registLoad } = useRegister();
+
+  const { mutate: guestLogin, isPending: guestLoginLoad } = guestAccessHook();
 
   const handleRegister = (data: FormRegister) => {
     mutate(data);
   };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { url } = await getGoogleAuth();
+      window.location.href = url;
+    } catch (err) {
+      console.error("Google login failed", err);
+    }
+  };
+
+  const handleGithubLogin = async () => {
+    try {
+      const { url } = await getGithubAuth();
+      window.location.href = url;
+    } catch (err) {
+      console.error("Google login failed", err);
+    }
+  };
+
+  const noCheck = registLoad || guestLoginLoad;
 
   const checkPasswordCriteria = (password: string = "") => {
     return {
@@ -148,8 +172,8 @@ export const Register = () => {
           </div>
           <Link to={"#"}>forgot password</Link>
           <div className="w-full grid grid-cols-2 gap-4">
-            <Button className="w-full" type="submit">
-              Registration
+            <Button disabled={noCheck ? true : false} className="w-full">
+              {noCheck ? "please wait..." : "Registration"}
             </Button>
             <Button className="w-full">
               <Link className="w-full" to={"/login"}>
@@ -170,33 +194,29 @@ export const Register = () => {
         </form>
         <div className="grid grid-cols-2 gap-4 px-4 ">
           <Button
+            disabled={noCheck ? true : false}
             className="w-full font-semibold"
-
-            // onClick={() => {
-            //   window.location.href = API_GHUBAUTHN;
-            // }}
+            onClick={handleGithubLogin}
           >
             <Github className="mr-2 h-4 w-4" />
             Github
           </Button>
 
           <Button
+            disabled={noCheck ? true : false}
             className="w-full font-semibold"
-
-            // onClick={() => {
-            //   window.location.href = API_GAUTHN;
-            // }}
+            onClick={handleGoogleLogin}
           >
             <Mail className="mr-2 h-4 w-4" />
             Google
           </Button>
           <Button
+            disabled={noCheck ? true : false}
             className="w-full col-span-2 font-semibold"
-
-            //   onClick={loginAsGuest}
+            onClick={() => guestLogin()}
           >
             <User className="mr-2 h-4 w-4" />
-            Guest for Test
+            {guestLoginLoad ? "Guest-Access is creating..." : "Guest for Test"}
           </Button>
         </div>
       </Card>
